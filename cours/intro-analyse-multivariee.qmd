@@ -1,0 +1,38 @@
+---
+title: "Introduction compréhensive à l'analyse statistique (linéaire) multivariée"
+---
+
+
+## Présentation
+
+Ce cours est à destination des étudiant.e.s en 2ème année (spécialité Agronomie et Agroalimentaire) à l'Institut Agro Dijon. Il vise à introduire les principales méthodes d'analyse statistique linéaire : Régression linéaire (~15h) et Réduction de dimension (~15h).
+
+Ce cours est très inspiré:
+
+- du cours de Sophie Donnet sur le [Modèle linéaire gaussien](https://sophiedonnet.github.io/linearmodel.html) ;
+- de la partie ACP du cours de Julien Chiquet sur la [Réduction de dimension](https://jchiquet.github.io/teaching/) ; et
+- du cours de François Husson d'[Analyse de données](https://husson.github.io/MOOC_AnaDo/index.html).
+
+
+## Supports de cours
+
+- Chapitre 1 - [Introduction](../_downloads/intro-analyse-multivariee/chap1_Intro.pdf)
+- Chapitre 2 - [Régression linéaire multiple](../_downloads/intro-analyse-multivariee/chap2_RegMultiple.pdf) (<a href="../_downloads/intro-analyse-multivariee/Chapitre2_cours_TD.zip" download>.Rmd</a> du chapitre)
+  - TD 1 : Régression linéaire simple 
+  - TD 2 : Régression linéaire multiple (Modèle)
+  - TD 3 : Régression linéaire multiple (Inférence & Prédiction)
+
+- Chapitre 3 - Régression factorielle
+  - TD 4 : Analyse de variance à 2 facteurs
+  - TD 5 : Analyse de la covariance
+
+- Chapitre 4 - Réduction (linéaire) de dimension
+  - TD 6 : Analyse en composantes principales
+  - TDs 7-8 : Analyse des correspondances, Analyse des correspondances multiples & Analyse factorielle des correspondances
+  
+- Chapitre 5 - Introduction à la classification automatique non-supervisée
+  - TD 9 : Classification ascendante hiérarchique
+
+## Données
+
+Les jeux de données sont à télécharger [ici](../_downloads/intro-analyse-multivariee/Data.zip).

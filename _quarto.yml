@@ -1,0 +1,32 @@
+project:
+  type: website
+  output-dir: docs
+  resources:
+    - "_downloads/**"
+
+website:
+  title: "Léo Dort"
+  description: "Maître de Conférences - Institut Agro Dijon / INRAE Dijon"
+  navbar:
+    left:
+        - href: index.qmd
+          text: Home
+        - href: research.qmd
+          text: Research
+        - href: teaching.qmd
+          text: Teaching
+        - href: diffusion.qmd
+          text: Diffusion
+        - href: about.qmd
+          text: About
+  page-footer:
+    center: "Website built with [Quarto](https://quarto.org)"
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
+    lang: en

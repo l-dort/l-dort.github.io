@@ -1,0 +1,57 @@
+---
+title: "Léo Dort"
+image: profile.jpeg
+about:
+  template: trestles
+  image-shape: rounded
+  links:
+    - icon: envelope
+      text: leo.dort [at] institut-agro [dot] fr
+      #href: "mailto:leo.dort [at] institut-agro [dot] fr"
+    - icon: geo-alt
+      text: Institut Agro Dijon
+      href: "https://institut-agro-dijon.fr"
+    - icon: geo-alt
+      text: UMR Agroécologie
+      href: "https://umr-agroecologie.dijon.hub.inrae.fr"
+---
+
+I am Associate Professor (Maître de Conférences) at Institut Agro Dijon and 
+INRAE in the lab [UMR Agroécologie](https://umr-agroecologie.dijon.hub.inrae.fr).
+
+<!--J'étais jusqu'à fin décembre 2024 ATER à l'[INSA de Lyon](http://www.insa-lyon.fr/), rattaché à l'[Institut Camille Jordan](http://math.univ-lyon1.fr) (recherche) et au département de génie électrique (enseignement).-->
+I did my phD at [ÉNS de Lyon](https://www.umpa.ens-lyon.fr) under the supervision of [Grégory Miermont](https://perso.ens-lyon.fr/gregory.miermont/) and [Emmanuel Jacob](https://perso.ens-lyon.fr/emmanuel.jacob/).
+
+
+<!-- Engagements -->
+
+- Member of the project [CONDORCET](https://www.maths-vives.fr/projet/condorcet/), financed by PEPR Maths-VivES
+- Member of [PEPR SolsVivants](https://pepr-solsvivants.fr)
+- Vice head of [IREM de Dijon](https://irem.ube.fr)
+
+
+<!-- Thèmes de recherche -->
+
+<h3> Research interests </h3>
+I am interested in :
+
+- the study of random graphs with different aspects: the development of models and 
+their application in ecology, the study of local limit in a dynamical setting, 
+and the study of precesses evolving on these dynamical graphs (such as contact
+process) ;
+- the study of statistical depth functions and their application in voting 
+procedures.
+
+
+<!-- Coordonnées -->
+
+**Institut Agro Dijon**  
+Site Déméter, Bâtiment Longelles  
+26, bd Docteur Petitjean  
+21079 Dijon Cedex  
+Bureau 20
+
+**INRAE Dijon**  
+UMR Agroécologie  
+17 rue Sully  
+21000 Dijon
