@@ -16,8 +16,8 @@ Ce cours est très inspiré:
 
 ## Supports de cours
 
-- Chapitre 1 - [Introduction](../_downloads/intro-analyse-multivariee/chap1_Intro.pdf)
-- Chapitre 2 - [Régression linéaire multiple](../_downloads/intro-analyse-multivariee/chap2_RegMultiple.pdf) (<a href="../_downloads/intro-analyse-multivariee/Chapitre2_cours_TD.zip" download>.Rmd</a> du chapitre)
+- Chapitre 1 - [Introduction](../downloads/intro-analyse-multivariee/chap1_Intro.pdf)
+- Chapitre 2 - [Régression linéaire multiple](../downloads/intro-analyse-multivariee/chap2_RegMultiple.pdf) (<a href="../downloads/intro-analyse-multivariee/Chapitre2_cours_TD.zip" download>.Rmd</a> du chapitre)
   - TD 1 : Régression linéaire simple 
   - TD 2 : Régression linéaire multiple (Modèle)
   - TD 3 : Régression linéaire multiple (Inférence & Prédiction)
@@ -35,4 +35,4 @@ Ce cours est très inspiré:
 
 ## Données
 
-Les jeux de données sont à télécharger [ici](../_downloads/intro-analyse-multivariee/Data.zip).
+Les jeux de données sont à télécharger [ici](../downloads/intro-analyse-multivariee/Data.zip).

@@ -2,7 +2,7 @@ project:
   type: website
   output-dir: docs
   resources:
-    - "_downloads/**"
+    - "downloads/**"
 
 website:
   title: "Léo Dort"

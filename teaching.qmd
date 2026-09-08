@@ -9,7 +9,7 @@ Pour insérer un nouveau cours
 
 <div class="course-grid">
 
-<a class="course-card" href="cours/nom-du-cours/nom-du-cours.html">
+<a class="course-card" href="teaching/nom-du-cours/nom-du-cours.html">
   <h3>Nom du cours</h3>
   <p>Niveau - Courte description du contenu</p>
 </a>
@@ -21,7 +21,7 @@ Pour insérer un nouveau cours
 ```{=html}
 <div class="course-grid">
 
-<a class="course-card" href="cours/intro-analyse-multivariee.html">
+<a class="course-card" href="teaching/intro-analyse-multivariee.html">
   <h3>Introduction (compréhensive) à l'analyse statistique (linéaire) multivariée</h3>
   <p>Régression linéaire &amp Réduction de dimension</p>
 </a>

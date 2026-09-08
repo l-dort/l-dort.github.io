@@ -1,17 +1,38 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "teaching/intro-analyse-multivariee.html",
+    "href": "teaching/intro-analyse-multivariee.html",
+    "title": "Introduction compréhensive à l’analyse statistique (linéaire) multivariée",
     "section": "",
-    "text": "This page is under construction. Content coming soon."
+    "text": "Ce cours est à destination des étudiant.e.s en 2ème année (spécialité Agronomie et Agroalimentaire) à l’Institut Agro Dijon. Il vise à introduire les principales méthodes d’analyse statistique linéaire : Régression linéaire (~15h) et Réduction de dimension (~15h).\nCe cours est très inspiré:\n\ndu cours de Sophie Donnet sur le Modèle linéaire gaussien ;\nde la partie ACP du cours de Julien Chiquet sur la Réduction de dimension ; et\ndu cours de François Husson d’Analyse de données."
   },
   {
-    "objectID": "diffusion.html",
-    "href": "diffusion.html",
-    "title": "Diffusion",
+    "objectID": "teaching/intro-analyse-multivariee.html#présentation",
+    "href": "teaching/intro-analyse-multivariee.html#présentation",
+    "title": "Introduction compréhensive à l’analyse statistique (linéaire) multivariée",
     "section": "",
-    "text": "This page is under construction. Content coming soon."
+    "text": "Ce cours est à destination des étudiant.e.s en 2ème année (spécialité Agronomie et Agroalimentaire) à l’Institut Agro Dijon. Il vise à introduire les principales méthodes d’analyse statistique linéaire : Régression linéaire (~15h) et Réduction de dimension (~15h).\nCe cours est très inspiré:\n\ndu cours de Sophie Donnet sur le Modèle linéaire gaussien ;\nde la partie ACP du cours de Julien Chiquet sur la Réduction de dimension ; et\ndu cours de François Husson d’Analyse de données."
+  },
+  {
+    "objectID": "teaching/intro-analyse-multivariee.html#supports-de-cours",
+    "href": "teaching/intro-analyse-multivariee.html#supports-de-cours",
+    "title": "Introduction compréhensive à l’analyse statistique (linéaire) multivariée",
+    "section": "Supports de cours",
+    "text": "Supports de cours\n\nChapitre 1 - Introduction\nChapitre 2 - Régression linéaire multiple (.Rmd du chapitre)\n\nTD 1 : Régression linéaire simple\nTD 2 : Régression linéaire multiple (Modèle)\nTD 3 : Régression linéaire multiple (Inférence & Prédiction)\n\nChapitre 3 - Régression factorielle\n\nTD 4 : Analyse de variance à 2 facteurs\nTD 5 : Analyse de la covariance\n\nChapitre 4 - Réduction (linéaire) de dimension\n\nTD 6 : Analyse en composantes principales\nTDs 7-8 : Analyse des correspondances, Analyse des correspondances multiples & Analyse factorielle des correspondances\n\nChapitre 5 - Introduction à la classification automatique non-supervisée\n\nTD 9 : Classification ascendante hiérarchique"
+  },
+  {
+    "objectID": "teaching/intro-analyse-multivariee.html#données",
+    "href": "teaching/intro-analyse-multivariee.html#données",
+    "title": "Introduction compréhensive à l’analyse statistique (linéaire) multivariée",
+    "section": "Données",
+    "text": "Données\nLes jeux de données sont à télécharger ici."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Léo Dort",
+    "section": "",
+    "text": "I am Associate Professor (Maître de Conférences) at Institut Agro Dijon and INRAE in the lab UMR Agroécologie.\n\nI did my phD at ÉNS de Lyon under the supervision of Grégory Miermont and Emmanuel Jacob.\n\n\nMember of the project CONDORCET, financed by PEPR Maths-VivES\nMember of PEPR SolsVivants\nVice head of IREM de Dijon\n\n\n\nResearch interests\n\nI am interested in :\n\nthe study of random graphs with different aspects: the development of models and their application in ecology, the study of local limit in a dynamical setting, and the study of precesses evolving on these dynamical graphs (such as contact process) ;\nthe study of statistical depth functions and their application in voting procedures.\n\n\nInstitut Agro Dijon\nSite Déméter, Bâtiment Longelles\n26, bd Docteur Petitjean\n21079 Dijon Cedex\nBureau 20\nINRAE Dijon\nUMR Agroécologie\n17 rue Sully\n21000 Dijon"
   },
   {
     "objectID": "research.html",
@@ -28,38 +49,17 @@
     "text": "Most of the lectures given are in french.\n\n\n\n\n  Introduction (compréhensive) à l'analyse statistique (linéaire) multivariée\n  Régression linéaire & Réduction de dimension"
   },
   {
-    "objectID": "cours/intro-analyse-multivariee.html",
-    "href": "cours/intro-analyse-multivariee.html",
-    "title": "Introduction compréhensive à l’analyse statistique (linéaire) multivariée",
+    "objectID": "diffusion.html",
+    "href": "diffusion.html",
+    "title": "Diffusion",
     "section": "",
-    "text": "Ce cours est à destination des étudiant.e.s en 2ème année (spécialité Agronomie et Agroalimentaire) à l’Institut Agro Dijon. Il vise à introduire les principales méthodes d’analyse statistique linéaire : Régression linéaire (~15h) et Réduction de dimension (~15h).\nCe cours est très inspiré:\n\ndu cours de Sophie Donnet sur le Modèle linéaire gaussien ;\nde la partie ACP du cours de Julien Chiquet sur la Réduction de dimension ; et\ndu cours de François Husson d’Analyse de données."
+    "text": "This page is under construction. Content coming soon."
   },
   {
-    "objectID": "cours/intro-analyse-multivariee.html#présentation",
-    "href": "cours/intro-analyse-multivariee.html#présentation",
-    "title": "Introduction compréhensive à l’analyse statistique (linéaire) multivariée",
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
     "section": "",
-    "text": "Ce cours est à destination des étudiant.e.s en 2ème année (spécialité Agronomie et Agroalimentaire) à l’Institut Agro Dijon. Il vise à introduire les principales méthodes d’analyse statistique linéaire : Régression linéaire (~15h) et Réduction de dimension (~15h).\nCe cours est très inspiré:\n\ndu cours de Sophie Donnet sur le Modèle linéaire gaussien ;\nde la partie ACP du cours de Julien Chiquet sur la Réduction de dimension ; et\ndu cours de François Husson d’Analyse de données."
-  },
-  {
-    "objectID": "cours/intro-analyse-multivariee.html#supports-de-cours",
-    "href": "cours/intro-analyse-multivariee.html#supports-de-cours",
-    "title": "Introduction compréhensive à l’analyse statistique (linéaire) multivariée",
-    "section": "Supports de cours",
-    "text": "Supports de cours\n\nChapitre 1 - Introduction\nChapitre 2 - Régression linéaire multiple (.Rmd du chapitre)\n\nTD 1 : Régression linéaire simple\nTD 2 : Régression linéaire multiple (Modèle)\nTD 3 : Régression linéaire multiple (Inférence & Prédiction)\n\nChapitre 3 - Régression factorielle\n\nTD 4 : Analyse de variance à 2 facteurs\nTD 5 : Analyse de la covariance\n\nChapitre 4 - Réduction (linéaire) de dimension\n\nTD 6 : Analyse en composantes principales\nTDs 7-8 : Analyse des correspondances, Analyse des correspondances multiples & Analyse factorielle des correspondances\n\nChapitre 5 - Introduction à la classification automatique non-supervisée\n\nTD 9 : Classification ascendante hiérarchique"
-  },
-  {
-    "objectID": "cours/intro-analyse-multivariee.html#données",
-    "href": "cours/intro-analyse-multivariee.html#données",
-    "title": "Introduction compréhensive à l’analyse statistique (linéaire) multivariée",
-    "section": "Données",
-    "text": "Données\nLes jeux de données sont à télécharger ici."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Léo Dort",
-    "section": "",
-    "text": "I am Associate Professor (Maître de Conférences) at Institut Agro Dijon and INRAE in the lab UMR Agroécologie.\n\nI did my phD at ÉNS de Lyon under the supervision of Grégory Miermont and Emmanuel Jacob.\n\n\nMember of the project CONDORCET, financed by PEPR Maths-VivES\nMember of PEPR SolsVivants\nVice head of IREM de Dijon\n\n\n\nResearch interests\n\nI am interested in :\n\nthe study of random graphs with different aspects: the development of models and their application in ecology, the study of local limit in a dynamical setting, and the study of precesses evolving on these dynamical graphs (such as contact process) ;\nthe study of statistical depth functions and their application in voting procedures.\n\n\nInstitut Agro Dijon\nSite Déméter, Bâtiment Longelles\n26, bd Docteur Petitjean\n21079 Dijon Cedex\nBureau 20\nINRAE Dijon\nUMR Agroécologie\n17 rue Sully\n21000 Dijon"
+    "text": "This page is under construction. Content coming soon."
   }
 ]
