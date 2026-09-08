@@ -4,28 +4,28 @@
     "href": "teaching/intro-analyse-multivariee.html",
     "title": "Introduction compréhensive à l’analyse statistique (linéaire) multivariée",
     "section": "",
-    "text": "Ce cours est à destination des étudiant.e.s en 2ème année (spécialité Agronomie et Agroalimentaire) à l’Institut Agro Dijon. Il vise à introduire les principales méthodes d’analyse statistique linéaire : Régression linéaire (~15h) et Réduction de dimension (~15h).\nCe cours est très inspiré:\n\ndu cours de Sophie Donnet sur le Modèle linéaire gaussien ;\nde la partie ACP du cours de Julien Chiquet sur la Réduction de dimension ; et\ndu cours de François Husson d’Analyse de données."
+    "text": "Ce cours est à destination des étudiant.e.s en 2ème année (spécialité Agronomie et Agroalimentaire) à l’Institut Agro Dijon. Il vise à introduire les principales méthodes d’analyse statistique linéaire : Régression linéaire (~15h) et Réduction de dimension (~15h).\nCe cours est très inspiré:\n\ndu cours de Sophie Donnet sur le Modèle linéaire gaussien ;\nde la partie ACP du cours de Julien Chiquet sur la Réduction de dimension ; et\ndu cours de François Husson d’Analyse de données.\nRégression avec R, 3e édition de Pierre-André Cornillon, Nicolas Hengartner, Eric Matzner-Lober et Laurent Rouvière."
   },
   {
     "objectID": "teaching/intro-analyse-multivariee.html#présentation",
     "href": "teaching/intro-analyse-multivariee.html#présentation",
     "title": "Introduction compréhensive à l’analyse statistique (linéaire) multivariée",
     "section": "",
-    "text": "Ce cours est à destination des étudiant.e.s en 2ème année (spécialité Agronomie et Agroalimentaire) à l’Institut Agro Dijon. Il vise à introduire les principales méthodes d’analyse statistique linéaire : Régression linéaire (~15h) et Réduction de dimension (~15h).\nCe cours est très inspiré:\n\ndu cours de Sophie Donnet sur le Modèle linéaire gaussien ;\nde la partie ACP du cours de Julien Chiquet sur la Réduction de dimension ; et\ndu cours de François Husson d’Analyse de données."
+    "text": "Ce cours est à destination des étudiant.e.s en 2ème année (spécialité Agronomie et Agroalimentaire) à l’Institut Agro Dijon. Il vise à introduire les principales méthodes d’analyse statistique linéaire : Régression linéaire (~15h) et Réduction de dimension (~15h).\nCe cours est très inspiré:\n\ndu cours de Sophie Donnet sur le Modèle linéaire gaussien ;\nde la partie ACP du cours de Julien Chiquet sur la Réduction de dimension ; et\ndu cours de François Husson d’Analyse de données.\nRégression avec R, 3e édition de Pierre-André Cornillon, Nicolas Hengartner, Eric Matzner-Lober et Laurent Rouvière."
   },
   {
     "objectID": "teaching/intro-analyse-multivariee.html#supports-de-cours",
     "href": "teaching/intro-analyse-multivariee.html#supports-de-cours",
     "title": "Introduction compréhensive à l’analyse statistique (linéaire) multivariée",
     "section": "Supports de cours",
-    "text": "Supports de cours\n\nChapitre 1 - Introduction\nChapitre 2 - Régression linéaire multiple (.Rmd du chapitre)\n\nTD 1 : Régression linéaire simple\nTD 2 : Régression linéaire multiple (Modèle)\nTD 3 : Régression linéaire multiple (Inférence & Prédiction)\n\nChapitre 3 - Régression factorielle\n\nTD 4 : Analyse de variance à 2 facteurs\nTD 5 : Analyse de la covariance\n\nChapitre 4 - Réduction (linéaire) de dimension\n\nTD 6 : Analyse en composantes principales\nTDs 7-8 : Analyse des correspondances, Analyse des correspondances multiples & Analyse factorielle des correspondances\n\nChapitre 5 - Introduction à la classification automatique non-supervisée\n\nTD 9 : Classification ascendante hiérarchique"
+    "text": "Supports de cours\nVous pouvez retrouvez ci-dessous les supports de cours, ainsi que les fichiers .Rmd utilisés pour le cours et les TDs. Ils sont susceptibles d’être modifiés (à la marge). Assurez-vous d’avoir des versions suffisament récente.\n\nChapitre 1 - Introduction\nChapitre 2 - Régression linéaire multiple (.Rmd du chapitre)\n\nTD 1 : Régression linéaire simple\nTD 2 : Régression linéaire multiple (Modèle)\nTD 3 : Régression linéaire multiple (Inférence & Prédiction)\n\nChapitre 3 - Régression factorielle\n\nTD 4 : Analyse de variance à 2 facteurs\nTD 5 : Analyse de la covariance\n\nChapitre 4 - Réduction (linéaire) de dimension\n\nTD 6 : Analyse en composantes principales\nTDs 7-8 : Analyse des correspondances, Analyse des correspondances multiples & Analyse factorielle des correspondances\n\nChapitre 5 - Introduction à la classification automatique non-supervisée\n\nTD 9 : Classification ascendante hiérarchique"
   },
   {
     "objectID": "teaching/intro-analyse-multivariee.html#données",
     "href": "teaching/intro-analyse-multivariee.html#données",
     "title": "Introduction compréhensive à l’analyse statistique (linéaire) multivariée",
     "section": "Données",
-    "text": "Données\nLes jeux de données sont à télécharger ici."
+    "text": "Données\nLes jeux de données sont à télécharger ici.\n\n\n\n\n\n\nDernières mises à jour\n8 septembre 2026 — Corrections mineures du Chapitre 2.\n7 septembre 2026 — Mise en ligne initiale du cours (Chapitres 1 et 2)."
   },
   {
     "objectID": "index.html",
