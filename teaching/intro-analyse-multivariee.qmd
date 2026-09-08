@@ -3,6 +3,7 @@ title: "Introduction compréhensive à l'analyse statistique (linéaire) multiva
 ---
 
 
+
 ## Présentation
 
 Ce cours est à destination des étudiant.e.s en 2ème année (spécialité Agronomie et Agroalimentaire) à l'Institut Agro Dijon. Il vise à introduire les principales méthodes d'analyse statistique linéaire : Régression linéaire (~15h) et Réduction de dimension (~15h).
@@ -12,9 +13,17 @@ Ce cours est très inspiré:
 - du cours de Sophie Donnet sur le [Modèle linéaire gaussien](https://sophiedonnet.github.io/linearmodel.html) ;
 - de la partie ACP du cours de Julien Chiquet sur la [Réduction de dimension](https://jchiquet.github.io/teaching/) ; et
 - du cours de François Husson d'[Analyse de données](https://husson.github.io/MOOC_AnaDo/index.html).
+- Régression avec R, 3e édition de Pierre-André Cornillon, Nicolas Hengartner, 
+Eric Matzner-Lober et Laurent Rouvière.
 
 
 ## Supports de cours
+
+Vous pouvez retrouvez ci-dessous les supports de cours, ainsi que les fichiers
+`.Rmd` utilisés pour le cours et les TDs. 
+Ils sont susceptibles d'être modifiés (à la marge). Assurez-vous d'avoir des
+versions suffisament récente.
+
 
 - Chapitre 1 - [Introduction](../downloads/intro-analyse-multivariee/chap1_Intro.pdf)
 - Chapitre 2 - [Régression linéaire multiple](../downloads/intro-analyse-multivariee/chap2_RegMultiple.pdf) (<a href="../downloads/intro-analyse-multivariee/Chapitre2_cours_TD.zip" download>.Rmd</a> du chapitre)
@@ -36,3 +45,14 @@ Ce cours est très inspiré:
 ## Données
 
 Les jeux de données sont à télécharger [ici](../downloads/intro-analyse-multivariee/Data.zip).
+
+
+
+
+::: {.callout-note collapse="true" appearance="simple"}
+*Dernières mises à jour*
+
+**8 septembre 2026** — Corrections mineures du Chapitre 2.
+
+**7 septembre 2026** — Mise en ligne initiale du cours (Chapitres 1 et 2).
+:::
