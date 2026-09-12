@@ -21,9 +21,21 @@ Pour insérer un nouveau cours
 ```{=html}
 <div class="course-grid">
 
-<a class="course-card" href="teaching/intro-analyse-multivariee.html">
+<a class="course-card" href="teaching/intro-analyse-multivariee/index.qmd">
   <h3>Introduction (compréhensive) à l'analyse statistique (linéaire) multivariée</h3>
   <p>Régression linéaire &amp Réduction de dimension</p>
+</a>
+
+</div>
+```
+
+
+```{=html}
+<div class="course-grid">
+
+<a class="course-card" href="teaching/arbreForet/index.qmd">
+  <h3>Arbres de décision &amp Forêts aléatoires</h3>
+  <p>Introduction et application à l'ingénierie de l'élevage</p>
 </a>
 
 </div>

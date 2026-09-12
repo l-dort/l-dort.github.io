@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Teaching – Léo Dort</title>
+<title>Introduction aux arbres de décision et aux forêts aléatoires – Léo Dort</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,23 +26,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dfa48a90d809c806c7ea2d5aecd9fc66.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dfa48a90d809c806c7ea2d5aecd9fc66.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-25b519a974c8f09e23ba0353a7796a56.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -72,17 +72,18 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../teaching.css">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="floating nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Léo Dort</span>
     </a>
   </div>
@@ -93,23 +94,23 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./research.html"> 
+    <a class="nav-link" href="../../research.html"> 
 <span class="menu-text">Research</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./teaching.html" aria-current="page"> 
+    <a class="nav-link" href="../../teaching.html"> 
 <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./diffusion.html"> 
+    <a class="nav-link" href="../../diffusion.html"> 
 <span class="menu-text">Diffusion</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
 </ul>
@@ -122,16 +123,93 @@ ul.task-list li input[type="checkbox"] {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Contenu</h2>
+   
+  <ul>
+  <li><a href="#présentation" id="toc-présentation" class="nav-link active" data-scroll-target="#présentation">Présentation</a></li>
+  <li><a href="#programme" id="toc-programme" class="nav-link" data-scroll-target="#programme">Programme</a></li>
+  <li><a href="#données" id="toc-données" class="nav-link" data-scroll-target="#données">Données</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
+<div class="chapter-nav">
+  <div class="chapter-links" id="chapterLinks">
+    <a href="index.html">Présentation</a>
+    <a href="Lecture1_arbredecision.html">Arbres de décision</a>
+    <a href="Lecture2_foretalea.html">Forêts aléatoires</a>
+  </div>
+
+<button class="chapters-toggle" id="chaptersToggle" style="display:none;">☰ Chapitres</button>
+
+  <div class="chapter-dropdown" id="chapterDropdown"></div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const header = document.querySelector("#quarto-header");
+  const nav = document.querySelector(".chapter-nav");
+  const linksContainer = document.getElementById("chapterLinks");
+  const toggleBtn = document.getElementById("chaptersToggle");
+  const dropdown = document.getElementById("chapterDropdown");
+
+  if (!nav || !linksContainer || !toggleBtn || !dropdown) return;
+
+  dropdown.innerHTML = linksContainer.innerHTML;
+
+  function syncPosition() {
+    if (!header) return;
+    nav.style.top = header.classList.contains("headroom--unpinned") ? "0px" : "80px";
+  }
+  if (header) {
+    new MutationObserver(syncPosition).observe(header, { attributes: true, attributeFilter: ["class"] });
+    syncPosition();
+  }
+
+  function setTotalOffset() {
+    const h = (header ? header.offsetHeight : 0) + nav.offsetHeight;
+    document.documentElement.style.setProperty('--total-header-height', h + 'px');
+  }
+
+  function checkOverflow() {
+    linksContainer.style.display = "flex";
+    toggleBtn.style.display = "none";
+
+    const overflowing = linksContainer.scrollWidth > linksContainer.clientWidth + 1;
+
+    if (overflowing) {
+      linksContainer.style.display = "none";
+      toggleBtn.style.display = "flex";
+    }
+    setTotalOffset();
+  }
+
+  checkOverflow();
+  window.addEventListener("resize", checkOverflow);
+
+  toggleBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    dropdown.classList.toggle("open");
+  });
+  document.addEventListener("click", function (e) {
+    if (!toggleBtn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.remove("open");
+    }
+  });
+});
+</script>
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Teaching</h1>
+<h1 class="title">Introduction aux arbres de décision et aux forêts aléatoires</h1>
 </div>
 
 
@@ -148,37 +226,36 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Most of the lectures given are in french.</p>
-<!-- 
-Pour insérer un nouveau cours
-
-<div class="course-grid">
-
-<a class="course-card" href="teaching/nom-du-cours/nom-du-cours.html">
-  <h3>Nom du cours</h3>
-  <p>Niveau - Courte description du contenu</p>
-</a>
-
+<section id="présentation" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="présentation">Présentation</h2>
+<p>Ce cours est à destination des étudiant.e.s en 3ème année de la dominante <em>Ingénierie de l’Élevage</em> de la spécialité Agronomie à l’Institut Agro Dijon. L’objectif de ce cours de 7h est de montrer d’introduire les arbres binaires et les forêts aléatoires dans un contexte agronomique lié à des problématiques d’élevage. Ce cours est un prolongement naturel du cours de 2e année introduisant les analyses statistiques linéaires multiples telles que la régression linéaire.</p>
+<p>Toutes les analyses statistiques seront effectuées avec le logiciel <code>R</code> et son interface Rstudio.</p>
+</section>
+<section id="programme" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="programme">Programme</h2>
+<p>Vous pouvez retrouver ci-dessous les supports de cours, ainsi que les fichiers <code>.Rmd</code> utilisés pour le cours et les TDs. Ils sont susceptibles d’être modifiés (à la marge). Assurez-vous d’avoir des versions suffisament récentes.</p>
+<ul>
+<li><p>Chapitre 1 : Arbres de décisions</p></li>
+<li><p>Chapitre 2 : Forêts aléatoires</p></li>
+</ul>
+</section>
+<section id="données" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="données">Données</h2>
+<p>Les jeux de données seront bientôt disponibles <!--sont à télécharger [ici](../downloads/intro-analyse-multivariee/Data.zip).--></p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
--->
-<div class="course-grid">
-
-<a class="course-card" href="./teaching/intro-analyse-multivariee/index.html">
-  <h3 class="anchored">Introduction (compréhensive) à l'analyse statistique (linéaire) multivariée</h3>
-  <p>Régression linéaire &amp; Réduction de dimension</p>
-</a>
-
+<div class="callout-body-container">
+<p><em>Dernières mises à jour</em></p>
+<p><strong>11 septembre 2026</strong> - Création de la page du cours.</p>
 </div>
-<div class="course-grid">
-
-<a class="course-card" href="./teaching/arbreForet/index.html">
-  <h3 class="anchored">Arbres de décision &amp; Forêts aléatoires</h3>
-  <p>Introduction et application à l'ingénierie de l'élevage</p>
-</a>
-
+</div>
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

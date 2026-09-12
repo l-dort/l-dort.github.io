@@ -1,0 +1,8 @@
+---
+title: "Forêts aléatoires"
+---
+
+
+::: {.callout-note collapse="true" appearance="simple"}
+Bientôt disponible.
+:::

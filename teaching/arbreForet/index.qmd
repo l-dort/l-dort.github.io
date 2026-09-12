@@ -1,0 +1,42 @@
+---
+title: "Introduction aux arbres de décision et aux forêts aléatoires"
+---
+
+
+## Présentation {.unnumbered}
+
+Ce cours est à destination des étudiant.e.s en 3ème année de la dominante 
+*Ingénierie de l'Élevage* de la spécialité Agronomie à l'Institut Agro Dijon.
+L'objectif de ce cours de 7h est de montrer d'introduire les arbres binaires 
+et les forêts aléatoires dans un contexte agronomique lié à des problématiques
+d'élevage. Ce cours est un prolongement naturel du cours de 2e année
+introduisant les analyses statistiques linéaires multiples telles que la
+régression linéaire.
+
+Toutes les analyses statistiques seront effectuées avec le logiciel `R` et son
+interface Rstudio.
+
+
+## Programme {.unnumbered}
+
+Vous pouvez retrouver ci-dessous les supports de cours, ainsi que les fichiers
+`.Rmd` utilisés pour le cours et les TDs. 
+Ils sont susceptibles d'être modifiés (à la marge). Assurez-vous d'avoir des
+versions suffisament récentes.
+
+- Chapitre 1 : Arbres de décisions
+
+- Chapitre 2 : Forêts aléatoires
+
+
+## Données {.unnumbered}
+
+Les jeux de données seront bientôt disponibles <!--sont à télécharger [ici](../downloads/intro-analyse-multivariee/Data.zip).-->
+
+
+
+::: {.callout-note collapse="true" appearance="simple"}
+*Dernières mises à jour*
+
+**11 septembre 2026** - Création de la page du cours.
+:::

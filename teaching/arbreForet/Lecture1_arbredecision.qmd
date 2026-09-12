@@ -1,0 +1,52 @@
+---
+title: "Arbres de décision"
+---
+
+
+::: {.callout-note collapse="true" appearance="simple"}
+Bientôt disponible.
+:::
+
+
+
+<!-- ```{r setup, include=FALSE} -->
+<!-- knitr::opts_chunk$set( -->
+<!--   echo = TRUE,  -->
+<!--   warning = FALSE,  -->
+<!--   message = FALSE, -->
+<!--   rows.print = 5) -->
+<!-- ``` -->
+
+<!-- Nous débutons par l'installation (si nécessaire) et le chargement de différentes -->
+<!-- librairies pour la manipulation, la représentation, l'analyse statistique par  -->
+<!-- arbres binaires et forêts aléatoires. -->
+
+<!-- ```{r packages} -->
+<!-- if(!require(dplyr)) install.packages("dyplr") -->
+<!-- if(!require(ggplot2)) install.packages("ggplot2") -->
+<!-- if(!require(rpart)) install.packages("rpart") -->
+<!-- if(!require(rpart.plot)) install.packages("rpart.plot") -->
+<!-- if(!require(randomForest)) install.packages("randomForest") -->
+
+<!-- library(dplyr)        # pour la manipulation de données -->
+<!-- library(ggplot2)      # pour les figures -->
+<!-- library(rpart)        # pour les partitions par arbre binaire -->
+<!-- library(rpart.plot)   # pour les figures de partition par arbre binaire -->
+<!-- library(randomForest) # pour les Forets aleatoires -->
+<!-- ``` -->
+
+
+
+<!-- # Introduction -->
+
+
+
+<!-- # Limites du modèle linéaire classique -->
+
+<!-- # Indice de Gini &amp Entropie -->
+
+<!-- # Deux types d'arbres -->
+
+<!-- ## Arbres de classification -->
+
+<!-- ## Arbres de régression -->

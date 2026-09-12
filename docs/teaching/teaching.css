@@ -1,0 +1,200 @@
+/*  MASQUER LA NAVBAR PAR DÉFAUT DE QUARTO  */
+header.quarto-title-banner,
+navbar {
+  display: none !important;
+}
+
+
+/*  BARRE PRINCIPALE (FIXÉE EN HAUT)  */
+#quarto-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px; 
+  z-index: 10000;
+  background-color: #5c7a63; /*#2d6a4f;*/ 
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 28px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+#quarto-header img {
+  height: 40px;
+  width: auto;
+}
+
+#quarto-header .header-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+
+/*  BARRE DES CHAPITRES  */
+.chapter-nav {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  z-index: 9999;
+  background-color: #eef3ef;
+  padding: 0px 28px;
+  border-bottom: 1px solid #d5e0d8;
+  box-sizing: border-box;
+  transition: top 0.25s ease; 
+  display: flex;
+  align-items: center;
+  /*flex-wrap: wrap;*/
+}
+
+.chapter-links {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.chapter-nav a {
+  color: #1b4332; /*#3f6650;*/
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+}
+
+.chapter-nav a:hover {
+  background-color: #d5e0d8;
+}
+
+.chapters-toggle {
+  /*display: none;*/
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid #d5e0d8;
+  border-radius: 6px;
+  color: #1b4332;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.chapter-dropdown {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  right: 28px;
+  margin-top: 6px;
+  background-color: #eef3ef;
+  border: 1px solid #d5e0d8;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  z-index: 10000;
+}
+
+.chapter-dropdown.open {
+  display: flex;
+}
+
+.chapter-dropdown a {
+  padding: 8px 12px;
+}
+
+@media (max-width: 500px) {
+  .chapter-links {
+    display: none;
+  }
+  .chapters-toggle {
+    display: flex;
+  }
+}
+
+
+/* PLACEMENT DU TOC */
+:root {
+  --content-offset: 30px;
+}
+
+#title-block-header,
+#quarto-content {
+  padding-top: var(--content-offset) !important;
+}
+
+#TOC,
+#quarto-margin-sidebar,
+#quarto-sidebar-toc-left {
+  top: var(--content-offset) !important;
+}
+
+
+/*  ESPACEMENT POUR LE CONTENU  */
+html {
+  scroll-padding-top: var(--content-offset) !important; /*160px !important; /* Évite le chevauchement avec les ancres */
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  padding-top: 0px;
+}
+
+
+/*  TITRES  */
+h1 {
+  color: #1b4332 /*#3f6650;*/
+  margin-top: 0;       /* Supprime la marge du haut (sinon espace sous .chapter-nav) */
+  margin-bottom: 16px;
+}
+
+h2 {
+  color: #2d6a4f; /*#4f7860;*/
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+h3 {
+  color: #40916c; /*#5f8a70;*/
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+h4 {
+  color: #52b788; /*#6f9c80;*/
+  margin-top: 16px;
+  margin-bottom: 6px;
+}
+
+h5 {
+  color: #74c69d; /*#7fae90;*/
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+
+/*  RESPONSIVE  */
+@media (max-width: 768px) {
+  #quarto-header {
+    padding: 0 16px;
+    gap: 10px;
+  }
+  .chapter-nav {
+    padding: 8px 16px;
+    gap: 8px;
+  }
+}

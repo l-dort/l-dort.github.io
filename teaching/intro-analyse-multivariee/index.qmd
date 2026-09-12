@@ -3,12 +3,11 @@ title: "Introduction compréhensive à l'analyse statistique (linéaire) multiva
 ---
 
 
-
-## Présentation
+## Présentation {.unnumbered}
 
 Ce cours est à destination des étudiant.e.s en 2ème année (spécialité Agronomie et Agroalimentaire) à l'Institut Agro Dijon. Il vise à introduire les principales méthodes d'analyse statistique linéaire : Régression linéaire (~15h) et Réduction de dimension (~15h).
 
-Ce cours est très inspiré:
+Ce cours est très inspiré (liste non exhaustive) :
 
 - du cours de Sophie Donnet sur le [Modèle linéaire gaussien](https://sophiedonnet.github.io/linearmodel.html) ;
 - de la partie ACP du cours de Julien Chiquet sur la [Réduction de dimension](https://jchiquet.github.io/teaching/) ; et
@@ -17,34 +16,36 @@ Ce cours est très inspiré:
 Eric Matzner-Lober et Laurent Rouvière.
 
 
-## Supports de cours
+## Programme {.unnumbered}
 
-Vous pouvez retrouvez ci-dessous les supports de cours, ainsi que les fichiers
+Vous pouvez retrouver ci-dessous les supports de cours, ainsi que les fichiers
 `.Rmd` utilisés pour le cours et les TDs. 
 Ils sont susceptibles d'être modifiés (à la marge). Assurez-vous d'avoir des
-versions suffisament récente.
+versions suffisament récentes.
 
 
-- Chapitre 1 - [Introduction](../downloads/intro-analyse-multivariee/chap1_Intro.pdf)
-- Chapitre 2 - [Régression linéaire multiple](../downloads/intro-analyse-multivariee/chap2_RegMultiple.pdf) (<a href="../downloads/intro-analyse-multivariee/Chapitre2_cours_TD.zip" download>.Rmd</a> du chapitre)
+- Chapitre 0 - [Introduction](../../downloads/intro-analyse-multivariee/chap1_Intro.pdf)
+
+- Chapitre 1 - [Régression linéaire multiple](../../downloads/intro-analyse-multivariee/chap2_RegMultiple.pdf) (<a href="../../downloads/intro-analyse-multivariee/Chapitre2_cours_TD.zip" download>.Rmd</a> du chapitre)
   - TD 1 : Régression linéaire simple 
   - TD 2 : Régression linéaire multiple (Modèle)
   - TD 3 : Régression linéaire multiple (Inférence & Prédiction)
 
-- Chapitre 3 - Régression factorielle
+- Chapitre 2 - [Régression linéaire factorielle](../../downloads/intro-analyse-multivariee/chap3_RegFacto.pdf)
   - TD 4 : Analyse de variance à 2 facteurs
   - TD 5 : Analyse de la covariance
 
-- Chapitre 4 - Réduction (linéaire) de dimension
+- Chapitre 3 - Réduction (linéaire) de dimension
   - TD 6 : Analyse en composantes principales
   - TDs 7-8 : Analyse des correspondances, Analyse des correspondances multiples & Analyse factorielle des correspondances
   
-- Chapitre 5 - Introduction à la classification automatique non-supervisée
+- Chapitre 4 - Introduction à la classification automatique non-supervisée
   - TD 9 : Classification ascendante hiérarchique
 
-## Données
 
-Les jeux de données sont à télécharger [ici](../downloads/intro-analyse-multivariee/Data.zip).
+## Données {.unnumbered}
+
+Les jeux de données sont à télécharger [ici](../../downloads/intro-analyse-multivariee/Data.zip).
 
 
 
@@ -52,7 +53,11 @@ Les jeux de données sont à télécharger [ici](../downloads/intro-analyse-mult
 ::: {.callout-note collapse="true" appearance="simple"}
 *Dernières mises à jour*
 
-**8 septembre 2026** — Corrections mineures du Chapitre 2.
+**11 septembre 2026** -- TD 1 : précision exercice 1. ; Chapitre 3 : ajout du diaporama et de la page de cours.
 
-**7 septembre 2026** — Mise en ligne initiale du cours (Chapitres 1 et 2).
+**10 septembre 2026** -- Structure de la page internet.
+
+**8 septembre 2026** -- Chapitre 2 : corrections mineures.
+
+**7 septembre 2026** -- Mise en ligne initiale du cours (Chapitres 1 et 2).
 :::

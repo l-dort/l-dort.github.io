@@ -1,0 +1,21 @@
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-title: Contenu
+    toc-expand: true
+    number-sections: true
+    code-fold: true
+    code-summary: "Afficher le code"
+    css: teaching.css
+    grid:
+      sidebar-width: 280px
+      body-width: 750px
+      margin-width: 300px
+      gutter-width: 1.5em
+
+execute:
+  echo: false   # affichage du code
+  output: true  # affichage des résultats
+  eval: true    # évaluation du code
+  error: true   # génèration du document malgré une erreur de code

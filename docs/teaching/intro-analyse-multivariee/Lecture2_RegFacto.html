@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.29">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Régression linéaire factorielle – Léo Dort</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dfa48a90d809c806c7ea2d5aecd9fc66.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-25b519a974c8f09e23ba0353a7796a56.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../teaching.css">
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Léo Dort</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../research.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../diffusion.html"> 
+<span class="menu-text">Diffusion</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Contenu</h2>
+   
+  <ul>
+  <li><a href="#préliminaires" id="toc-préliminaires" class="nav-link active" data-scroll-target="#préliminaires">Préliminaires</a>
+  <ul class="collapse">
+  <li><a href="#chargement-des-packages" id="toc-chargement-des-packages" class="nav-link" data-scroll-target="#chargement-des-packages">Chargement des packages</a></li>
+  <li><a href="#contexte-description-des-données" id="toc-contexte-description-des-données" class="nav-link" data-scroll-target="#contexte-description-des-données">Contexte &amp; Description des données</a></li>
+  <li><a href="#importation-exploration-du-jeu-de-données" id="toc-importation-exploration-du-jeu-de-données" class="nav-link" data-scroll-target="#importation-exploration-du-jeu-de-données">Importation &amp; Exploration du jeu de données</a></li>
+  <li><a href="#problématiques" id="toc-problématiques" class="nav-link" data-scroll-target="#problématiques">Problématiques</a></li>
+  </ul></li>
+  <li><a href="#analyse-de-variance-à-un-facteur" id="toc-analyse-de-variance-à-un-facteur" class="nav-link" data-scroll-target="#analyse-de-variance-à-un-facteur"><span class="header-section-number">1</span> Analyse de variance à un facteur</a>
+  <ul class="collapse">
+  <li><a href="#premières-visualisations" id="toc-premières-visualisations" class="nav-link" data-scroll-target="#premières-visualisations"><span class="header-section-number">1.1</span> Premières visualisations</a></li>
+  <li><a href="#modélisation-du-problème-modèle-régulier" id="toc-modélisation-du-problème-modèle-régulier" class="nav-link" data-scroll-target="#modélisation-du-problème-modèle-régulier"><span class="header-section-number">1.2</span> Modélisation du problème &amp; Modèle régulier</a></li>
+  <li><a href="#modèle-singulier" id="toc-modèle-singulier" class="nav-link" data-scroll-target="#modèle-singulier"><span class="header-section-number">1.3</span> Modèle singulier</a>
+  <ul class="collapse">
+  <li><a href="#rendre-le-modèle-identifiable-en-le-contraignant" id="toc-rendre-le-modèle-identifiable-en-le-contraignant" class="nav-link" data-scroll-target="#rendre-le-modèle-identifiable-en-le-contraignant"><span class="header-section-number">1.3.1</span> Rendre le modèle identifiable en le contraignant</a></li>
+  <li><a href="#estimation-des-paramètres-du-modèle-singulier" id="toc-estimation-des-paramètres-du-modèle-singulier" class="nav-link" data-scroll-target="#estimation-des-paramètres-du-modèle-singulier"><span class="header-section-number">1.3.2</span> Estimation des paramètres du modèle singulier</a></li>
+  <li><a href="#analyses-numériques" id="toc-analyses-numériques" class="nav-link" data-scroll-target="#analyses-numériques"><span class="header-section-number">1.3.3</span> Analyses numériques</a></li>
+  </ul></li>
+  <li><a href="#validation-du-modèle-comparaison-de-traitements" id="toc-validation-du-modèle-comparaison-de-traitements" class="nav-link" data-scroll-target="#validation-du-modèle-comparaison-de-traitements"><span class="header-section-number">1.4</span> Validation du modèle &amp; Comparaison de traitements</a>
+  <ul class="collapse">
+  <li><a href="#analyse-des-résidus" id="toc-analyse-des-résidus" class="nav-link" data-scroll-target="#analyse-des-résidus"><span class="header-section-number">1.4.1</span> Analyse des résidus</a></li>
+  <li><a href="#tests-de-comparaison-multiple" id="toc-tests-de-comparaison-multiple" class="nav-link" data-scroll-target="#tests-de-comparaison-multiple"><span class="header-section-number">1.4.2</span> Tests de comparaison multiple</a></li>
+  </ul></li>
+  <li><a href="#remarque-sur-la-décomposition-de-variance" id="toc-remarque-sur-la-décomposition-de-variance" class="nav-link" data-scroll-target="#remarque-sur-la-décomposition-de-variance"><span class="header-section-number">1.5</span> Remarque sur la décomposition de variance</a></li>
+  </ul></li>
+  <li><a href="#analyse-de-variance-à-deux-facteurs" id="toc-analyse-de-variance-à-deux-facteurs" class="nav-link" data-scroll-target="#analyse-de-variance-à-deux-facteurs"><span class="header-section-number">2</span> Analyse de variance à deux facteurs</a>
+  <ul class="collapse">
+  <li><a href="#modèle-régulier-modèle-singulier" id="toc-modèle-régulier-modèle-singulier" class="nav-link" data-scroll-target="#modèle-régulier-modèle-singulier"><span class="header-section-number">2.1</span> Modèle régulier &amp; Modèle singulier</a>
+  <ul class="collapse">
+  <li><a href="#modèle-régulier" id="toc-modèle-régulier" class="nav-link" data-scroll-target="#modèle-régulier"><span class="header-section-number">2.1.1</span> Modèle régulier</a></li>
+  <li><a href="#modèle-singulier-1" id="toc-modèle-singulier-1" class="nav-link" data-scroll-target="#modèle-singulier-1"><span class="header-section-number">2.1.2</span> Modèle singulier</a></li>
+  <li><a href="#analyse-numérique" id="toc-analyse-numérique" class="nav-link" data-scroll-target="#analyse-numérique"><span class="header-section-number">2.1.3</span> Analyse numérique</a></li>
+  </ul></li>
+  <li><a href="#validation-du-modèle-tests-due-modèles" id="toc-validation-du-modèle-tests-due-modèles" class="nav-link" data-scroll-target="#validation-du-modèle-tests-due-modèles"><span class="header-section-number">2.2</span> Validation du modèle &amp; Tests due modèles</a>
+  <ul class="collapse">
+  <li><a href="#validation-du-modèle" id="toc-validation-du-modèle" class="nav-link" data-scroll-target="#validation-du-modèle"><span class="header-section-number">2.2.1</span> Validation du modèle</a></li>
+  </ul></li>
+  <li><a href="#test-de-pertinence-du-modèle" id="toc-test-de-pertinence-du-modèle" class="nav-link" data-scroll-target="#test-de-pertinence-du-modèle"><span class="header-section-number">2.3</span> Test de pertinence du modèle</a>
+  <ul class="collapse">
+  <li><a href="#tests-de-comparaison-de-modèles" id="toc-tests-de-comparaison-de-modèles" class="nav-link" data-scroll-target="#tests-de-comparaison-de-modèles"><span class="header-section-number">2.3.1</span> Tests de comparaison de modèles</a></li>
+  </ul></li>
+  <li><a href="#test-des-facteurs" id="toc-test-des-facteurs" class="nav-link" data-scroll-target="#test-des-facteurs"><span class="header-section-number">2.4</span> Test des facteurs</a></li>
+  <li><a href="#analyse-de-variance-à-trois-facteurs" id="toc-analyse-de-variance-à-trois-facteurs" class="nav-link" data-scroll-target="#analyse-de-variance-à-trois-facteurs"><span class="header-section-number">2.5</span> Analyse de variance à trois facteurs</a></li>
+  </ul></li>
+  <li><a href="#analyse-de-la-covariance" id="toc-analyse-de-la-covariance" class="nav-link" data-scroll-target="#analyse-de-la-covariance"><span class="header-section-number">3</span> Analyse de la covariance</a>
+  <ul class="collapse">
+  <li><a href="#modélisation" id="toc-modélisation" class="nav-link" data-scroll-target="#modélisation"><span class="header-section-number">3.1</span> Modélisation</a></li>
+  <li><a href="#modèle-singulier-2" id="toc-modèle-singulier-2" class="nav-link" data-scroll-target="#modèle-singulier-2"><span class="header-section-number">3.2</span> Modèle singulier</a></li>
+  <li><a href="#inférence" id="toc-inférence" class="nav-link" data-scroll-target="#inférence"><span class="header-section-number">3.3</span> Inférence</a>
+  <ul class="collapse">
+  <li><a href="#estimation-des-coefficients" id="toc-estimation-des-coefficients" class="nav-link" data-scroll-target="#estimation-des-coefficients"><span class="header-section-number">3.3.1</span> Estimation des coefficients</a></li>
+  <li><a href="#test-de-linteraction-ou-test-de-légalité-des-pentes" id="toc-test-de-linteraction-ou-test-de-légalité-des-pentes" class="nav-link" data-scroll-target="#test-de-linteraction-ou-test-de-légalité-des-pentes"><span class="header-section-number">3.3.2</span> Test de l’interaction ou test de l’égalité des pentes</a></li>
+  <li><a href="#test-de-leffet-du-facteur-après-ajustement-de-la-covariable" id="toc-test-de-leffet-du-facteur-après-ajustement-de-la-covariable" class="nav-link" data-scroll-target="#test-de-leffet-du-facteur-après-ajustement-de-la-covariable"><span class="header-section-number">3.3.3</span> Test de l’effet du facteur après ajustement de la covariable</a></li>
+  </ul></li>
+  <li><a href="#analyse-des-résidus-1" id="toc-analyse-des-résidus-1" class="nav-link" data-scroll-target="#analyse-des-résidus-1"><span class="header-section-number">3.4</span> Analyse des résidus</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<div class="chapter-nav">
+  <div class="chapter-links" id="chapterLinks">
+    <a href="index.html">Présentation</a>
+    <a href="Lecture1_RegMulti.html">Régression linéaire multiple</a>
+    <a href="Lecture2_RegFacto.html">Régression linéaire factorielle</a>
+    <a href="Lecture3_RedDim.html">Réduction de dimension</a>
+    <a href="Lecture4_ClassifNonSupervisee.html">Classification non-supervisée</a>
+  </div>
+
+<button class="chapters-toggle" id="chaptersToggle" style="display:none;">☰ Chapitres</button>
+
+  <div class="chapter-dropdown" id="chapterDropdown"></div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const header = document.querySelector("#quarto-header");
+  const nav = document.querySelector(".chapter-nav");
+  const linksContainer = document.getElementById("chapterLinks");
+  const toggleBtn = document.getElementById("chaptersToggle");
+  const dropdown = document.getElementById("chapterDropdown");
+
+  if (!nav || !linksContainer || !toggleBtn || !dropdown) return;
+
+  dropdown.innerHTML = linksContainer.innerHTML;
+
+  function syncPosition() {
+    if (!header) return;
+    nav.style.top = header.classList.contains("headroom--unpinned") ? "0px" : "80px";
+  }
+  if (header) {
+    new MutationObserver(syncPosition).observe(header, { attributes: true, attributeFilter: ["class"] });
+    syncPosition();
+  }
+
+  function setTotalOffset() {
+    const h = (header ? header.offsetHeight : 0) + nav.offsetHeight;
+    document.documentElement.style.setProperty('--total-header-height', h + 'px');
+  }
+
+  function checkOverflow() {
+    linksContainer.style.display = "flex";
+    toggleBtn.style.display = "none";
+
+    const overflowing = linksContainer.scrollWidth > linksContainer.clientWidth + 1;
+
+    if (overflowing) {
+      linksContainer.style.display = "none";
+      toggleBtn.style.display = "flex";
+    }
+    setTotalOffset();
+  }
+
+  checkOverflow();
+  window.addEventListener("resize", checkOverflow);
+
+  toggleBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    dropdown.classList.toggle("open");
+  });
+  document.addEventListener("click", function (e) {
+    if (!toggleBtn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.remove("open");
+    }
+  });
+});
+</script>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Régression linéaire factorielle</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Ce chapitre est très largement inspiré, et pour tout une partie reprise du cours <em>Modèle linéaire gaussien</em> de Sophie Donnet. Il peut être retrouvé sur son <a href="https://sophiedonnet.github.io/linearmodel.html">site internet</a>.</p>
+<section id="préliminaires" class="level1 unnumbered">
+<h1 class="unnumbered">Préliminaires</h1>
+<section id="chargement-des-packages" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="chargement-des-packages">Chargement des packages</h2>
+<p>Nous débutons en chargeant un ensemble de paquets pour la manipulation de données et des représentations graphiques.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)   <span class="co"># manipulation et visualisation avancees de donnees</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)       <span class="co"># Export et format de notebook R </span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)    <span class="co"># Graphiques de matrices</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)      <span class="co"># Extension de ggplot2 facile d'utilisation</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>()) <span class="co"># theme noir et blanc par defaut de ggplot2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="contexte-description-des-données" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="contexte-description-des-données">Contexte &amp; Description des données</h2>
+<p>Nous reprenons l’exemple du chapitre précédent pour lequel nous rappelons le contexte.</p>
+<p>Le papillon Apollon de l’espèce <em>Parnassius apollo</em> est une espèce emblématique des milieux montagnards, inscrite sur la liste rouge des espèces menacées en France avec le statut <strong>vulnérable</strong>. Il affectionne les pelouses rocailleuses, éboulis et prairies sèches d’altitude, où pousse sa plante-hôte, l’orpin <em>Sedum sp.</em>, dont se nourrit exclusivement sa chenille. L’Apollon est particulièrement sensible aux conditions microclimatiques locales (ensolleillement, humidité du sol, <em>etc</em>.) ainsi qu’aux pratiques de gestion du milieu notamment le pastoralisme, qui influence l’ouverture des pelouses et donc la disponibilité en plante-hôte.</p>
+<p>Dans le cadre d’un suivi de population mené dans le <em>Parc national de la Vanoise</em>, 100 sites d’observations ont été échantillonnés le long de transects, répartis sur quatre secteurs du massif. Pour chaque site, plusieurs variables environnementales ont été mesurées, ainsi que l’abondance (logarithmique) du papillon.</p>
+<p>Le jeu de données <code>apollo</code> (au format <code>.Rdata</code>) possède 100 lignes et 6 colonnes, dont :</p>
+<ul>
+<li><em>humidity_index</em> : indice d’humidité du sol local du site. Des valeurs faibles correspondent à des milieux secs, favorables à l’espèce ; des valeurs élevées à des milieux humides, généralement moins favorables ;</li>
+<li><em>altitude_index</em> : indice d’altitude du site d’observation ;</li>
+<li><em>orientation_index</em> : indice d’expositation du site. Les valeurs élevées correspondent à des versants bien exposés et ensolleilés ;</li>
+<li><em>logabundance</em> : logarithme de l’abondance du papillon Apollon dénombrée par transect sur chaque type ;</li>
+<li><em>sector</em> : secteur géographique du site d’observation au sein du Parc national de la Vanoise ;</li>
+<li><em>grazing</em> : mode de gestion du site : <em>grazed</em> pour un site pâturé, alpage exploité ; ou <em>ungrazed</em> pour un site non-paturé, en évolution naturelle.</li>
+</ul>
+<p>Ce jeu de données permet d’étudier comment les conditions environnementales et les pratiques de gestion influencent l’abondance du papillon Apollon dans le Parc national de la Vanoise, dans une perspective de conservation d’une espèce menacée.</p>
+</section>
+<section id="importation-exploration-du-jeu-de-données" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="importation-exploration-du-jeu-de-données">Importation &amp; Exploration du jeu de données</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a modifier selon l'emplacement du repertoire de travail</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">'Data/apollo.Rdata'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(apollo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> humidity_index   altitude_index orientation_index      logabondance.V1     
+ Min.   : 7.805   Min.   :1380   Min.   :-2.7783   Min.   :-0.878076002828  
+ 1st Qu.:10.731   1st Qu.:1796   1st Qu.: 0.3390   1st Qu.: 2.997486496010  
+ Median :11.195   Median :2053   Median : 0.8655   Median : 4.548821705460  
+ Mean   :11.236   Mean   :2102   Mean   : 0.8632   Mean   : 4.488913669260  
+ 3rd Qu.:11.937   3rd Qu.:2349   3rd Qu.: 1.4746   3rd Qu.: 5.879824885520  
+ Max.   :13.350   Max.   :3073   Max.   : 4.2412   Max.   : 9.264007023730  
+             sector       grazing  
+ HauteMaurienne :28   ungrazed:54  
+ HauteTarentaise:24   grazed  :46  
+ Pralognan      :26                
+ Champagny      :22                
+                                   
+                                   </code></pre>
+</div>
+</div>
+</section>
+<section id="problématiques" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="problématiques">Problématiques</h2>
+<p>Dans le chapitre précédent, les variables explicatives étaient quantitatives continues. Dans ce chapitre, nous souhaitons intégrer au modèle linéaires des variables explicatives <strong>qualitatives</strong>.</p>
+<p>Nous allons d’abord étudier le cas d’une variable explicative qualitative seule : il s’agit de l’<strong>analyse de variance à un facteur</strong>. Nous verrons ensuite le cas de <strong>deux facteurs</strong>. Enfin, nous terminerons par le cas d’un facteur associé à une variable quantitative. Dans ce dernier cas “mixte”, on parle d’<strong>analyse de la covariance</strong> ou ANCOVA (<em>ANalysis of COVAriance</em>).</p>
+</section>
+</section>
+<section id="analyse-de-variance-à-un-facteur" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Analyse de variance à un facteur</h1>
+<section id="premières-visualisations" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="premières-visualisations"><span class="header-section-number">1.1</span> Premières visualisations</h2>
+<p>Nous souhaitons savoir si l’abondance du papillon Apollon est influencé par le secteur. La variable <code>sector</code> possède 4 modalités : Champagny en Vanoise, Haute Maurienne, Haute Tarentaise et Pralognan en Vanoise.</p>
+<p>Avant de réaliser un quelconque test statistique, adonnons nous à une représentation graphique permettant de comparer l’abondance du papillon Apollon en fonction du secteur d’observation. Deux représentations graphiques pertinentes sont la boîte à moustache (<em>boxplot</em>) et la représentation en violon (<em>violin plot</em>).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(apollo) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> sector,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> logabondance,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> sector</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">color =</span> sector)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Secteur"</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Logarithme de l'abondance"</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                              <span class="at">color =</span> <span class="st">"grey40"</span>),</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lecture2_RegFacto_files/figure-html/boxplot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Il semble que la variable <code>sector</code> influence l’abondance du papillon.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(apollo) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> sector,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> logabondance,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> sector</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">alpha =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">color =</span> sector)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun =</span> mean,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">geom =</span> <span class="st">"point"</span>,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">18</span>,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">3</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Secteur"</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Logarithme de l'abondance"</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>                              <span class="at">color =</span> <span class="st">"grey40"</span>),</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lecture2_RegFacto_files/figure-html/violin_plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Bien qu’un <code>violin plot</code> donne une idée de la répartition des données, dans notre cas, il donne moins d’indication sur l’influence de la variable <code>sector</code> (ce qui ne signifie pas qu’elle n’en a pas).</p>
+<p>Pour préciser s’il existe (d’un point de vue statistique) une influence du secteur sur l’abondance du papillon Apollon, nous allons réaliser une analyse de variance à un facteur, qui est la variable <code>sector</code>.</p>
+</section>
+<section id="modélisation-du-problème-modèle-régulier" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="modélisation-du-problème-modèle-régulier"><span class="header-section-number">1.2</span> Modélisation du problème &amp; Modèle régulier</h2>
+<p>Nous supposons que la variable explicative <span class="math inline">\(X\)</span> est qualitative et qu’elle possède <span class="math inline">\(I\)</span> modalités. Chaque modalité <span class="math inline">\(i\)</span> est prise par <span class="math inline">\(n_i\)</span> observations (de telle sorte que <span class="math inline">\(\sum_{i=1}^I n_i = n\)</span>). Par exemple, si nous prenons l’ordre alphabétique (<code>Champagny</code>, <code>HauteMaurienne</code> <code>HauteTarentaise</code> et <code>Pralognan</code>), nous avons : <span class="math display">\[ n_1 = 22, \quad n_2 = 28, \quad n_3 =24 \quad \text{et} \quad n_4 = 26. \]</span> Enfin pour tout <span class="math inline">\(i\in\{1,\dots,I\}\)</span> et tout <span class="math inline">\(j\in\{1,\dots, n_i\}\)</span>, <span class="math inline">\(y_{i,j}\)</span> représente la valeur de la variable à expliquer pour le <span class="math inline">\(j\)</span>-ème individu ayant pris la <span class="math inline">\(i\)</span>-ème modalité.</p>
+<p>On suppose que les <span class="math inline">\(y_{i,j}\)</span> sont la réalisation de variables aléatoires <em>i.i.d.</em> <span class="math inline">\(\mathbf{Y}_{i,j}\)</span>. Nous cherchons à savoir si le facteur <span class="math inline">\(X\)</span> fait varier la variable <span class="math inline">\(\mathbf{Y}\)</span>. Le modèle considéré ici est le suivant : <span class="math display">\[ \mathbf{Y}_{i,j} \:\: = \:\: \mu_i \: + \: \varepsilon_{i} \, , \qquad \forall i\in\{1,\dots,I\} \, , \: \forall j\in\{1,\dots, n_i\} \, , \]</span> où</p>
+<ul>
+<li>les variables aléatoires <span class="math inline">\(\varepsilon_i\)</span>, appelées <em>erreurs</em>, sont des variables aléatoires <em>i.i.d.</em> de loi <span class="math inline">\(\mathcal{N}(0, \, \sigma^2)\)</span> de variance <span class="math inline">\(\sigma^2\)</span> inconnue ; et</li>
+<li>les paramètres <span class="math inline">\(\mu_i\)</span> sont inconnues et fixes (déterministes).</li>
+</ul>
+<p>Comme au chapitre précédent, il existe une écriture matricielle de ce modèle. Posons <span class="math display">\[ X^r \:\: = \:\: \begin{pmatrix} 1 &amp; &amp; &amp; &amp; \\ \vdots &amp; &amp; &amp; &amp; \\ 1 &amp; &amp; &amp; &amp; \\&amp; 1 &amp; &amp; &amp; \\ &amp; \vdots &amp; &amp; &amp; \\ &amp; 1 &amp; &amp; &amp; \\ &amp; &amp; \ddots &amp; &amp; \\ &amp; &amp; &amp; \ddots &amp; \\ &amp; &amp; &amp; &amp; 1 \\ &amp; &amp; &amp; &amp; \vdots \\ &amp; &amp; &amp; &amp; 1 \end{pmatrix} \, , \qquad \mu \:\: = \:\: \begin{pmatrix}\mu_1 \\ \mu_2 \\ \vdots \\
+\mu_{I} \end{pmatrix} \qquad \text{et} \qquad \varepsilon \:\: = \:\: \begin{pmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \vdots \\ \varepsilon_n \end{pmatrix} \, . \]</span> Alors, le modèle se réécrit matriciellement sous la forme : <span class="math display">\[ \mathbf{Y} \:\: = \:\: X^r \, \mu \: + \: \varepsilon \, , \quad \text{où } \varepsilon\sim\mathcal{N}(0, \, \sigma^2 I_n) \, . \]</span></p>
+<p>Le modèle est dit <strong>régulier</strong> car la matrice de <em>design</em> <span class="math inline">\(X^r\)</span> est de rang plein !</p>
+<p>Dans ce modèle, chaque paramètre <span class="math inline">\(\mu_i\)</span> est estimé naturellement par la moyenne empirique des observations dans la modalité <span class="math inline">\(i\)</span> : <span class="math display">\[ \hat{\mu}_i \:\: = \:\: \frac{1}{n_i} \sum_{j=1}^{n_i} y_{i,j} \:\: = \:\: \overline{y}_{i,\cdot} \, . \]</span> Les <strong>valeurs ajustées</strong> <span class="math inline">\(\hat{y}_{i,j}\)</span> sont alors données par les estimations précédentes : <span class="math display">\[ \hat{y}_{i,j} \:\: = \:\: \hat{\mu}_i \, . \]</span> De plus, la variance inconnue <span class="math inline">\(\sigma^2\)</span> est elle aussi naturellement estimée (sans biais) par : <span class="math display">\[ \hat{\sigma}^2 \:\: = \:\: \frac{1}{n-I} \sum_{i,j} \big( y_{i,j} \: - \: \hat{\mu}_i \big)^2 \, . \]</span></p>
+<p>Comme pour les modèles de régression linéaire simple et multiple, ce modèle s’ajuste à l’aide de la fonction <code>lm()</code></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> logabondance <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> sector,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> apollo)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = logabondance ~ -1 + sector, data = apollo)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.6217 -1.1564  0.0049  1.1978  3.5236 
+
+Coefficients:
+                      Estimate Std. Error t value Pr(&gt;|t|)    
+sectorHauteMaurienne    5.7404     0.3131  18.334  &lt; 2e-16 ***
+sectorHauteTarentaise   5.1625     0.3382  15.265  &lt; 2e-16 ***
+sectorPralognan         2.2450     0.3249   6.909 5.32e-10 ***
+sectorChampagny         4.8132     0.3532  13.627  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.657 on 96 degrees of freedom
+Multiple R-squared:  0.8932,    Adjusted R-squared:  0.8887 
+F-statistic: 200.6 on 4 and 96 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>La sortie est peu ou prou similaire à la sortie d’une régression linéaire multiple. Nous retrouvons :</p>
+<ul>
+<li>un tableau <code>Residuals:</code> donnant un court résumé descriptif des résidus ;</li>
+<li>un tableau <code>Coefficient:</code> donnant une estimation des paramètres <span class="math inline">\(\mu_i\)</span> (colonne <code>Estimate</code>), l’écart-type associé à l’estimation (colonne <code>Std. Error</code>), la valeur de la statistique de test de pertinence de la modalité (colonne <code>t value</code>) et la <span class="math inline">\(p\)</span>-valeur du test (colonne <code>Pr(&gt;|t|)</code>) ;</li>
+<li>une estimation de l’écart-type inconnu <span class="math inline">\(\sigma^2\)</span> (ligne <code>Residuals standard error</code>) ;</li>
+<li>les coefficients de détermination (ligne <code>Multiple R-squared:...</code>) ; et</li>
+<li>le résumé du test de Fisher global du modèle (dernière ligne <code>F-statistic:...</code>).</li>
+</ul>
+<p>Le test global de Fisher n’a que peu d’intérêt ici. En effet, il teste : <span class="math display">\[ (\mathcal{H}_0): \mu_1 =\mu_2=\mu_3=\mu_4=0 \qquad \text{contre} \qquad (\mathcal{H}_1): \text{"l'un des }\mu_i\text{ n'est pas nul}" \, . \]</span> Une question plus pertinente est alors : <em>la localité du site d’observation</em> <em>influence-t-elle l’abondance du papillon Apollon ?</em></p>
+<p>Cette question se traduit par le test suivant : <span class="math display">\[ (\mathcal{H}_0): \mu_1 =\mu_2=\mu_3=\mu_4 \qquad \text{contre} \qquad (\mathcal{H}_1): \text{"les }\mu_i\text{ ne sont pas tous égaux}" \, . \]</span> Pour répondre à cette question, nous introduisons un effet moyen <span class="math inline">\(\mu\)</span>, c’est-à-dire dans notre contexte, une ordonnée à l’origine.</p>
+</section>
+<section id="modèle-singulier" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="modèle-singulier"><span class="header-section-number">1.3</span> Modèle singulier</h2>
+<p>Introduisons un effet moyen <span class="math inline">\(\mu\)</span> dans le modèle précédent. Supposons que les variables <span class="math inline">\(y_{i,j}\)</span> sont la réalisation de variables aléatoires <span class="math inline">\(\mathbf{Y}_{i,j}\)</span>, avec : <span class="math display">\[ \mathbf{Y}_{i,j} \:\: = \:\: \mu \: + \: \alpha_i \: + \: \varepsilon_{i,j} \, , \qquad \forall i\in\{1,\dots, I\} \, , \, \forall j\in\{1,\dots,n_i\} \, . \]</span> Pour chaque modalité <span class="math inline">\(i\)</span>, <span class="math inline">\(\alpha_i\)</span> est l’effet de la <span class="math inline">\(i\)</span>-ème modalité sur la variable à expliquer <span class="math inline">\(y\)</span> par rapport à l’effet moyen, ou autrement écrit : <span class="math display">\[ \mu_i \:\: = \:\: \mu \: + \: \alpha_i \quad \text{qui se lit aussi } \alpha_i \:\: = \:\: \mu_i \: - \: \mu \, . \]</span> Le paramètre <span class="math inline">\(\mu\)</span> est vu comme un niveau de référence et <span class="math inline">\(\alpha_i\)</span> s’entend alors comme une différence par rapport à ce niveau de référence.</p>
+<p>Il y a donc <span class="math inline">\(I+1\)</span> paramètres à estimer <span class="math inline">\(\mu\)</span> et les paramètres <span class="math inline">\(\alpha_i\)</span>. La matrice de design <span class="math inline">\(X^s\)</span> est alors <span class="math display">\[ X^s \:\: = \:\: \begin{pmatrix} 1 &amp; 1 &amp; &amp; &amp; \\ \vdots &amp; &amp; &amp; &amp; \\ 1 &amp; 1 &amp; &amp; &amp; \\ 1 &amp; &amp; 1 &amp; &amp; \\ \vdots &amp; &amp; \vdots &amp; &amp; \\ 1 &amp; &amp; 1 &amp; &amp; \\ \vdots &amp; &amp; &amp; \ddots &amp; \\1 &amp; &amp; &amp; &amp; 1 \\ \vdots &amp; &amp; &amp; &amp; \vdots \\ 1 &amp; &amp; &amp; &amp; 1 \\ \end{pmatrix} \, . \]</span> Contrairement au modèle précédent, cette nouvelle matrice de design <span class="math inline">\(X^s\)</span> n’est plus de rang plein ; ce qui pose des problèmes d’identifiabilité pour l’estimation des paramètres. En effet, nous disposons de <span class="math inline">\(I\)</span> équations <span class="math inline">\(\mu_i = \mu + \alpha_i\)</span>, pour estimer <span class="math inline">\(I+1\)</span> paramètres … Ce modèle est dit <strong>singulier</strong>. Pour palier à ce problème, nous devons introduire une nouvelle contrainte (linéairement indépendante des dernières).</p>
+<section id="rendre-le-modèle-identifiable-en-le-contraignant" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="rendre-le-modèle-identifiable-en-le-contraignant"><span class="header-section-number">1.3.1</span> Rendre le modèle identifiable en le contraignant</h3>
+<p>Différentes contraintes naturelles peuvent être introduites :</p>
+<ul>
+<li>Contrainte <span class="math inline">\(\mu = 0\)</span> : correspondant au modèle régulier.</li>
+<li>Contrainte <span class="math inline">\(\alpha_1 = 0\)</span> : impliquant <span class="math inline">\(\mu= \mu_1\)</span>. L’effet moyenne est la première modalité. Les autres contraintes <span class="math inline">\(\alpha_1 = \mu_i - \mu_1\)</span> mesurent alors les différences des autres modalités avec cette modalité de référence. (Les contraintes <span class="math inline">\(\alpha_j=0\)</span> sont similaires.)</li>
+<li>Contrainte <span class="math inline">\(\displaystyle{\sum_{i=1}^I} \alpha_i = 0\)</span> : impliquant que l’effet moyen est la moyenne des effets de chaque modalité. En effet, puisque pour tout <span class="math inline">\(i\in\{1,\dots,I\}\)</span>, <span class="math inline">\(\mu+\alpha_i = \mu_i\)</span>, nous avons : <span class="math display">\[ \sum_{i=1}^I \mu \: + \: \sum_{i=1}^I \alpha_i \:\: = \:\: \sum_{i=1}^I\mu_i \, . \]</span> Ainsi, sous la contrainte <span class="math inline">\(\displaystyle{\sum_{i=1}^I} \alpha_i = 0\)</span>, nous en déduisons que : <span class="math display">\[ \mu \:\: = \:\: \frac{1}{I} \sum_{i=1}^I \mu_i \, . \]</span></li>
+<li>Contrainte linéaire quelconque : en utilisant l’option <code>contrasts</code> ou <code>C(...)</code>.</li>
+</ul>
+<p>Par défaut, c’est la contrainte <span class="math inline">\(\alpha_1=0\)</span> qui est utilisé pour la fonction <code>lm()</code>.</p>
+</section>
+<section id="estimation-des-paramètres-du-modèle-singulier" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="estimation-des-paramètres-du-modèle-singulier"><span class="header-section-number">1.3.2</span> Estimation des paramètres du modèle singulier</h3>
+<p>Plaçons-nous sous la contrainte <span class="math inline">\(\alpha_1=0\)</span>. Par identification dans <span class="math inline">\(\mu_1 = \mu + \alpha_1\)</span>, nous avons <span class="math inline">\(\mu_1 = \mu\)</span>. Une estimation de <span class="math inline">\(\mu\)</span> est alors : <span class="math display">\[ \hat{\mu} \:\: = \:\: \hat{\mu}_1 \:\: = \:\: \frac{1}{n_1}\sum_{j=1}^{n_1}y_{1,j} \:\: = \:\: \overline{y}_{1,\cdot} \, . \]</span> Puis, de la contrainte <span class="math inline">\(\mu_2=\mu+\alpha_2\)</span> ré-écrite sous la forme <span class="math inline">\(\alpha_2 = \mu_2 - \mu\)</span>, nous tirons, de l’estimation précédente de <span class="math inline">\(\hat{\mu}\)</span>, une estimation de <span class="math inline">\(\alpha_2\)</span> : <span class="math display">\[ \hat{\alpha}_2 \:\: = \:\: \hat{\mu}_2 \: - \: \hat{\mu} \:\: = \:\: \frac{1}{n_2}\sum_{j=1}^{n_2} y_{2,j} \: - \: \frac{1}{n_1}\sum_{j=1}^{n_1} y_{1,j} \:\: = \:\: \overline{y}_{2,\cdot} \: - \: \overline{y}_{1,\cdot} \, . \]</span> De la même manière, pour <span class="math inline">\(i\in\{2,\dots,I\}\)</span> nous obtenons une estimation du paramètre <span class="math inline">\(\alpha_i\)</span>, de la contrainte <span class="math inline">\(\mu_i = \alpha_i + \mu\)</span> réécrite sous la forme <span class="math inline">\(\alpha_i = \mu_i - \mu\)</span> : <span class="math display">\[ \hat{\alpha}_i \:\: = \:\: \hat{\mu}_i \: - \: \hat{\mu} \:\: = \:\: \frac{1}{n_i}\sum_{j=1}^{n_i} y_{i,j} \: - \: \frac{1}{n_1}\sum_{j=1}^{n_1} y_{1,j} \:\: = \:\: \overline{y}_{i,\cdot} \: - \: \overline{y}_{1,\cdot} \, . \]</span></p>
+<p>Attention toutefois, quelque soit l’écriture du modèle nous obtenons les mêmes résultats en terme de prédiction et tests statistiques. La différence dans l’écriture du modèle réside dans l’interprétation des coefficients et donc dans l’interprétation des résultats des tests statistiques. Par exemple, pour la contrainte <span class="math inline">\(\alpha_1=0\)</span> :</p>
+<ul>
+<li>le coefficient de l’<code>intercept</code> correspond à l’effet de la première modalité ;</li>
+<li>les autres coefficients correspondent aux différences d’effet avec cette première modalité ;</li>
+<li>le test de Fisher associé à ce modèle teste les hypothèses : <span class="math display">\[ (\mathcal{H}_0):\alpha_2 = \alpha_3 = \dots = \alpha_I = 0 \qquad \text{contre} \qquad (\mathcal{H}_1):\exists i\in\{1,\dots,I\} : \alpha_i \ne0 \, . \]</span> Ce qui correspond donc bien à un test sur l’égalité des effets de chaque modalité.</li>
+</ul>
+</section>
+<section id="analyses-numériques" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="analyses-numériques"><span class="header-section-number">1.3.3</span> Analyses numériques</h3>
+<p>Vérifions, en réalisant un test global de Fisher, si le secteur influence l’abondance du papillon Apollon (et confirme ce que nous avons pu entrevoir lors de la comparaison des boites à moustaches.)</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> logabondance <span class="sc">~</span> sector, </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> apollo)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = logabondance ~ sector, data = apollo)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.6217 -1.1564  0.0049  1.1978  3.5236 
+
+Coefficients:
+                      Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)             5.7404     0.3131  18.334  &lt; 2e-16 ***
+sectorHauteTarentaise  -0.5779     0.4609  -1.254   0.2130    
+sectorPralognan        -3.4954     0.4512  -7.746 9.74e-12 ***
+sectorChampagny        -0.9271     0.4720  -1.964   0.0524 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.657 on 96 degrees of freedom
+Multiple R-squared:  0.4163,    Adjusted R-squared:  0.3981 
+F-statistic: 22.83 on 3 and 96 DF,  p-value: 3.075e-11</code></pre>
+</div>
+</div>
+<p>La <span class="math inline">\(p\)</span>-valeur du test de Fisher est très basse (3.075e-11), on rejette <span class="math inline">\((\mathcal{H}_0)\)</span> : nous pouvons conclure, avec un risque d’erreur de 1ère espèce de 5% (par exemple), que le secteur influence l’abondance du papillon Apollon.</p>
+<p>Remarquons que nous obtenons les mêmes résultats entre les deux contraintes <span class="math inline">\(\mu=0\)</span> et <span class="math inline">\(\alpha_1=0\)</span>. Nous pouvons retrouver les résultats de la première sortie (sous la contrainte <span class="math inline">\(\mu=0\)</span>) :</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">sectorHauteMaurienne</td>
+<td style="text-align: left;">5.7407</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sectorHauteTarentaise</td>
+<td style="text-align: left;">5.1625</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sectorPralognan</td>
+<td style="text-align: left;">2.2450</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sectorChampagny</td>
+<td style="text-align: left;">4.8132</td>
+</tr>
+</tbody>
+</table>
+<p>à partir des résultats de la seconde (sous la contrainte <span class="math inline">\(\alpha_1=0\)</span>) :</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: left;">5.7407</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sectorHauteTarentaise</td>
+<td style="text-align: left;">-0.5779</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sectorPralognan</td>
+<td style="text-align: left;">-3.4954</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sectorChampagny</td>
+<td style="text-align: left;">-0.9271</td>
+</tr>
+</tbody>
+</table>
+<p>Il est possible de changer la contrainte (nous rapelons que cela implique un changement d’interprétation). Pour prendre la seconde modalité comme référence, nous pouvons le faire à l’aide de la commande suivante :</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(<span class="at">formula =</span> logabondance <span class="sc">~</span> <span class="fu">C</span>(sector, <span class="at">base =</span> <span class="dv">2</span>), </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">data =</span> apollo)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = logabondance ~ C(sector, base = 2), data = apollo)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.6217 -1.1564  0.0049  1.1978  3.5236 
+
+Coefficients:
+                                  Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                         5.1625     0.3382  15.265  &lt; 2e-16 ***
+C(sector, base = 2)HauteMaurienne   0.5779     0.4609   1.254    0.213    
+C(sector, base = 2)Pralognan       -2.9175     0.4690  -6.221 1.29e-08 ***
+C(sector, base = 2)Champagny       -0.3493     0.4890  -0.714    0.477    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.657 on 96 degrees of freedom
+Multiple R-squared:  0.4163,    Adjusted R-squared:  0.3981 
+F-statistic: 22.83 on 3 and 96 DF,  p-value: 3.075e-11</code></pre>
+</div>
+</div>
+<p>Si nous voulons utiliser la contrainte <span class="math inline">\(\displaystyle{\sum_{i=1}^I \alpha_i =0}\)</span>, il suffit de préciser l’option <code>base = sum</code> de la fonction <code>C</code> :</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(<span class="at">formula =</span> logabondance <span class="sc">~</span> <span class="fu">C</span>(sector, sum), </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">data =</span> apollo)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = logabondance ~ C(sector, sum), data = apollo)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.6217 -1.1564  0.0049  1.1978  3.5236 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       4.4903     0.1663  26.993  &lt; 2e-16 ***
+C(sector, sum)1   1.2501     0.2769   4.514 1.80e-05 ***
+C(sector, sum)2   0.6722     0.2913   2.308   0.0232 *  
+C(sector, sum)3  -2.2453     0.2837  -7.916 4.28e-12 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.657 on 96 degrees of freedom
+Multiple R-squared:  0.4163,    Adjusted R-squared:  0.3981 
+F-statistic: 22.83 on 3 and 96 DF,  p-value: 3.075e-11</code></pre>
+</div>
+</div>
+<p>Sur ces trois sorties, remarquons que la description des résidus (tableau <code>Residuals</code>) et les trois dernières lignes concernant l’estimation de l’écart-type <span class="math inline">\(\sigma\)</span>, les coefficients de détermination et le test de Fisher global sont exactement les mêmes.</p>
+</section>
+</section>
+<section id="validation-du-modèle-comparaison-de-traitements" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="validation-du-modèle-comparaison-de-traitements"><span class="header-section-number">1.4</span> Validation du modèle &amp; Comparaison de traitements</h2>
+<section id="analyse-des-résidus" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="analyse-des-résidus"><span class="header-section-number">1.4.1</span> Analyse des résidus</h3>
+<p>La validation du modèle repose sur l’analyse des <strong>résidus</strong>, estimateurs des erreurs <span class="math inline">\(\varepsilon_{i,j}\)</span>. Rappelons que les erreurs doivent satisfaire les conditions suivantes :</p>
+<ul>
+<li>[P1] : espérance nulle <span class="math inline">\(\mathbb{E}[\varepsilon_i] = 0\)</span> ;</li>
+<li>[P2] : variance constante <span class="math inline">\(\mathbb{V}(\varepsilon_i) = \sigma^2\)</span> ;</li>
+<li>[P3] : indépendants ; et dans le cadre du modèle linéaire <strong>gaussien</strong></li>
+<li>[P4] : <span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0,\sigma^2)\)</span>.</li>
+</ul>
+<p>Comme dans le cadre de la régression linéaire multiple, Puisque nous n’avons évidemment pas accès aux erreurs <span class="math inline">\(\varepsilon_{i,j}\)</span>, ces propriétés doivent être vérifiées sur le modèle ajusté, c’est-à-dire sur les résidus estimés $<em>{i,j} = </em>{i,j} - y_{i,j} $. Elles peuvent l’être l’aide des graphiques suivants :</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lecture2_RegFacto_files/figure-html/residus_plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Il semble n’y avoir aucune obstruction quant aux postulats [P1]-[P4] de validation du modèle.</p>
+<p>La description de ces différents graphiques a été réalisée en détail dans le chapitre précédent. Remarquons simplement qu’il n’y a que quatre valeurs pour les valeurs ajustées <span class="math inline">\(\hat{y}_{i,j}\)</span>. Ce n’est pas une erreur puisque nous avons prédit la valeur <span class="math inline">\(y_{i,j}\)</span> par <span class="math inline">\(\hat{\mu} + \hat{\alpha}_i\)</span>, ce qui donne bien <span class="math inline">\(I\)</span> valeurs possibles.</p>
+</section>
+<section id="tests-de-comparaison-multiple" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="tests-de-comparaison-multiple"><span class="header-section-number">1.4.2</span> Tests de comparaison multiple</h3>
+<p>La conclusion du test global de Fisher effectué précédemment est (qu’avec un risque d’erreur de 1ère espèce de 5%) que le secteur influence l’abondance du papillon Apollon : au moins deux secteurs ont des abondances statistiquement différentes. Cependant, le test global de Fisher ne nous permet de conclure quels secteurs sont statistiquement différents. Peut-être y a-t-il des groupes de secteurs homogènes ? Ou peut-être sont-ils tous différents (deux à deux) ?</p>
+<p>Pour répondre à ces questions, nous pouvons mettre en place une procédure de test de comparaison multiple. Nous renvoyons au cours de 1ère année <em>Introduction à l’Inférence Statistique</em> pour plus de précision sur les tests multiples, la catastrophe des <span class="math inline">\(p\)</span>-valeurs et de la multiplicité des tests, des procédures de corrections, ainsi que les tests de comparaison possible dans ce cadre de travail.</p>
+<p>Nous ne donnons ici que la commande permettant d’effectuer des tests de Student de comparaison des modalités 2 à 2, avec une correction de type Bonferroni.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(apollo<span class="sc">$</span>logabondance, apollo<span class="sc">$</span>sector,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pairwise comparisons using t tests with pooled SD 
+
+data:  apollo$logabondance and apollo$sector 
+
+                HauteMaurienne HauteTarentaise Pralognan
+HauteTarentaise 1.00           -               -        
+Pralognan       5.8e-11        7.7e-08         -        
+Champagny       0.31           1.00            3.6e-06  
+
+P value adjustment method: bonferroni </code></pre>
+</div>
+</div>
+<p>Nous pouvons conclure au risque d’erreur de 1ère espèce de 5% que l’abondance à Pralognan est statistiquement différente de l’abondance en Haute Maurienne, ou Haute Tarentaise, ou à Champagny. Nous ne pouvons en revanche pas conclure (pour ce même risque d’erreur de 1ère espèce) que l’abondance en Haute Maurienne, Haute Tarentaise et à Champagny sont différentes.</p>
+</section>
+</section>
+<section id="remarque-sur-la-décomposition-de-variance" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="remarque-sur-la-décomposition-de-variance"><span class="header-section-number">1.5</span> Remarque sur la décomposition de variance</h2>
+<p>Pour conclure cette partie sur l’analyse de variance à un facteur. Rappelons le théorème de décomposition de variance vue en 1ère année. En utilisant la décomposition : <span class="math display">\[ y_{i,j} \: - \: \overline{y} \:\: = \:\: y_{i,j} \: - \: \overline{y}_{i,\cdot} \: + \: \overline{y}_{i,\cdot} \: - \: \overline{y} \, , \]</span> nous pouvons montrer que : <span class="math display">\[ \underbrace{\sum_{i,j} \big(y_{i,j} \: - \: \overline{y}\big)^2}_{\text{Variation totale}} \:\:\:\: = \:\:\:\: \underbrace{\sum_{i=1}^I n_i \, \big(\overline{y}_{i,\cdot} \: - \: \overline{y} \big)^2}_{\text{Variation inter-groupes}} \:\: + \:\: \underbrace{\sum_{i,j} \big(y_{i,j} \: - \: \overline{y}_{i,\cdot}\big)^2}_{\text{Variation intra-groupes}} \]</span> Il s’agit exactement de la formule de décomposition de variance vue au chapitre précédent : <span class="math display">\[ \mathrm{SCT} \:\: = \:\: \mathrm{SCM} \: + \: \mathrm{SCR} \, . \]</span></p>
+</section>
+</section>
+<section id="analyse-de-variance-à-deux-facteurs" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Analyse de variance à deux facteurs</h1>
+<p>Comme dans le cadre de la régression linéaire simple, l’abondance du papillon Apollon peut être influencé par différents facteurs (pas seulement le secteur). Nous allons dans cette partie intégrer à notre étude un second facteur : ici il s’agit du mode de gestion du site d’observation. Ce facteur possède deux modalités : pâturage (<code>grazed</code>) et non-paturage (<code>ungrazed</code>).</p>
+<p>Nous pouvons généraliser les résultats de cette partie à un nombre quelconque de facteurs. Afin de privillégier la clareté et d’alléger les notations, nous nous restreignons au cas de deux facteurs.</p>
+<section id="modèle-régulier-modèle-singulier" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="modèle-régulier-modèle-singulier"><span class="header-section-number">2.1</span> Modèle régulier &amp; Modèle singulier</h2>
+<p>Supposons que le premier facteur ait <span class="math inline">\(I\)</span> modalités et le second <span class="math inline">\(J\)</span> modalités. Notons <span class="math inline">\(y_{i,j,k}\)</span> la <span class="math inline">\(k\)</span>-ème observation dans les modalités <span class="math inline">\(i\)</span> pour le premier facteur et <span class="math inline">\(j\)</span> pour le second facteur. Notons <span class="math inline">\(n_{i,j}\)</span> le nombre d’observations ayant les modalités <span class="math inline">\(i\)</span> et <span class="math inline">\(j\)</span> (pour le premier et second facteur respectivement).</p>
+<p>Dans la suite <span class="math inline">\(i\)</span> (resp. <span class="math inline">\(j\)</span>) sera exclusivement utilisé pour une modalité du premier (resp. second) facteur.</p>
+<section id="modèle-régulier" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="modèle-régulier"><span class="header-section-number">2.1.1</span> Modèle régulier</h3>
+<p>Commençons par introduire le modèle régulier. Nous supposons que les valeurs <span class="math inline">\(y_{i,j,k}\)</span> sont la réalisation de variables aléatoires <span class="math inline">\(\mathbf{Y}_{i,j,k}\)</span> suivant le modèle : <span class="math display">\[ \mathbf{Y}_{i,j,k} \:\: = \:\: \mu_{i,j} \: + \: \varepsilon_{i,j,k} \, , \qquad \forall i \in\{1,\dots, I\} , \, \forall j \in\{1,\dots,J\} \, , \forall k\in\{1,\dots,n_{i,j}\} \, , \]</span> où</p>
+<ul>
+<li>les erreurs <span class="math inline">\(\varepsilon_{i,j,k} \: \overset{\text{i.i.d.}}{\sim} \: \mathcal{N}(0, \, \sigma^2)\)</span> ; et</li>
+<li>les paramètres <span class="math inline">\(\mu_{i,j}\)</span> sont inconnus et fixes (déterministes).</li>
+</ul>
+<p>Posons <span class="math display">\[ \overline{y}_{i,j,\cdot} \:\: = \:\: \frac{1}{n_{i,j}} \sum_{k=1}^{n_{i,j}} y_{i,j,k} \]</span> la moyenne des <span class="math inline">\(n_{i,j}\)</span> observations ayant les modalités <span class="math inline">\(i\)</span> et <span class="math inline">\(j\)</span>.</p>
+<p>Alors une estimation (sans biais et) naturelle du paramètre <span class="math inline">\(\mu_{i,j}\)</span> est <span class="math inline">\(\hat{\mu}_{i,j} = \overline{y}_{i,j,\cdot}\)</span>.</p>
+<p>Par conséquent, une estimation de la variance inconnue <span class="math inline">\(\sigma^2\)</span> est donnée par : <span class="math display">\[ \hat{\sigma}^2 \:\: = \:\: \frac{1}{n-IJ} \sum_{i,j,k} \big( y_{i,j,k} \: - \: \hat{\mu}_{i,j} \big)^2 \, . \]</span></p>
+</section>
+<section id="modèle-singulier-1" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="modèle-singulier-1"><span class="header-section-number">2.1.2</span> Modèle singulier</h3>
+<p>Comme dans le cas de l’analyse de variance à un facteur, afin de mieux analyser l’influence des facteurs, nous introduisons de nouveaux termes. Considérons donc la décomposition suivante de la moyenne <span class="math inline">\(\mu_{i,j}\)</span> inconnue : <span class="math display">\[ \mu_{i,j} \:\: = \:\: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \gamma_{i,j} \, . \]</span> Les paramètres sont interprétés de la manière suivante :</p>
+<ul>
+<li><span class="math inline">\(\mu\)</span> : effet moyen (dépendant comme précédemment des contraintes imposés) ;</li>
+<li><span class="math inline">\(\alpha_i\)</span> : effet principal de la modalité <span class="math inline">\(i\)</span> du premier facteur ;</li>
+<li><span class="math inline">\(\beta_j\)</span> : effet principale de la modalité <span class="math inline">\(j\)</span> du second facteur ; et</li>
+<li><span class="math inline">\(\gamma_{i,j}\)</span> : effet d’interaction entre les modalités <span class="math inline">\(i\)</span> et <span class="math inline">\(j\)</span> du premier et second facteur resp.</li>
+</ul>
+<p>Avec cette réécriture (qui n’est pas unique), nous avons décomposé les <span class="math inline">\(I\times J\)</span> paramètres <span class="math inline">\(\mu_{i,j}\)</span> en <span class="math inline">\(1 + I + J + I\times J\)</span> nouveaux paramètres, soit <span class="math inline">\(1+I+J\)</span> paramètres de plus à estimer. Il faut donc imposer <span class="math inline">\(1+I+J\)</span> contrainteslinéairement indépendantes, dont voici quelques exemples classiques :</p>
+<ul>
+<li>contrainte de type <em>analyse par cellule</em>, qui correspond au modèle régulier : <span class="math display">\[ \mu = 0\, , \qquad \forall i\in\{1,\dots,I\}, \, \alpha_i = 0 \quad \text{et} \quad \forall j\in\{1,\dots,J\}, \, \beta_j = 0 \, . \]</span></li>
+<li>contrainte de type <em>cellyle de référence</em>, qui est la contrainte par défaut de la fonction <code>lm</code> : <span class="math display">\[ \alpha_1 = 0 \, , \qquad \beta_1 = 0 \, , \qquad \forall j\in\{1,\dots,J\},\, \gamma_{1,j} = 0 \, \quad \text{et} \quad \forall i\in\{1,\dots,I\},\, \gamma_{i,1} = 0 \, . \]</span></li>
+<li>contrainte de type <em>somme</em> : <span class="math display">\[ \sum_{i=1}^I\alpha_i = 0 \, , \qquad \sum_{j=1}^J\beta_j = 0 \, , \qquad \forall j\in\{1,\dots,J\},\, \sum_{i=1}^I \gamma_{i,j} = 0 \, \quad \text{et} \quad \forall i\in\{1,\dots,I\},\, \sum_{j=1}^J\gamma_{i,j} = 0 \, . \]</span></li>
+</ul>
+</section>
+<section id="analyse-numérique" class="level3" data-number="2.1.3">
+<h3 data-number="2.1.3" class="anchored" data-anchor-id="analyse-numérique"><span class="header-section-number">2.1.3</span> Analyse numérique</h3>
+<p>L’analyse numérique s’effectue encore une fois avec la fonction <code>lm</code> :</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> logabondance <span class="sc">~</span> sector <span class="sc">*</span> grazing, </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> apollo)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = logabondance ~ sector * grazing, data = apollo)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.4335 -0.9944 -0.0247  1.0360  4.0229 
+
+Coefficients:
+                                    Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                          5.24112    0.45860  11.428  &lt; 2e-16 ***
+sectorHauteTarentaise               -0.26685    0.69550  -0.384   0.7021    
+sectorPralognan                     -2.89820    0.60184  -4.816 5.75e-06 ***
+sectorChampagny                     -0.04095    0.64856  -0.063   0.9498    
+grazinggrazed                        0.93192    0.62657   1.487   0.1403    
+sectorHauteTarentaise:grazinggrazed -0.60923    0.92806  -0.656   0.5132    
+sectorPralognan:grazinggrazed       -1.25024    0.94141  -1.328   0.1874    
+sectorChampagny:grazinggrazed       -1.87774    0.95221  -1.972   0.0516 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.654 on 92 degrees of freedom
+Multiple R-squared:  0.4429,    Adjusted R-squared:  0.4005 
+F-statistic: 10.45 on 7 and 92 DF,  p-value: 1.364e-09</code></pre>
+</div>
+</div>
+<p>Il existe d’autres écritures équivalentes de l’option <code>formula</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(<span class="at">formula =</span> logabondance <span class="sc">~</span> sector <span class="sc">+</span> grazing <span class="sc">+</span> sector<span class="sc">:</span>grazing, </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">data =</span> apollo)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = logabondance ~ sector + grazing + sector:grazing, 
+    data = apollo)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.4335 -0.9944 -0.0247  1.0360  4.0229 
+
+Coefficients:
+                                    Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                          5.24112    0.45860  11.428  &lt; 2e-16 ***
+sectorHauteTarentaise               -0.26685    0.69550  -0.384   0.7021    
+sectorPralognan                     -2.89820    0.60184  -4.816 5.75e-06 ***
+sectorChampagny                     -0.04095    0.64856  -0.063   0.9498    
+grazinggrazed                        0.93192    0.62657   1.487   0.1403    
+sectorHauteTarentaise:grazinggrazed -0.60923    0.92806  -0.656   0.5132    
+sectorPralognan:grazinggrazed       -1.25024    0.94141  -1.328   0.1874    
+sectorChampagny:grazinggrazed       -1.87774    0.95221  -1.972   0.0516 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.654 on 92 degrees of freedom
+Multiple R-squared:  0.4429,    Adjusted R-squared:  0.4005 
+F-statistic: 10.45 on 7 and 92 DF,  p-value: 1.364e-09</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="validation-du-modèle-tests-due-modèles" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="validation-du-modèle-tests-due-modèles"><span class="header-section-number">2.2</span> Validation du modèle &amp; Tests due modèles</h2>
+<section id="validation-du-modèle" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="validation-du-modèle"><span class="header-section-number">2.2.1</span> Validation du modèle</h3>
+<p>La validation du modèle reposant sur les mêmes postulats que dans la section précédente et le chapitre précédent, nous renvoyons à ce dernier pour une description détailler de la méthodologie concernant la validation du modèle.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lecture2_RegFacto_files/figure-html/anova2_residus-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Il semble n’y avoir aucune obstruction quant aux postulats [P1]-[P4] de validation du modèle.</p>
+</section>
+</section>
+<section id="test-de-pertinence-du-modèle" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="test-de-pertinence-du-modèle"><span class="header-section-number">2.3</span> Test de pertinence du modèle</h2>
+<p>Le modèle de régression est certes validé, mais cela n’implique qu’il soit “pertinent”, ou autrement écrit cela n’implique pas que les facteurs (l’un, l’autre ou les deux) secteur et mode de gestion influencent l’abondance du papillon.</p>
+<p>Le test global de Fisher teste les hypothèses suivantes : <span class="math display">\[ (\mathcal{H}_0): \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \varepsilon_{i,j,k} \quad \text{contre} \quad (\mathcal{H}_1):\mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \gamma_{i,j} \: + \: \varepsilon_{i,j,k} \, . \]</span> Le résultat de ce test est donné à la dernière ligne de la sortie de la fonction <code>summary</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = logabondance ~ sector * grazing, data = apollo)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.4335 -0.9944 -0.0247  1.0360  4.0229 
+
+Coefficients:
+                                    Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                          5.24112    0.45860  11.428  &lt; 2e-16 ***
+sectorHauteTarentaise               -0.26685    0.69550  -0.384   0.7021    
+sectorPralognan                     -2.89820    0.60184  -4.816 5.75e-06 ***
+sectorChampagny                     -0.04095    0.64856  -0.063   0.9498    
+grazinggrazed                        0.93192    0.62657   1.487   0.1403    
+sectorHauteTarentaise:grazinggrazed -0.60923    0.92806  -0.656   0.5132    
+sectorPralognan:grazinggrazed       -1.25024    0.94141  -1.328   0.1874    
+sectorChampagny:grazinggrazed       -1.87774    0.95221  -1.972   0.0516 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.654 on 92 degrees of freedom
+Multiple R-squared:  0.4429,    Adjusted R-squared:  0.4005 
+F-statistic: 10.45 on 7 and 92 DF,  p-value: 1.364e-09</code></pre>
+</div>
+</div>
+<p>La <span class="math inline">\(p\)</span>-valeur du test global de Fisher est 1.364e-09, donc au risque d’erreur de 1ère espèce de 5% nous rejetons <span class="math inline">\((\mathcal{H}_0)\)</span> : au moins l’un des facteurs a une influence sur l’abondance du papillon Apollon (c’est-à-dire qu’au moins un des <span class="math inline">\(\alpha_i\)</span> et/ou <span class="math inline">\(\beta_j\)</span> et/ou <span class="math inline">\(\gamma_{i,j}\)</span> est non nul).</p>
+<p>Nous pourrons également noter que le coefficient de détermination n’est pas très élevé.</p>
+<section id="tests-de-comparaison-de-modèles" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="tests-de-comparaison-de-modèles"><span class="header-section-number">2.3.1</span> Tests de comparaison de modèles</h3>
+<p>Maintenant que nous savons que le modèle est pertinent, nous aimerions être plus fin.e dans l’analyse : est-ce seulement l’un des facteurs qui influence la variable d’intérêt, ou les deux ? y a-t-il une interaction entre les facteurs ou influencent-ils la variable de manière indépendante ?</p>
+<p>Pour répondre à ces questions nous pouvons réaliser des tests de comparaison de modèles. Ces derniers sont : <span class="math display">\[ \begin{eqnarray}
+\mathcal{M}_\mu &amp; : &amp; \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: \varepsilon_{i,j,k} \\
+\mathcal{M}_{\mu,\alpha} &amp; : &amp; \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: \alpha_i \: + \: \varepsilon_{i,j,k} \\
+\mathcal{M}_{\mu,\beta} &amp; : &amp; \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: \beta_j \: + \: \varepsilon_{i,j,k} \\
+\mathcal{M}_{\mu,\alpha,\beta} &amp; : &amp; \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \varepsilon_{i,j,k} \\
+\mathcal{M}_{\mu,\alpha,\beta,\gamma} &amp; : &amp; \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \gamma_{i,j} \: + \: \varepsilon_{i,j,k}
+\end{eqnarray} \]</span></p>
+<p>Le modèle :</p>
+<ul>
+<li><span class="math inline">\(\mathcal{M}_{\mu,\alpha,\beta,\gamma}\)</span> est le <strong>modèle complet</strong>. Il prend en compte tous les phénomènes, mais comporte beaucoup de paramètres ;</li>
+<li><span class="math inline">\(\mathcal{M}_{\mu,\alpha,\beta}\)</span> est le <strong>modèle additif</strong>. Il suppose l’absence d’interacton entre les facteurs.</li>
+</ul>
+<p>Avant de réaliser des tests sur l’influence des facteurs pris indépendamment, il est important de tester l’interaction de ces derniers. Le test est le suivant : <span class="math display">\[ (\mathcal{H}_0):\mathbf{Y}_{i,j,k}\:=\:\mu\:+\:\alpha_i\:+\:\beta_j\:+\:\varepsilon_{i,j,k} \quad \text{contre} \quad (\mathcal{H}_1):\mathbf{Y}_{i,j,k}\:=\:\mu\:+\:\alpha_i\:+\:\beta_j\:+\:\gamma_{i,j}\:+\:\varepsilon_{i,j,k} \, . \]</span> Il s’agit d’un test de modèles emboités (ou de sous-modèles) : nous réalisons donc un test global de Fisher (de comparaison de modèles). Dans ce cadre, la statistique de test est : <span class="math display">\[ F \:\: = \:\: \frac{\displaystyle{\frac{1}{\mathrm{rg}\Big(X^{(\mu,\alpha,\beta,\gamma)}\Big) \: - \: \mathrm{rg}\Big(X^{(\mu,\alpha,\beta)}\Big)} \Big( \mathrm{SCR}_{\mu,\alpha,\beta} \: - \: \mathrm{SCR}_{\mu,\alpha,\beta,\gamma} \Big)}}{\displaystyle{\frac{1}{n \: - \: \mathrm{rg}\Big(X^{(\mu,\alpha,\beta,\gamma)}\Big)} \, \mathrm{SCR}_{\mu,\alpha,\beta,\gamma}}} \]</span> qui, sous <span class="math inline">\((\mathcal{H}_0)\)</span>, suit la loi de Fisher à <span class="math inline">\(\big( (I-1)(J-1),\, n-IJ \big)\)</span> degrés de liberté. Nous rejetons donc <span class="math inline">\((\mathcal{H}_0)\)</span> au risque de 1ère espèce <span class="math inline">\(\alpha\)</span>, si <span class="math inline">\(F &gt; q_{1-\alpha}^{\mathcal{F}\big((I-1)(J-1),\,n-IJ\big)}\)</span>.</p>
+<p>Sous <code>R</code>, le test de comparaison de Fisher de deux modèles peut s’effectuer à l’aide de la fonction <code>anova</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> logabondance <span class="sc">~</span> sector <span class="sc">+</span> grazing,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> apollo)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model1, model2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: logabondance ~ sector * grazing
+Model 2: logabondance ~ sector + grazing
+  Res.Df    RSS Df Sum of Sq     F Pr(&gt;F)
+1     92 251.54                          
+2     95 263.41 -3   -11.869 1.447 0.2343</code></pre>
+</div>
+</div>
+<p>La <span class="math inline">\(p\)</span>-valeur du test de Fisher est élevée : au risque d’erreur de 1ère espèce de 5%, on ne peut pas conclure qu’il y a une interaction. Nous considérons donc dans la suite qu’il n’y a pas d’interaction, et nous sommes ramenés au modèle : <span class="math display">\[ \mathbf{Y}_{i,j,k} \:\: = \:\: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \varepsilon_{i,j,k} \, . \]</span></p>
+</section>
+</section>
+<section id="test-des-facteurs" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="test-des-facteurs"><span class="header-section-number">2.4</span> Test des facteurs</h2>
+<p>Commençons par deux remarques méthodologiques.</p>
+<ul>
+<li>Si nous avons pu enlever l’interaction, alors nous définissons le modèle sans interaction et nous testons l’effet de chaque facteur restant de manière indépendante.</li>
+<li>Si le test des interactions rejette l’hypothèse nulle, alors il n’y a pas de sens à tester les facteurs séparément ! (Il ne peut y avoir d’interaction entre les facteurs sans les facteurs.)</li>
+</ul>
+<p>Dans l’exemple conducteur de ce chapitre, nous avons montré dans la partie précédente l’absence d’interaction entre les facteurs <code>sector</code> et <code>grazing</code>. Nous souhaitons maintenant savoir si la variable <code>grazing</code> est pertinent dans le model <code>model2</code>.</p>
+<p>Nous souhaitons donc comparer les deux modèles : <span class="math display">\[ \mathcal{M}_{\mu,\alpha,\beta}: \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \varepsilon_{i,j,k} \quad \text{et} \quad \mathcal{M}_{\mu,\alpha}: \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \alpha_i \: + \: \varepsilon_{i,j,k} \, . \]</span> Il s’agit une nouvelle fois d’un test de modèles emboités. Nous réalisons donc un test de Fisher de comparaison de modèles.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> logabondance <span class="sc">~</span> sector,</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> apollo)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model3, model2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: logabondance ~ sector
+Model 2: logabondance ~ sector + grazing
+  Res.Df    RSS Df Sum of Sq     F Pr(&gt;F)
+1     96 263.51                          
+2     95 263.41  1   0.10548 0.038 0.8458</code></pre>
+</div>
+</div>
+<p>La <span class="math inline">\(p\)</span>-valeur du test de Fisher est élevée : au risque d’erreur de 1ère espèce de 5%, on ne peut pas conclure que la variable <code>grazing</code> a une influence sur l’abondance du papillon Apollo. Nous considérons donc dans la suite le modèle <code>model3</code> sans le facteur <code>grazing</code>, et nous sommes ramenés au modèle : <span class="math display">\[ \mathcal{M}_{\mu,\alpha}:\:\mathbf{Y}_{i,j,k} \:\: = \:\: \mu \: + \: \alpha_i \: + \: \varepsilon_{i,j,k} \, . \]</span></p>
+<p>Nous pouvons à présent tester l’influence de la variable <code>sector</code> sur l’abondance du papillon Apollon dans le modèle <code>model3</code>, ce qui correspond ici à une analyse de variance à un facteur que nous avons effectuer dans la section précédente.</p>
+<p>Si nous avions précédemment conclut que le facteur <code>grazing</code> influençait la variable d’intérêt, nous aurions comparé les modèles : <span class="math display">\[ \mathcal{M}_{\mu,\alpha,\beta}: \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \varepsilon_{i,j,k} \quad \text{et} \quad \mathcal{M}_{\mu,\beta}: \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \beta_j \: + \: \varepsilon_{i,j,k} \, . \]</span></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>model4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> logabondance <span class="sc">~</span> grazing,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> apollo)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model4, model3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: logabondance ~ grazing
+Model 2: logabondance ~ sector
+  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+1     98 442.73                                  
+2     96 263.51  2    179.22 32.645 1.527e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>La <span class="math inline">\(p\)</span>-valeur étant très faible, nous aurions conclus au risque d’erreur de 1ère espèce de 5%, que le facteur <code>sector</code> influence la variable d’intérêt, c’est-à-dire que nous aurions conservé le modèle <span class="math inline">\(\mathcal{M}_{\mu,\alpha,\beta}\)</span>.</p>
+</section>
+<section id="analyse-de-variance-à-trois-facteurs" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="analyse-de-variance-à-trois-facteurs"><span class="header-section-number">2.5</span> Analyse de variance à trois facteurs</h2>
+<p>Pour réaliser une analyse de variance à trois facteurs (ou plus), nous procéderons de la même façon. La tâche s’avère plus fastidieuse.</p>
+<p>Le modèle ANOVA à trois facteurs s’écrit de la manière suivante : <span class="math display">\[ \mathbf{Y}_{i,j,k,l} \:\: = \:\: \mu \: + \: \underbrace{\alpha_i \: + \: \beta_j \: + \: \gamma_k}_{\text{Effets des facteurs}} \: + \: \underbrace{\delta_{i,j} \: + \: \zeta_{i,k} \: + \: \eta_{j,k}}_{\text{Effets des interactions 2 à 2}} \: + \: \underbrace{\theta_{i,j,k}}_{\text{Effet de l'interaction des 3 facteurs}} \: + \: \varepsilon_{i,j,k,l} \, . \]</span> Il y a donc beaucoup plus de paramètres à estimer. L’étude des interactions s’avère également plus complexe. Dans un soucis de simplification, parfois justifiée par l’expérience, il est possible de supposer l’absence d’interaction.</p>
+</section>
+</section>
+<section id="analyse-de-la-covariance" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Analyse de la covariance</h1>
+<p>Les deux parties précédentes étudiaient l’étude de l’influence de variables explicatives toutes exclusivement quantitatives (continues) ou toutes eexclusivement qualitatives.</p>
+<p>Dans cette partie, nous présentons l’<strong>analyse de la covariance</strong> qui intègre les deux types de variables.</p>
+<p>Par exemple, supposons que nous étudions l’influence d’une variable explicative quantitative <span class="math inline">\(x\)</span> et d’un facteur sur une variable d’intérêt <span class="math inline">\(y\)</span>. Supposons qu’il y ait <span class="math inline">\(I\)</span> modalités pour le facteur, et <span class="math inline">\(n_i\)</span> observations pour la <span class="math inline">\(i\)</span>-ème modalité. Alors pour chacune des modalités <span class="math inline">\(i\in\{1,\dots,I\}\)</span>, nous rassemblons les <span class="math inline">\(n_i\)</span> observations. Ce qui donne :</p>
+<ul>
+<li><span class="math inline">\((y_{i,j})_{1\le j\le n_i}\)</span> pour la variable d’intérêt <span class="math inline">\(y\)</span> ; ainsi que</li>
+<li><span class="math inline">\((X-{i,j})_{1\le j\le n_i}\)</span> pour la variable explicative quantitative <span class="math inline">\(x\)</span>.</li>
+</ul>
+<p>Nous avons alors, possiblement, une régression liénaire sur la variable quantitative <span class="math inline">\(x\)</span> différente selon les niveaux du facteur ! Illustrons-le sur une simulation.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)   <span class="co"># pour assembler les 6 panneaux (ou facet_wrap si un seul data.frame)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">73</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>fact <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>), <span class="at">each =</span> n<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">1.5</span>  <span class="co"># bruit</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>simu <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> x, <span class="at">fact =</span> fact,</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">ifelse</span>(fact <span class="sc">==</span> <span class="st">"A"</span>, <span class="dv">1</span> <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>x, <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="fl">3.5</span><span class="sc">*</span>x) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(simu, </span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> x, </span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> y, </span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> fact)</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">1.2</span>, </span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.7</span></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"lm"</span>, </span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> <span class="st">"y ~ x"</span>,</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">se =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.75</span></span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(</span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.1</span>,</span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.15</span></span>
+<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#F97"</span>, <span class="st">"#38F"</span>)</span>
+<span id="cb31-34"><a href="#cb31-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb31-35"><a href="#cb31-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb31-36"><a href="#cb31-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>,</span>
+<span id="cb31-37"><a href="#cb31-37" aria-hidden="true" tabindex="-1"></a>                              <span class="at">color =</span> <span class="st">"grey40"</span>),</span>
+<span id="cb31-38"><a href="#cb31-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb31-39"><a href="#cb31-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span></span>
+<span id="cb31-40"><a href="#cb31-40" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb31-41"><a href="#cb31-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb31-42"><a href="#cb31-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"x"</span>, </span>
+<span id="cb31-43"><a href="#cb31-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"y"</span>, </span>
+<span id="cb31-44"><a href="#cb31-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Facteur"</span></span>
+<span id="cb31-45"><a href="#cb31-45" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lecture2_RegFacto_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Intéressons-nous à l’influence du secteur et de l’altitude sur l’abondance du papillon Apollo. Commençons par une représentation graphique.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(apollo, </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> altitude_index, </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> logabondance, </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> sector)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">1.2</span>, </span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.7</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"lm"</span>, </span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> <span class="st">"y ~ x"</span>,</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">se =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.75</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.1</span>,</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.15</span></span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#F97"</span>, <span class="st">"#38F"</span>, <span class="st">"#BE1"</span>, <span class="st">"#DAF"</span>)</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>,</span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>                              <span class="at">color =</span> <span class="st">"grey40"</span>),</span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span></span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Altitude"</span>, </span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Logabondance"</span>, </span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Secteur"</span></span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lecture2_RegFacto_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="modélisation" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="modélisation"><span class="header-section-number">3.1</span> Modélisation</h2>
+<p>Pour ce nouveau modèle, nous supposons que la variable d’intérêt <span class="math inline">\(y_{i,j}\)</span> est la réalisation d’une variable aléatoire <span class="math inline">\(\mathbf{Y}_{i,j}\)</span> avec : <span class="math display">\[ \mathbf{Y}_{i,j} \:\: = \:\: b_i \: + \: a_i \, x_{i,j} \: + \: {\boldsymbol\varepsilon}_{i,j} \, , \qquad i\in\{1,\dots,I\},\,j\in\{1,\dots,n_i\} \, , \]</span> où</p>
+<ul>
+<li>les erreurs <span class="math inline">\({\boldsymbol\varepsilon}_{i,j} \: \overset{\mathrm{i.i.d.}}{\sim} \: \mathcal{N}(0,\,\sigma^2)\)</span> ; et</li>
+<li>les paramètres <span class="math inline">\(a_i\)</span>, <span class="math inline">\(b_i\)</span> sont inconnus et fixes (déterministes).</li>
+</ul>
+<p>Cette écriture correspond au modèle complet (le plus complexe) : il y a autant de droites de régression que de modalités du facteur.</p>
+</section>
+<section id="modèle-singulier-2" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="modèle-singulier-2"><span class="header-section-number">3.2</span> Modèle singulier</h2>
+<p>Le modèle singulier précédent <span class="math display">\[ \mathbf{Y}_{i,j} \:\: = \:\: b_i \: + \: a_i \, x_{i,j} \: + \: {\boldsymbol\varepsilon}_{i,j} \, , \qquad i\in\{1,\dots,I\},\,j\in\{1,\dots,n_i\} \, , \]</span> peut se réécrire sous la forme suivante : <span class="math display">\[ \mathbf{Y}_{i,j} \:\: = \:\: (\mu \: + \: \beta_i) \: + \: (\alpha\:+\:\gamma_i) \, x_{i,j} \: + \: {\boldsymbol\varepsilon}_{i,j} \, , \qquad i\in\{1,\dots,I\},\,j\in\{1,\dots,n_i\} \, , \]</span> où <span class="math inline">\(\gamma_{i,j}\)</span> est l’interaction entre le facteur et la variable explicative.</p>
+<p>Plusieurs cas de figures peuvent se présenter.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>fact <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>), <span class="at">each =</span> n<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">1.5</span>  <span class="co"># bruit</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co"># --- A. Avec interaction : pentes ET intercepts différents ---</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>dA <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> x, <span class="at">fact =</span> fact,</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">ifelse</span>(fact <span class="sc">==</span> <span class="st">"A"</span>, <span class="dv">1</span> <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>x, <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="fl">3.5</span><span class="sc">*</span>x) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="co"># --- B. Additif : même pente, intercepts différents ---</span></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>dB <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> x, <span class="at">fact =</span> fact,</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">ifelse</span>(fact <span class="sc">==</span> <span class="st">"A"</span>, <span class="dv">1</span> <span class="sc">+</span> <span class="fl">1.9</span><span class="sc">*</span>x, <span class="dv">10</span> <span class="sc">+</span> <span class="fl">1.9</span><span class="sc">*</span>x) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a><span class="co"># --- C. Même intercept : pentes différentes, même intercept ---</span></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>dC <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> x, <span class="at">fact =</span> fact,</span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">ifelse</span>(fact <span class="sc">==</span> <span class="st">"A"</span>, <span class="fl">0.5</span> <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>x, <span class="fl">0.5</span> <span class="sc">+</span> <span class="dv">4</span><span class="sc">*</span>x) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a><span class="co"># --- D. Régression simple : le facteur n'a aucun effet ---</span></span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>dD <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> x, <span class="at">fact =</span> fact,</span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fl">0.5</span> <span class="sc">+</span> <span class="dv">4</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a><span class="co"># --- E. Anova : effet du facteur uniquement (pas de x) ---</span></span>
+<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>dE <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> x, <span class="at">fact =</span> fact,</span>
+<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">ifelse</span>(fact <span class="sc">==</span> <span class="st">"A"</span>, <span class="dv">5</span>, <span class="dv">10</span>) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a><span class="co"># --- F. Modèle nul : ni x ni facteur n'ont d'effet ---</span></span>
+<span id="cb33-39"><a href="#cb33-39" aria-hidden="true" tabindex="-1"></a>dF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb33-40"><a href="#cb33-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> x, <span class="at">fact =</span> fact,</span>
+<span id="cb33-41"><a href="#cb33-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="dv">5</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb33-42"><a href="#cb33-42" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-43"><a href="#cb33-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-44"><a href="#cb33-44" aria-hidden="true" tabindex="-1"></a><span class="co"># On combine les 6 jeux de données avec une étiquette de panneau</span></span>
+<span id="cb33-45"><a href="#cb33-45" aria-hidden="true" tabindex="-1"></a>combine <span class="ot">&lt;-</span> <span class="cf">function</span>(d, label) { d<span class="sc">$</span>panel <span class="ot">&lt;-</span> label; d }</span>
+<span id="cb33-46"><a href="#cb33-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-47"><a href="#cb33-47" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb33-48"><a href="#cb33-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">combine</span>(dA, <span class="st">"A. Avec interaction"</span>),</span>
+<span id="cb33-49"><a href="#cb33-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">combine</span>(dB, <span class="st">"B. Additif"</span>),</span>
+<span id="cb33-50"><a href="#cb33-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">combine</span>(dC, <span class="st">"C. Même intercept"</span>),</span>
+<span id="cb33-51"><a href="#cb33-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">combine</span>(dD, <span class="st">"D. Simple régression"</span>),</span>
+<span id="cb33-52"><a href="#cb33-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">combine</span>(dE, <span class="st">"E. Anova"</span>),</span>
+<span id="cb33-53"><a href="#cb33-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">combine</span>(dF, <span class="st">"F. Modèle nul"</span>)</span>
+<span id="cb33-54"><a href="#cb33-54" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-55"><a href="#cb33-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-56"><a href="#cb33-56" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>panel <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>panel, </span>
+<span id="cb33-57"><a href="#cb33-57" aria-hidden="true" tabindex="-1"></a>                    <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"A. Avec interaction"</span>, </span>
+<span id="cb33-58"><a href="#cb33-58" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"B. Additif"</span>, </span>
+<span id="cb33-59"><a href="#cb33-59" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"C. Même intercept"</span>,</span>
+<span id="cb33-60"><a href="#cb33-60" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"D. Simple régression"</span>, </span>
+<span id="cb33-61"><a href="#cb33-61" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"E. Anova"</span>, </span>
+<span id="cb33-62"><a href="#cb33-62" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"F. Modèle nul"</span></span>
+<span id="cb33-63"><a href="#cb33-63" aria-hidden="true" tabindex="-1"></a>                              )</span>
+<span id="cb33-64"><a href="#cb33-64" aria-hidden="true" tabindex="-1"></a>                    )</span>
+<span id="cb33-65"><a href="#cb33-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-66"><a href="#cb33-66" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Graphique ---</span></span>
+<span id="cb33-67"><a href="#cb33-67" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat, </span>
+<span id="cb33-68"><a href="#cb33-68" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> x, </span>
+<span id="cb33-69"><a href="#cb33-69" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> y, </span>
+<span id="cb33-70"><a href="#cb33-70" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> fact)</span>
+<span id="cb33-71"><a href="#cb33-71" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
+<span id="cb33-72"><a href="#cb33-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb33-73"><a href="#cb33-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">1.2</span>, </span>
+<span id="cb33-74"><a href="#cb33-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.7</span></span>
+<span id="cb33-75"><a href="#cb33-75" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-76"><a href="#cb33-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(</span>
+<span id="cb33-77"><a href="#cb33-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"lm"</span>, </span>
+<span id="cb33-78"><a href="#cb33-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> <span class="st">"y ~ x"</span>,</span>
+<span id="cb33-79"><a href="#cb33-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">se =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb33-80"><a href="#cb33-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.75</span></span>
+<span id="cb33-81"><a href="#cb33-81" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-82"><a href="#cb33-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(</span>
+<span id="cb33-83"><a href="#cb33-83" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> panel, </span>
+<span id="cb33-84"><a href="#cb33-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">nrow =</span> <span class="dv">2</span></span>
+<span id="cb33-85"><a href="#cb33-85" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-86"><a href="#cb33-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(</span>
+<span id="cb33-87"><a href="#cb33-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.1</span>,</span>
+<span id="cb33-88"><a href="#cb33-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.15</span></span>
+<span id="cb33-89"><a href="#cb33-89" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-90"><a href="#cb33-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb33-91"><a href="#cb33-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#F97"</span>, <span class="st">"#38F"</span>)</span>
+<span id="cb33-92"><a href="#cb33-92" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-93"><a href="#cb33-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb33-94"><a href="#cb33-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>,</span>
+<span id="cb33-95"><a href="#cb33-95" aria-hidden="true" tabindex="-1"></a>                              <span class="at">color =</span> <span class="st">"grey40"</span>),</span>
+<span id="cb33-96"><a href="#cb33-96" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb33-97"><a href="#cb33-97" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span></span>
+<span id="cb33-98"><a href="#cb33-98" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-99"><a href="#cb33-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb33-100"><a href="#cb33-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"x"</span>, </span>
+<span id="cb33-101"><a href="#cb33-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"y"</span>, </span>
+<span id="cb33-102"><a href="#cb33-102" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Facteur"</span></span>
+<span id="cb33-103"><a href="#cb33-103" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lecture2_RegFacto_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A. Modèle complet : <span class="math inline">\(\mathbf{Y}_{i,j} \: = \: \mu \: + \: \beta_i \: + \: (\alpha+\gamma_i) \, x_{i,j} \: + \: {\boldsymbol\varepsilon}_{i,j}\)</span>. B. Modèle additif, c’est-à-dire à interactions nulles : <span class="math display">\[ \mathbf{Y}_{i,j} \: = \: \mu \: + \: \beta_i \: + \: \alpha \, x_{i,j} \: + \: {\boldsymbol\varepsilon}_{i,j} \, . \]</span> C. <span class="math inline">\(\beta_i=0\)</span> pour tout <span class="math inline">\(i\)</span>, c’est-à-dire lorsque les pentes sont différentes, mais même ordonnée à l’origine : <span class="math display">\[ \mathbf{Y}_{i,j} \: = \: \mu \: + \: (\alpha+\gamma_i) \, x_{i,j} \: + \: {\boldsymbol\varepsilon}_{i,j} \, . \]</span> D. <span class="math inline">\(\beta_i=\gamma_i=0\)</span> pour tout <span class="math inline">\(i\)</span>, c’est-à-dire que le facteur n’a pas d’effet : <span class="math display">\[ \mathbf{Y}_{i,j} \: = \: \mu \: + \: \alpha \, x_{i,j} \: + \: {\boldsymbol\varepsilon}_{i,j} \,. \]</span> E. <span class="math inline">\(\alpha_i=\gamma_i=0\)</span>, c’est-à-dire que la covariable n’a pas d’effet : <span class="math display">\[ \mathbf{Y}_{i,j} \: = \: \mu \: + \: \beta_i \: + \: {\boldsymbol\varepsilon}_{i,j} \, . \]</span> F. Modèle nul, c’est-à-dire lorsque <span class="math inline">\(\alpha=\beta_i=\gamma_i =0\)</span> pour tout <span class="math inline">\(i\)</span> : <span class="math display">\[ \mathbf{Y}_{i,j} \: = \: \mu \: + \: {\boldsymbol\varepsilon}_{i,j} \, . \]</span></p>
+</section>
+<section id="inférence" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="inférence"><span class="header-section-number">3.3</span> Inférence</h2>
+<p>Toute l’inférence statistique se passe de la même manière que précédemment.</p>
+<section id="estimation-des-coefficients" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="estimation-des-coefficients"><span class="header-section-number">3.3.1</span> Estimation des coefficients</h3>
+<ul>
+<li>Nous pouvons montrer que les estimateurs des moindres carrés des paramètres <span class="math inline">\((a_i,b_i)\)</span> sont obtenus en réalisant la régression linéaire de <span class="math inline">\(y\)</span> contre la variable <span class="math inline">\(x\)</span> pour les données de la modalités <span class="math inline">\(i\)</span>.</li>
+<li>La paramètres du modèle singulier étant non-identifiables, il faut imposer des contraintes (<code>R</code> impose la contrainte naturelle <span class="math inline">\(\beta_1=\gamma_1=0\)</span>.)</li>
+<li>Nous obtenons l’estimation des paramètres du modèle singulier à partir de celle des <span class="math inline">\((a_i,b_i)\)</span>.</li>
+</ul>
+<p>Notons la <em>valeur ajustée</em> par <span class="math inline">\(\hat{y}_{i,j} \: = \: \hat{b}_i \: + \: \hat{a}_i \, x_{i,j}\)</span>. Alors la variance <span class="math inline">\(\sigma^2\)</span> est estimée sans biais par : <span class="math display">\[ \hat{\sigma}^2 \:\: = \:\: \frac{1}{n-2I} \sum_{i=1}^I\sum_{j=1}^{n_i} \big( y_{i,j} \: - \: \hat{y}_{i,j} \big)^2 \, . \]</span> Les tests du facteur et de la covariance seront effectués en comparant les <span class="math inline">\(\mathrm{SCR}\)</span> des différents modèles en compétition :</p>
+<ul>
+<li>nous prendrons en compte le nombre de paramètres dans chaque modèle ;</li>
+<li>nous utiliserons la fonction <code>anova</code>.</li>
+</ul>
+<p>Commençons par l’analyse du modèle complet.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>anco1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> logabondance <span class="sc">~</span> altitude_index <span class="sc">*</span> sector,</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> apollo)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anco1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = logabondance ~ altitude_index * sector, data = apollo)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.8249 -0.9039  0.0444  0.8614  3.9202 
+
+Coefficients:
+                                       Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                          10.6118544  1.3182272   8.050 2.83e-12 ***
+altitude_index                       -0.0025702  0.0006849  -3.753 0.000306 ***
+sectorHauteTarentaise                 3.2032243  1.9643181   1.631 0.106371    
+sectorPralognan                       0.3716806  2.1691158   0.171 0.864324    
+sectorChampagny                      -1.0896893  1.9813950  -0.550 0.583679    
+altitude_index:sectorHauteTarentaise -0.0016701  0.0009817  -1.701 0.092278 .  
+altitude_index:sectorPralognan       -0.0009785  0.0009742  -1.004 0.317832    
+altitude_index:sectorChampagny        0.0002226  0.0009982   0.223 0.823991    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.213 on 92 degrees of freedom
+Multiple R-squared:  0.7002,    Adjusted R-squared:  0.6774 
+F-statistic:  30.7 on 7 and 92 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Le test global de Fisher a une <span class="math inline">\(p\)</span>-valeur très basse, donc au risque d’erreur de 1ère espèce de 5%, nous pouvons conclure qu’au moins un des coefficients est non nul. Autrement dit, le modèle est pertinent.</p>
+<p>De plus, nous pouvons voir que les <span class="math inline">\(p\)</span>-valeurs des coefficients d’interaction sont toutes élevées : au risque d’erreur de 1ère espèce de 5% (pour chaque coefficient pris indépendamment), les termes d’interactions sont nuls.</p>
+</section>
+<section id="test-de-linteraction-ou-test-de-légalité-des-pentes" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="test-de-linteraction-ou-test-de-légalité-des-pentes"><span class="header-section-number">3.3.2</span> Test de l’interaction ou test de l’égalité des pentes</h3>
+<p>Il est possible de tester l’interaction des variables explicatives, en comparant les modèles avec et sans interaction grâce à un test de Fisher. Comme précédemment, la fonction <code>anova</code> permet de réaliser ce test.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>anco2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> logabondance <span class="sc">~</span> altitude_index <span class="sc">+</span> sector,</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> apollo)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(anco2, anco1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: logabondance ~ altitude_index + sector
+Model 2: logabondance ~ altitude_index * sector
+  Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+1     95 142.21                           
+2     92 135.34  3    6.8598 1.5543 0.2059</code></pre>
+</div>
+</div>
+<p>Rappelons que les hypothèses de ce test d’interaction sont : <span class="math display">\[ (\mathcal{H}_0) : \mathbf{Y}_{i,j} \: = \: \mu \: + \: \beta_i \: + \: \alpha \; x_{i,j} \: + \: {\boldsymbol\varepsilon}_{i,j} \qquad \textrm{contre} \qquad \mathbf{Y}_{i,j} \: = \: \mu \: + \: \beta_i \: + \: (\alpha+\gamma_i) \; x_{i,j} \: + \: {\boldsymbol\varepsilon}_{i,j} \, . \]</span></p>
+<p>Par conséquent, la <span class="math inline">\(p\)</span>-valeur étant élevée (0.2059), au risque d’erreur de 1ère espèce de 5%, nous ne rejetons pas <span class="math inline">\((\mathcal{H}_0)\)</span> : nous ne pouvons pas conclure qu’il y a une interaction.</p>
+<p>Remarquons que ce test est équivalent à un test d’égalité des pentes des différentes régressions.</p>
+</section>
+<section id="test-de-leffet-du-facteur-après-ajustement-de-la-covariable" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="test-de-leffet-du-facteur-après-ajustement-de-la-covariable"><span class="header-section-number">3.3.3</span> Test de l’effet du facteur après ajustement de la covariable</h3>
+<p>Puisque nous avons jugé l’interaction non significative, il nous est maintenant possible de tester l’effet du facteur. Il est possible de le réaliser à l’aide de la fonction <code>anova</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(anco2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: logabondance
+               Df  Sum Sq Mean Sq  F value    Pr(&gt;F)    
+altitude_index  1 275.089 275.089 183.7740 &lt; 2.2e-16 ***
+sector          3  34.191  11.397   7.6137  0.000129 ***
+Residuals      95 142.205   1.497                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>La <span class="math inline">\(p\)</span>-valeur du test du facteur <code>sector</code> est très basse (0.000129), donc au risque d’erreur de 1ère espèce de 5%, nous pouvons conclure que le secteur a un effect sur l’abondance du papillon.</p>
+<p>Remarquons que nous aurions pu aboutir à la même conclusion pour la seconde variable <code>altitude_index</code>.</p>
+</section>
+</section>
+<section id="analyse-des-résidus-1" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="analyse-des-résidus-1"><span class="header-section-number">3.4</span> Analyse des résidus</h2>
+<p>Comme précédemment, le modèle d’analyse de la covariance repose sur l’hypothèse (la seule) de résidus gaussiens, centrés, de même variance et indépendants. Elles sont à vérifier sur le modèle retenu. Nous renvoyons au chapitre précédent pour l’analyse des résidus et la validation du modèle.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Website built with <a href="https://quarto.org">Quarto</a></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

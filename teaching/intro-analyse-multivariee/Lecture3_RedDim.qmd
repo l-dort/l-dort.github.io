@@ -1,0 +1,8 @@
+---
+title: "Réduction de dimension"
+---
+
+
+::: {.callout-note collapse="true" appearance="simple"}
+Bientôt disponible.
+:::

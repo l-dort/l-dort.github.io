@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.29">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Régression linéaire multiple – Léo Dort</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dfa48a90d809c806c7ea2d5aecd9fc66.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-25b519a974c8f09e23ba0353a7796a56.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../teaching.css">
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Léo Dort</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../research.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../diffusion.html"> 
+<span class="menu-text">Diffusion</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Contenu</h2>
+   
+  <ul>
+  <li><a href="#préliminaires" id="toc-préliminaires" class="nav-link active" data-scroll-target="#préliminaires">Préliminaires</a>
+  <ul class="collapse">
+  <li><a href="#chargement-des-packages" id="toc-chargement-des-packages" class="nav-link" data-scroll-target="#chargement-des-packages">Chargement des packages</a></li>
+  <li><a href="#contexte-description-des-données" id="toc-contexte-description-des-données" class="nav-link" data-scroll-target="#contexte-description-des-données">Contexte &amp; Description des données</a></li>
+  <li><a href="#importation-exploration-du-jeu-de-données" id="toc-importation-exploration-du-jeu-de-données" class="nav-link" data-scroll-target="#importation-exploration-du-jeu-de-données">Importation &amp; Exploration du jeu de données</a></li>
+  </ul></li>
+  <li><a href="#visualisation-dune-relation-linéaire" id="toc-visualisation-dune-relation-linéaire" class="nav-link" data-scroll-target="#visualisation-dune-relation-linéaire"><span class="header-section-number">1</span> Visualisation d’une relation linéaire</a>
+  <ul class="collapse">
+  <li><a href="#visualisation" id="toc-visualisation" class="nav-link" data-scroll-target="#visualisation"><span class="header-section-number">1.1</span> Visualisation</a></li>
+  <li><a href="#modèle-de-régression-linéaire-simple" id="toc-modèle-de-régression-linéaire-simple" class="nav-link" data-scroll-target="#modèle-de-régression-linéaire-simple"><span class="header-section-number">1.2</span> Modèle de régression linéaire simple</a></li>
+  </ul></li>
+  <li><a href="#modèle-de-régression-linéaire-multiple" id="toc-modèle-de-régression-linéaire-multiple" class="nav-link" data-scroll-target="#modèle-de-régression-linéaire-multiple"><span class="header-section-number">2</span> Modèle de régression linéaire multiple</a>
+  <ul class="collapse">
+  <li><a href="#modélisation" id="toc-modélisation" class="nav-link" data-scroll-target="#modélisation"><span class="header-section-number">2.1</span> Modélisation</a></li>
+  <li><a href="#écriture-matricielle" id="toc-écriture-matricielle" class="nav-link" data-scroll-target="#écriture-matricielle"><span class="header-section-number">2.2</span> Écriture matricielle</a></li>
+  <li><a href="#ajustement-du-modèle-linéaire-sous-r" id="toc-ajustement-du-modèle-linéaire-sous-r" class="nav-link" data-scroll-target="#ajustement-du-modèle-linéaire-sous-r"><span class="header-section-number">2.3</span> Ajustement du modèle linéaire sous <code>R</code></a></li>
+  </ul></li>
+  <li><a href="#estimateur-des-moindres-carrés" id="toc-estimateur-des-moindres-carrés" class="nav-link" data-scroll-target="#estimateur-des-moindres-carrés"><span class="header-section-number">3</span> Estimateur des moindres carrés</a></li>
+  <li><a href="#validation-du-modèle-linéaire-analyse-des-résidus" id="toc-validation-du-modèle-linéaire-analyse-des-résidus" class="nav-link" data-scroll-target="#validation-du-modèle-linéaire-analyse-des-résidus"><span class="header-section-number">4</span> Validation du modèle linéaire : Analyse des résidus</a>
+  <ul class="collapse">
+  <li><a href="#posulat-p3-indépendance" id="toc-posulat-p3-indépendance" class="nav-link" data-scroll-target="#posulat-p3-indépendance"><span class="header-section-number">4.1</span> Posulat [P3] : Indépendance</a></li>
+  <li><a href="#postulat-p1-espérance-nulle" id="toc-postulat-p1-espérance-nulle" class="nav-link" data-scroll-target="#postulat-p1-espérance-nulle"><span class="header-section-number">4.2</span> Postulat [P1] : Espérance nulle</a></li>
+  <li><a href="#postulat-p2-homoscédasticité-des-résidus" id="toc-postulat-p2-homoscédasticité-des-résidus" class="nav-link" data-scroll-target="#postulat-p2-homoscédasticité-des-résidus"><span class="header-section-number">4.3</span> Postulat [P2] : Homoscédasticité des résidus</a></li>
+  <li><a href="#postula-p4-normalité-des-résidus" id="toc-postula-p4-normalité-des-résidus" class="nav-link" data-scroll-target="#postula-p4-normalité-des-résidus"><span class="header-section-number">4.4</span> Postula [P4] : Normalité des résidus</a></li>
+  <li><a href="#variance-des-résidus" id="toc-variance-des-résidus" class="nav-link" data-scroll-target="#variance-des-résidus"><span class="header-section-number">4.5</span> Variance des résidus</a></li>
+  </ul></li>
+  <li><a href="#prédiction" id="toc-prédiction" class="nav-link" data-scroll-target="#prédiction"><span class="header-section-number">5</span> Prédiction</a></li>
+  <li><a href="#intervalles-de-confiance" id="toc-intervalles-de-confiance" class="nav-link" data-scroll-target="#intervalles-de-confiance"><span class="header-section-number">6</span> Intervalles de confiance</a>
+  <ul class="collapse">
+  <li><a href="#intervalles-de-confiance-pour-les-paramètres" id="toc-intervalles-de-confiance-pour-les-paramètres" class="nav-link" data-scroll-target="#intervalles-de-confiance-pour-les-paramètres"><span class="header-section-number">6.1</span> Intervalles de confiance pour les paramètres</a></li>
+  <li><a href="#intervalles-de-confiance-pour-les-prédictions" id="toc-intervalles-de-confiance-pour-les-prédictions" class="nav-link" data-scroll-target="#intervalles-de-confiance-pour-les-prédictions"><span class="header-section-number">6.2</span> Intervalles de confiance pour les prédictions</a></li>
+  </ul></li>
+  <li><a href="#tests-statistiques" id="toc-tests-statistiques" class="nav-link" data-scroll-target="#tests-statistiques"><span class="header-section-number">7</span> Tests statistiques</a>
+  <ul class="collapse">
+  <li><a href="#tests-sur-un-coefficient" id="toc-tests-sur-un-coefficient" class="nav-link" data-scroll-target="#tests-sur-un-coefficient"><span class="header-section-number">7.1</span> Tests sur un coefficient</a></li>
+  <li><a href="#tests-sur-un-groupe-de-coefficients" id="toc-tests-sur-un-groupe-de-coefficients" class="nav-link" data-scroll-target="#tests-sur-un-groupe-de-coefficients"><span class="header-section-number">7.2</span> Tests sur un groupe de coefficients</a></li>
+  <li><a href="#test-du-modèle" id="toc-test-du-modèle" class="nav-link" data-scroll-target="#test-du-modèle"><span class="header-section-number">7.3</span> Test du modèle</a></li>
+  </ul></li>
+  <li><a href="#ajustement-de-modèle-aux-données" id="toc-ajustement-de-modèle-aux-données" class="nav-link" data-scroll-target="#ajustement-de-modèle-aux-données"><span class="header-section-number">8</span> Ajustement de modèle aux données</a>
+  <ul class="collapse">
+  <li><a href="#coefficient-de-détermination" id="toc-coefficient-de-détermination" class="nav-link" data-scroll-target="#coefficient-de-détermination"><span class="header-section-number">8.1</span> Coefficient de détermination</a></li>
+  <li><a href="#coefficient-de-détermination-ajusté" id="toc-coefficient-de-détermination-ajusté" class="nav-link" data-scroll-target="#coefficient-de-détermination-ajusté"><span class="header-section-number">8.2</span> Coefficient de détermination ajusté</a></li>
+  </ul></li>
+  <li><a href="#annexe-a.-en-pratique-les-grandes-étapes" id="toc-annexe-a.-en-pratique-les-grandes-étapes" class="nav-link" data-scroll-target="#annexe-a.-en-pratique-les-grandes-étapes">Annexe A. En pratique : les grandes étapes</a></li>
+  <li><a href="#annexe-b.-tests-problème-de-colinéarité-des-variables-explicatives" id="toc-annexe-b.-tests-problème-de-colinéarité-des-variables-explicatives" class="nav-link" data-scroll-target="#annexe-b.-tests-problème-de-colinéarité-des-variables-explicatives">Annexe B. Tests &amp; Problème de colinéarité des variables explicatives</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<div class="chapter-nav">
+  <div class="chapter-links" id="chapterLinks">
+    <a href="index.html">Présentation</a>
+    <a href="Lecture1_RegMulti.html">Régression linéaire multiple</a>
+    <a href="Lecture2_RegFacto.html">Régression linéaire factorielle</a>
+    <a href="Lecture3_RedDim.html">Réduction de dimension</a>
+    <a href="Lecture4_ClassifNonSupervisee.html">Classification non-supervisée</a>
+  </div>
+
+<button class="chapters-toggle" id="chaptersToggle" style="display:none;">☰ Chapitres</button>
+
+  <div class="chapter-dropdown" id="chapterDropdown"></div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const header = document.querySelector("#quarto-header");
+  const nav = document.querySelector(".chapter-nav");
+  const linksContainer = document.getElementById("chapterLinks");
+  const toggleBtn = document.getElementById("chaptersToggle");
+  const dropdown = document.getElementById("chapterDropdown");
+
+  if (!nav || !linksContainer || !toggleBtn || !dropdown) return;
+
+  dropdown.innerHTML = linksContainer.innerHTML;
+
+  function syncPosition() {
+    if (!header) return;
+    nav.style.top = header.classList.contains("headroom--unpinned") ? "0px" : "80px";
+  }
+  if (header) {
+    new MutationObserver(syncPosition).observe(header, { attributes: true, attributeFilter: ["class"] });
+    syncPosition();
+  }
+
+  function setTotalOffset() {
+    const h = (header ? header.offsetHeight : 0) + nav.offsetHeight;
+    document.documentElement.style.setProperty('--total-header-height', h + 'px');
+  }
+
+  function checkOverflow() {
+    linksContainer.style.display = "flex";
+    toggleBtn.style.display = "none";
+
+    const overflowing = linksContainer.scrollWidth > linksContainer.clientWidth + 1;
+
+    if (overflowing) {
+      linksContainer.style.display = "none";
+      toggleBtn.style.display = "flex";
+    }
+    setTotalOffset();
+  }
+
+  checkOverflow();
+  window.addEventListener("resize", checkOverflow);
+
+  toggleBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    dropdown.classList.toggle("open");
+  });
+  document.addEventListener("click", function (e) {
+    if (!toggleBtn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.remove("open");
+    }
+  });
+});
+</script>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Régression linéaire multiple</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Ce chapitre est très largement inspiré, et pour tout une partie reprise du cours <em>Modèle linéaire gaussien</em> de Sophie Donnet. Il peut être retrouvé sur son <a href="https://sophiedonnet.github.io/linearmodel.html">site internet</a>.</p>
+<section id="préliminaires" class="level1 unnumbered">
+<h1 class="unnumbered">Préliminaires</h1>
+<section id="chargement-des-packages" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="chargement-des-packages">Chargement des packages</h2>
+<p>Nous débutons en chargeant un ensemble de paquets pour la manipulation de données et des représentations graphiques.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(tidyverse)) <span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(knitr)) <span class="fu">install.packages</span>(<span class="st">"knitr"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(corrplot)) <span class="fu">install.packages</span>(<span class="st">"corrplot"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(GGally)) <span class="fu">install.packages</span>(<span class="st">"GGally"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)   <span class="co"># manipulation et visualisation avancees de donnees</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)       <span class="co"># Export et format de notebook R </span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)    <span class="co"># Graphiques de matrices</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)      <span class="co"># Extension de ggplot2 facile d'utilisation</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>()) <span class="co"># theme noir et blanc par defaut de ggplot2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="contexte-description-des-données" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="contexte-description-des-données">Contexte &amp; Description des données</h2>
+<p>Le papillon Apollon de l’espèce <em>Parnassius apollo</em> est une espèce emblématique des milieux montagnards, inscrite sur la liste rouge des espèces menacées en France avec le statut <strong>vulnérable</strong>. Il affectionne les pelouses rocailleuses, éboulis et prairies sèches d’altitude, où pousse sa plante-hôte, l’orpin <em>Sedum sp.</em>, dont se nourrit exclusivement sa chenille. L’Apollon est particulièrement sensible aux conditions microclimatiques locales (ensolleillement, humidité du sol, <em>etc</em>.) ainsi qu’aux pratiques de gestion du milieu notamment le pastoralisme, qui influence l’ouverture des pelouses et donc la disponibilité en plante-hôte.</p>
+<p>Dans le cadre d’un suivi de population mené dans le <em>Parc National de la Vanoise</em>, 100 sites d’observations ont été échantillonnés le long de transects, répartis sur quatre secteurs du massif. Pour chaque site, plusieurs variables environnementales ont été mesurées, ainsi que l’abondance (logarithmique) du papillon.</p>
+<p>Le jeu de données <code>apollo</code> (au format <code>.Rdata</code>) possède 100 lignes et 6 colonnes, dont :</p>
+<ul>
+<li><em>humidity_index</em> : indice d’humidité du sol local du site. Des valeurs faibles correspondent à des milieux secs, favorables à l’espèce ; des valeurs élevées à des milieux humides, généralement moins favorables ;</li>
+<li><em>altitude_index</em> : indice d’altitude du site d’observation ;</li>
+<li><em>orientation_index</em> : indice d’expositation du site. Les valeurs élevées correspondent à des versants bien exposés et ensolleilés ;</li>
+<li><em>logabundance</em> : logarithme de l’abondance du papillon Apollon dénombrée par transect sur chaque type ;</li>
+<li><em>sector</em> : secteur géographique du site d’observation au sein du Parc National de la Vanoise ;</li>
+<li><em>grazing</em> : mode de gestion du site : <em>grazed</em> pour un site pâturé, alpage exploité ; ou <em>ungrazed</em> pour un site non-paturé, en évolution naturelle.</li>
+</ul>
+<p>Ce jeu de données permet d’étudier comment les conditions environnementales et les pratiques de gestion influencent l’abondance du papillon Apollon dans le Parc national de la Vanoise, dans une perspective de conservation d’une espèce menacée.</p>
+</section>
+<section id="importation-exploration-du-jeu-de-données" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="importation-exploration-du-jeu-de-données">Importation &amp; Exploration du jeu de données</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">'Data/apollo.Rdata'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(apollo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 100   6</code></pre>
+</div>
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(apollo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  humidity_index altitude_index orientation_index logabondance          sector
+1       9.694338         2314.4         1.9667860    2.5121862       Pralognan
+2      10.689511         2206.8         2.8300227    3.6229736       Pralognan
+3      11.298474         2419.6         1.0720735    8.3132629  HauteMaurienne
+4      11.198018         2010.4         0.2104998    6.8623379 HauteTarentaise
+5      11.253549         2729.6         0.4967877    1.7761766       Pralognan
+6      12.956267         3073.2         0.4395535    0.9502576       Pralognan
+   grazing
+1 ungrazed
+2 ungrazed
+3   grazed
+4   grazed
+5 ungrazed
+6   grazed</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">dim</span>(apollo)[<span class="dv">1</span>]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(apollo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> humidity_index   altitude_index orientation_index      logabondance.V1     
+ Min.   : 7.805   Min.   :1380   Min.   :-2.7783   Min.   :-0.878076002828  
+ 1st Qu.:10.731   1st Qu.:1796   1st Qu.: 0.3390   1st Qu.: 2.997486496010  
+ Median :11.195   Median :2053   Median : 0.8655   Median : 4.548821705460  
+ Mean   :11.236   Mean   :2102   Mean   : 0.8632   Mean   : 4.488913669260  
+ 3rd Qu.:11.937   3rd Qu.:2349   3rd Qu.: 1.4746   3rd Qu.: 5.879824885520  
+ Max.   :13.350   Max.   :3073   Max.   : 4.2412   Max.   : 9.264007023730  
+             sector       grazing  
+ HauteMaurienne :28   ungrazed:54  
+ HauteTarentaise:24   grazed  :46  
+ Pralognan      :26                
+ Champagny      :22                
+                                   
+                                   </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="visualisation-dune-relation-linéaire" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Visualisation d’une relation linéaire</h1>
+<section id="visualisation" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="visualisation"><span class="header-section-number">1.1</span> Visualisation</h2>
+<p>Commençons par une représentation graphique du nuage de points du logarithme de l’abondance du papillon Apollon en fonction de l’altitude du site d’observation.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(apollo) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> altitude_index,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> logabondance</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Altitude (en mètre)"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Logarithme de l'abondance"</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                              <span class="at">color =</span> <span class="st">"grey40"</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lecture1_RegMulti_files/figure-html/plot_altitude-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Nous pouvons remarquer une relation linéaire entre les deux variables : lorsque l’altitude augmente, il semble que l’abondance du papillon diminue (de manière linéaire).</p>
+</section>
+<section id="modèle-de-régression-linéaire-simple" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="modèle-de-régression-linéaire-simple"><span class="header-section-number">1.2</span> Modèle de régression linéaire simple</h2>
+<p>Nous donnons le code <code>R</code> permettant d’effecuter une régression linéaire simple et d’obtenir les graphiques du cours. Nous renvoyons au TD 1 pour une introduction exhaustive à ce modèle.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rls_apollo <span class="ot">&lt;-</span> <span class="fu">lm</span>(logabondance <span class="sc">~</span> altitude_index,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> apollo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rls_apollo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = logabondance ~ altitude_index, data = apollo)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.4757 -0.8852 -0.1511  0.8639  5.1083 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    12.986199   0.700314   18.54   &lt;2e-16 ***
+altitude_index -0.004043   0.000327  -12.36   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.342 on 98 degrees of freedom
+Multiple R-squared:  0.6093,    Adjusted R-squared:  0.6053 
+F-statistic: 152.8 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  apollo,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> altitude_index, </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> logabondance)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Droite de regression avec l'erreur standard</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> lm, </span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> y <span class="sc">~</span> x,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">se =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">'turquoise4'</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Altitude (en mètre)"</span>,</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Logarithme de l'abondance"</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>,</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>                              <span class="at">color =</span> <span class="st">"grey40"</span>)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lecture1_RegMulti_files/figure-html/plot_lm-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="modèle-de-régression-linéaire-multiple" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Modèle de régression linéaire multiple</h1>
+<p>La modélisation précédente reste simpliste. En effet, d’autres variables sont susceptibles d’avoir une influence sur la variable d’abondance comme par exemple l’humidité, l’altitude ou l’exposition (ou orientation) du site d’observation. Pour analyser la relation entre l’abondance, l’altitude et l’exposition d’un site d’observatoin, nous cherchons une fonciton <span class="math inline">\(f:\mathbb{R}\to\mathbb{R}\)</span> telle que : <span class="math display">\[ \texttt{logabondance} \quad \approx \quad f\big( \: \texttt{altitude} \, , \, \texttt{humidite} \, , \, \texttt{orientation} \: ) \, . \]</span> Si on suppose que le lien est <strong>linéaire</strong>, alors on cherche <span class="math inline">\(f\)</span> sous la forme : <span class="math display">\[ f(x_1,x_2,x_3) \quad = \quad  \beta_1x_1 \: + \: \beta_2x_2 \: + \: \beta_3x_3 \, . \]</span> Cela revient donc à estimer les paramètres <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span> et <span class="math inline">\(\beta_3\)</span>.</p>
+<section id="modélisation" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="modélisation"><span class="header-section-number">2.1</span> Modélisation</h2>
+<p>Nous supposons que les données <span class="math inline">\(y_i\)</span>, de la variable d’intérêt, sont la réalisation de variables aléatoires <span class="math inline">\(\mathbf{Y}_i\)</span> telles que : <span class="math display">\[ \mathbf{Y}_i \quad = \quad \beta_1\, x_{i,1} \: + \: \beta_2 \, x_{i,2} \: + \: \dots \: + \: \beta_p \, x_{i,p} \: + \: {\boldsymbol\varepsilon}_i, \qquad \text{pour tout } i=1,\dots,n \]</span> où</p>
+<ul>
+<li>les <span class="math inline">\(x_i\)</span> sont des nombres connus, déterministes (<em>i.e.</em> non aléatoires) ;</li>
+<li>les paramètres <span class="math inline">\(\beta_j\)</span> sont déterministes et inconnus ;</li>
+<li>les variables <span class="math inline">\({\boldsymbol\varepsilon}_i\)</span> sont des variables aléatoires <em>i.i.d.</em> de loi <span class="math inline">\(\mathcal{N}(0,\sigma^2))\)</span> de variance <span class="math inline">\(\sigma^2\)</span> inconnue.</li>
+</ul>
+<p>Par simplification, nous avons supposé que <span class="math inline">\(f\)</span> est linéaire. En réalité, la plupart du temps la fonction <span class="math inline">\(f\)</span> recherchée est affine, c’est-à-dire de la forme : <span class="math display">\[ f(x_1,\dots,x_p) \:\: = \:\: \beta_0 \: + \: \beta_1 x_1 \: + \: \dots \: + \: \beta_p x_p \, . \]</span> À des fins de simplification, nous pouvons ré-écrire cette dernière égalité comme : <span class="math display">\[ f(x_1,\dots,x_p) \:\: = \:\: \beta_0 x_0 \: + \: \beta_1 x_1 \: + \: \dots \: + \: \beta_p x_p \, , \]</span> où nous avons introduit un vecteur <span class="math inline">\(x_0\)</span> dont toutes les composantes sont égales à 1. Plus simplement (pour correspondre avec l’écriture matricielle de la partie suivante), nous écrirons : <span class="math display">\[ \mathbf{Y}_i \quad = \quad \beta_1\, x_{i,1} \: + \: \beta_2 \, x_{i,2} \: + \: \dots \: + \: \beta_p \, x_{i,p} \: + \: {\boldsymbol\varepsilon}_i, \qquad \text{pour tout } i=1,\dots,n \]</span> et considérer que la première variable est l’ordonnée à l’origine, c’est-à-dire la variable consante égale à 1, c’est-à-dire <span class="math inline">\(x_1 = \mathbf{1}_n = \begin{pmatrix}1 \\ \vdots \\ 1\end{pmatrix}\)</span>.</p>
+</section>
+<section id="écriture-matricielle" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="écriture-matricielle"><span class="header-section-number">2.2</span> Écriture matricielle</h2>
+<p>Notons <span class="math display">\[ \beta = \begin{pmatrix} \beta_0 \\ \beta_1 \\ \vdots \\ \beta_p \end{pmatrix} , \qquad \mathbf{Y} = \begin{pmatrix} Y_1 \\ \vdots \\ Y_n \end{pmatrix} , \qquad X = \begin{pmatrix}x_{1,1} &amp; x_{1,2} &amp; \cdots &amp; x_{1,p} \\ x_{2,1} &amp; x_{2,2} &amp; \cdots &amp; x_{2,p} \\
+\vdots &amp; \vdots &amp; &amp; \vdots \\ x_{n,1} &amp; x_{n,2} &amp; \cdots &amp; x_{n,p} \end{pmatrix} , \qquad {\boldsymbol\varepsilon} = \begin{pmatrix} {\boldsymbol\varepsilon}_1 \\ \vdots \\ {\boldsymbol\varepsilon}_n \end{pmatrix}. \]</span></p>
+<p>Avec ces notations, le modèle précédent se ré-écrit alors : <span class="math display">\[ \mathbf{Y} = X \, \beta \: + \: {\boldsymbol\varepsilon} \]</span> où</p>
+<ul>
+<li><span class="math inline">\(X\)</span>, apelée <strong>matrice de design</strong>, est une matrice à <span class="math inline">\(n\)</span> lignes et <span class="math inline">\(p+1\)</span> colonnes contenant une première colonne égale à 1 et les mesures des variables dites explicatives ; et</li>
+<li><span class="math inline">\({\boldsymbol\varepsilon}\)</span> vérifie <span class="math inline">\({\boldsymbol\varepsilon} \sim \mathcal{N}(0, \sigma^2 I_n)\)</span>.</li>
+</ul>
+<p>Remarquons que comme <span class="math inline">\(X\)</span> et <span class="math inline">\(\beta\)</span> sont déterministes, <span class="math inline">\(\mathbf{Y}\)</span> est un vecteur gaussien de loi <span class="math inline">\(\mathcal{N}(X\beta,\, \sigma^2 I_n)\)</span>.</p>
+<p>Pour tout ce cours, nous supposons que la matrice de design <span class="math inline">\(X\)</span> est de rang plein, c’est-à-dire que les variables explicatives (les colonnes de <span class="math inline">\(X\)</span>) sont linéairement indépendantes. En effet, si une colonne est combinaison linéaire des autres, alors nous ne pourront pas distinguer les effets éventuels. Une conséquence immédiate de cette hypothèse est que <span class="math inline">\(p\)</span> doit être inférieur à <span class="math inline">\(n\)</span>.</p>
+</section>
+<section id="ajustement-du-modèle-linéaire-sous-r" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="ajustement-du-modèle-linéaire-sous-r"><span class="header-section-number">2.3</span> Ajustement du modèle linéaire sous <code>R</code></h2>
+<p>Nous souhaitons expliqur l’abondance (logarithmique) par l’humidité, l’altitude et l’exposition d’un site d’observation. La fonction <code>lm</code> (<em>linear model</em>) permet d’ajuster le modèle linéaire.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>reg_apollo <span class="ot">&lt;-</span> <span class="fu">lm</span>(logabondance <span class="sc">~</span> humidity_index <span class="sc">+</span> altitude_index <span class="sc">+</span> orientation_index,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> apollo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_apollo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = logabondance ~ humidity_index + altitude_index + 
+    orientation_index, data = apollo)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.3368 -0.7446 -0.0876  0.7586  5.2587 
+
+Coefficients:
+                    Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       13.5439577  1.5234477   8.890 3.60e-14 ***
+humidity_index     0.0106327  0.1182602   0.090    0.929    
+altitude_index    -0.0041094  0.0002928 -14.034  &lt; 2e-16 ***
+orientation_index -0.6217292  0.1196374  -5.197 1.14e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.197 on 96 degrees of freedom
+Multiple R-squared:  0.6956,    Adjusted R-squared:  0.6861 
+F-statistic: 73.11 on 3 and 96 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>On obtient entre autres un tableau <code>Coefficients</code> qui comporte pour chaque paramètre (chaque ligne) quatre colonnes :</p>
+<ul>
+<li><code>Estimate</code> : son estimation ;</li>
+<li><code>Std. Error</code> : son écart-type estimé ;</li>
+<li><code>t value</code> : la valeur observée de la statistique du test d’hypothèse <span class="math inline">\((\mathcal{H}_0) : \beta_i = 0\)</span> contre <span class="math inline">\((\mathcal{H}_1) : \beta_i \ne 0\)</span> ; et</li>
+<li><code>Pr(&gt;|t|)</code> : pour la statistique de test sous <span class="math inline">\((\mathcal{H}_0)\)</span>, la probabilité de dépasser la valeur estimée.</li>
+</ul>
+</section>
+</section>
+<section id="estimateur-des-moindres-carrés" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Estimateur des moindres carrés</h1>
+<p>Comme pour la régression linéaire simple, nous cherchons directement parmi toutes les droites possibles <span class="math display">\[ y \:\: = \:\: \beta_1x_1 \: + \: \dots \: + \: \beta_px_p \, , \]</span> celle qui les la “plus proche” du nuage de points. Nous cherchons donc les coefficients <span class="math inline">\(\beta_1,\dots,\beta_p\)</span> minimisant la distance entre les valeurs observées <span class="math inline">\(y_i\)</span>, et les valeurs prédites ou ajustées par la droite <span class="math inline">\(\beta_1x_{i,1}\:+\:\dots\:+\:\beta_px_{i,p}\)</span>. Il exsite de nombreuses distances : la distance de Manhattant (la somme des valeurs absolues), la norme euclidienne, la norme-<span class="math inline">\(p\)</span>, la norme-<span class="math inline">\(\infty\)</span>, <em>etc</em>.</p>
+<p>Nous choisissons la norme euclidienne. L’estimation retenue pour <span class="math inline">\(\beta\)</span> est donc celle des <strong>moindres carrés</strong>. Elle est l’unique solution du problème d’optimisation : <span class="math display">\[ \hat{\beta} \quad = \quad \underset{\beta \, \in \, \mathbb{R}^{p}}{\mathrm{argmin}} \:\: \sum_{i=1}^n \Big( y_i - \sum_{j=1}^p \beta_j \, x_{i,j} \Big)^2 \, ,\]</span> ce qui se ré-écrit matriciellement comme <span class="math display">\[ \hat{\beta} \quad = \quad \underset{\beta \, \in \, \mathbb{R}^{p}}{\mathrm{argmin}} \:\: \Vert y - X \, \beta \Vert_2^2 \, ,\]</span> où <span class="math inline">\(\Vert \cdot \Vert_2\)</span> est la norme euclidienne.</p>
+<p>À partir de la fonction <code>lm</code>, l’estimation de <span class="math inline">\(\beta\)</span> est contenue dans <code>coefficients</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>reg_apollo<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      (Intercept)    humidity_index    altitude_index orientation_index 
+     13.543957706       0.010632654      -0.004109369      -0.621729153 </code></pre>
+</div>
+</div>
+<p>Si la matrice de <em>design</em> <span class="math inline">\(X\)</span> est de rang plein, il est possible de calculer explicitement ces estimations à partir de <span class="math inline">\(X\)</span> : <span class="math display">\[ \hat{\beta} \quad = \quad (X^T X)^{-1} \, X^T y \, . \]</span></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(apollo[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], <span class="at">nrow =</span> n, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">rep</span>(<span class="dv">1</span>, n), X)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>XT <span class="ot">&lt;-</span> <span class="fu">t</span>(X)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> apollo[, <span class="dv">4</span>]</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>hat_beta <span class="ot">&lt;-</span> <span class="fu">solve</span>(XT <span class="sc">%*%</span> X) <span class="sc">%*%</span> XT <span class="sc">%*%</span> y</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>hat_beta</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                          [,1]
+                  13.543957706
+humidity_index     0.010632654
+altitude_index    -0.004109369
+orientation_index -0.621729153</code></pre>
+</div>
+</div>
+<p>On note dans la suite <span class="math inline">\(\hat{\boldsymbol\beta}\)</span> l’<strong>estimateur des moindres carrés</strong>.</p>
+</section>
+<section id="validation-du-modèle-linéaire-analyse-des-résidus" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Validation du modèle linéaire : Analyse des résidus</h1>
+<p>Commençons par quelques notations :</p>
+<ul>
+<li>les <strong>valeurs prédites</strong> ou <strong>ajustées</strong> par le modèle sont définis par : <span class="math display">\[ \hat{y}_i \: = \: \sum_{j=1}^p \hat{\beta}_j \, x_{i,j} \: = \: x_i \, \hat{\beta} \:\: ; \]</span></li>
+<li>les <strong>résidus estimés</strong> sont définis par : <span class="math display">\[ \hat{e}_i \: = \: y_i - \hat{y}_i \:\: ; \]</span></li>
+<li>les <strong>résidus</strong> sont les estimateurs des erreurs inconnues <span class="math inline">\(\hat {\boldsymbol\varepsilon}_i\)</span>, c’est-à-dire : <span class="math display">\[ \hat{{\boldsymbol\varepsilon}}_i \: = \: \mathbf{Y}_i - \hat{\mathbf{Y}}_i \:\: . \]</span></li>
+</ul>
+<p>Les résidus sont accessibles <em>via</em> la fonction <code>resid</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resid</span>(reg_apollo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>           1            2            3            4            5            6 
+-0.401316136  0.793421338  5.258741160  1.591664953 -0.361635002  0.170736662 
+           7            8            9           10           11           12 
+-0.801042630  0.363274190  0.712507500  0.581069138 -0.006406004  0.772582812 
+          13           14           15           16           17           18 
+ 0.845431877 -0.552279462  0.503735242 -0.418329967 -1.444432283  0.657099438 
+          19           20           21           22           23           24 
+ 1.225989178  1.142845504  2.044093688  1.560460010  0.347985713  1.495354708 
+          25           26           27           28           29           30 
+-0.403985648 -0.439483153 -0.387512291 -1.915605358 -1.723582845  1.532293913 
+          31           32           33           34           35           36 
+-1.408601285 -0.375482835  0.216696648 -0.342614513 -2.075657850  0.552810467 
+          37           38           39           40           41           42 
+-1.844936514 -1.522861529 -0.427697826  0.756634789  1.134426103 -0.823784707 
+          43           44           45           46           47           48 
+-0.057849246 -0.613726148 -1.845874502  1.686446172 -0.658051589 -1.260681902 
+          49           50           51           52           53           54 
+ 0.980787907 -0.210704422 -0.492152078  1.652576908 -0.949209995  0.073269809 
+          55           56           57           58           59           60 
+-0.258361597 -2.148823951 -0.205485356 -0.254284954 -1.461378481 -1.122394889 
+          61           62           63           64           65           66 
+-1.331229849  0.488495308  1.018282230  1.359087627 -0.455152038 -1.325485009 
+          67           68           69           70           71           72 
+ 1.009973459 -1.294894208  0.269936074  0.569909113 -1.514518378 -0.242464032 
+          73           74           75           76           77           78 
+ 1.701332252  1.199816917  0.702596343  0.226784060  1.398050653 -1.823222476 
+          79           80           81           82           83           84 
+-1.061727917  0.300201701 -0.046085153 -0.423968031 -1.233536922  0.596065731 
+          85           86           87           88           89           90 
+-2.336803838  0.764664462  0.682063370 -0.498193325 -0.321479805 -0.725753756 
+          91           92           93           94           95           96 
+ 0.366540446  1.310125502  0.893034673  0.754156842 -1.102377956 -0.962757462 
+          97           98           99          100 
+ 1.634967493 -0.477267762  0.611552551 -0.117427766 </code></pre>
+</div>
+</div>
+<p>Les tests, intervalles de confiance, prévisions que nous verrons dans les parties suivantes, ne sont valables que sous l’hypothèse que les observations sont la réalisation d’un modèle linéaire gaussien. Ce dernier requiert que les erreurs <span class="math inline">\({\boldsymbol\varepsilon}_1,\dots,{\boldsymbol\varepsilon}_n\)</span> satisfassent les propriétés suivantes :</p>
+<ul>
+<li>[P1] : espérance nulle <span class="math inline">\(\mathbb{E}[{\boldsymbol\varepsilon}_i] = 0\)</span> ;</li>
+<li>[P2] : variance constante <span class="math inline">\(\mathbb{V}({\boldsymbol\varepsilon}_i) = \sigma^2\)</span> ;</li>
+<li>[P3] : indépendants ; et dans le cadre du modèle linéaire <strong>gaussien</strong></li>
+<li>[P4] : <span class="math inline">\({\boldsymbol\varepsilon}_i \sim \mathcal{N}(0,\sigma^2)\)</span>.</li>
+</ul>
+<p>Puisque nous n’avons évidemment pas accès aux erreurs <span class="math inline">\({\boldsymbol\varepsilon}_i\)</span>, ces propriétés doivent être vérifiées sur le modèle ajusté. Elles peuvent l’être l’aide des graphiques suivants :</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_apollo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lecture1_RegMulti_files/figure-html/residus_plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="posulat-p3-indépendance" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="posulat-p3-indépendance"><span class="header-section-number">4.1</span> Posulat [P3] : Indépendance</h2>
+<p>L’indépendance des données ne peut être assuré que par le protocole expérimental.</p>
+</section>
+<section id="postulat-p1-espérance-nulle" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="postulat-p1-espérance-nulle"><span class="header-section-number">4.2</span> Postulat [P1] : Espérance nulle</h2>
+<p>Cette propriété revient à valider que la relation entre <span class="math inline">\(x\)</span> et <span class="math inline">\(y\)</span> est linéaire. Le graphe <code>Residuals vs Fitted</code> des résidus en fonction des données prédites (c’est-à-dire des points <span class="math inline">\((\hat{y}_i, \hat{e}_i)\)</span>) (en haut à gauche du <code>plot</code> précédent) permet de le vérifier.</p>
+<ul>
+<li>Si nous observons un nuage de points centré et aligné sans structure particulière, alors nous nous satisfaisons.</li>
+<li>Si nous observons une structure particulière (croissance des résidus en fonction des données prédites par exemple ou autre), alors nous pourrons penser que le modèle n’est pas adapté aux données, qu’il manque une tendance dans le modèle.</li>
+<li>Dans ce deuxième cas, plusieurs solutions sont possibles : transformer les données comme travailler avec le log des observations, ou le log des variables explicatives, <em>etc</em>.</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_apollo, <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lecture1_RegMulti_files/figure-html/residuals_vs_fitted-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Il ne semble pas y avoir de wtrucutre particulière ici.</p>
+</section>
+<section id="postulat-p2-homoscédasticité-des-résidus" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="postulat-p2-homoscédasticité-des-résidus"><span class="header-section-number">4.3</span> Postulat [P2] : Homoscédasticité des résidus</h2>
+<p>Les erreurs estimées <span class="math inline">\(\hat e_i\)</span> ne sont pas de variance constante. Nous utilisons donc la version standardisée. Le graphe <code>Scale-Location</code> des résidus standardisés en fonction des données prédites (c’est-à-dire des points <span class="math inline">\((\hat{y}_i, \hat{r}_i)\)</span>, où <span class="math inline">\(r_i = \frac{\hat{e}_i}{\widehat{se}_i}\)</span> avec <span class="math inline">\(se_i\)</span> est l’écart-type estimé des <span class="math inline">\(\hat{e}_i\)</span>) permet de le vérifier.</p>
+<ul>
+<li>Si nous observons un nuage de points centré et aligné sans structure particulière, alors nous nous satisfaisons.</li>
+<li>Si nous observons une structure particulière (croissance des résidus standardisés en fonction des données prédites par exemple ou autre), alors nous pourrons penser que le modèle n’est pas homoscédastique.</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_apollo, <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lecture1_RegMulti_files/figure-html/scale-location-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Il ne semble pas y avoir de wtrucutre particulière ici.</p>
+</section>
+<section id="postula-p4-normalité-des-résidus" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="postula-p4-normalité-des-résidus"><span class="header-section-number">4.4</span> Postula [P4] : Normalité des résidus</h2>
+<p>Le QQ-plot des résidus estimés permet de tester le caractère gaussien des résidus.</p>
+<ul>
+<li>Si nous observons que les points sont alignés le long de la première bissectrice, alors nous nous satisfaisons.</li>
+<li>Cependant, ce postulat [P4] n’est pas obligatoire car si le nombre d’observations <span class="math inline">\(n\)</span> est grand, alors nous pouvons obtenir des propriétés asymptotiques des estimateurs et des tests considérés plus haut.</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_apollo, <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lecture1_RegMulti_files/figure-html/qq-plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Les quantiles des résidus estimés semblent bien correspondre aux quantiles théoriques de la loi normale.</p>
+</section>
+<section id="variance-des-résidus" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="variance-des-résidus"><span class="header-section-number">4.5</span> Variance des résidus</h2>
+<p>La matrice de variance-covariance des résidus est <span class="math display">\[ \Sigma_{\hat{\boldsymbol\varepsilon}} \quad = \quad \sigma^2 \: (I_n \:-\:P_{[X]}) \, . \]</span> Cette matrice est dépendante du bruit <span class="math inline">\(\sigma^2\)</span> inconnue.</p>
+<p>Sous l’hypothèse d’un modèle linéaire gaussien, les résidus <span class="math inline">\(\hat{\boldsymbol\varepsilon}_i\)</span> :</p>
+<ul>
+<li>sont gaussiens, centrés, comme l’erreur <span class="math inline">\({\boldsymbol\varepsilon}_i\)</span> ;</li>
+<li>mais ils n’ont pas tous la même variance, et ne sont en général pas indépendant.</li>
+</ul>
+<p>En revanche, une propriété importante est que <span class="math inline">\(\hat{\boldsymbol\varepsilon}\)</span> et <span class="math inline">\(\hat{\mathbf{Y}}\)</span> sont indépendants. Cette propriété nous permet de construire un estimateur naturel de <span class="math inline">\(\sigma^2\)</span> dont on connait la loi. L’estimateur <span class="math display">\[ \hat{\boldsymbol\sigma} \quad = \quad \frac{1}{n-p} \, \sum_{i=1}^n \hat{{\boldsymbol\varepsilon}}_i^2 \]</span> est un estimateur sans biais de <span class="math inline">\(\sigma^2\)</span>. Plus précisément : <span class="math display">\[ (n-p)\,\frac{\hat{\boldsymbol\sigma}^2}{\sigma^2} \quad \sim \quad \chi^2(n-p) \, , \]</span> où <span class="math inline">\(\chi^2(n-p)\)</span> est la loi du Khi-deux à <span class="math inline">\(n-p\)</span> <em>d.d.l.</em></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>hat_sigma <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>(n<span class="sc">-</span>p) <span class="sc">*</span> <span class="fu">sum</span>(<span class="fu">resid</span>(reg_apollo)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>hat_sigma</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.431722</code></pre>
+</div>
+</div>
+<p>En particulier, il est maintenant possible d’obtenir un estimateur de la variance des coefficients. Rappelons que <span class="math inline">\(\hat{\boldsymbol\beta}_j\)</span> est de loi <span class="math inline">\(\mathcal{N}(\beta,\,\sigma^2(X^TX)^{-1}))\)</span>. En particulier, <span class="math display">\[ \sigma^2_{\hat{\beta}_j} \:\: = \:\: \sigma^2 \: \big[(X^TX)^{-1}\big]_{jj} \qquad \textrm{et} \qquad \sigma_{\hat{\beta}_j ,\: \hat{\beta}_k} \:\: = \:\: \sigma^2 \: \big[(X^TX)^{-1}\big]_{jk} \, . \]</span> Pour calculer ces quantités, il nous faut connaître la variance inconnue <span class="math inline">\(\sigma^2\)</span>, dont nous connaissons un estimateur sans biais. Alors un estimateur de la variance du coefficient <span class="math inline">\(\beta_j\)</span> est donné par : <span class="math display">\[ \hat{\boldsymbol\sigma}_{\hat{\beta}_j} \:\: = \:\: \hat{\boldsymbol\sigma}\, \big[(X^TX)^{-1}]_{jj} \, . \]</span></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">diag</span>(hat_sigma <span class="sc">*</span> <span class="fu">solve</span>(XT <span class="sc">%*%</span> X)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     humidity_index    altitude_index orientation_index 
+     1.5234476709      0.1182602186      0.0002928111      0.1196373896 </code></pre>
+</div>
+</div>
+<p>Une estimation de la variance <span class="math inline">\(\sigma^2\)</span> est directement accessible depuis la sortie <code>summary</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_apollo)<span class="sc">$</span>sigma<span class="sc">^</span><span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.431722</code></pre>
+</div>
+</div>
+<p>Les écarts-types de chaque coefficient <span class="math inline">\(\hat{\beta}_j\)</span> sont également directement accessible depuis la sortie <code>summary</code>, dans la colonne <code>Std.Error</code> du tableau <code>Coefficients</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_apollo)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                      Estimate   Std. Error      t value     Pr(&gt;|t|)
+(Intercept)       13.543957706 1.5234476709   8.89033340 3.595476e-14
+humidity_index     0.010632654 0.1182602186   0.08990897 9.285469e-01
+altitude_index    -0.004109369 0.0002928111 -14.03420063 5.445785e-25
+orientation_index -0.621729153 0.1196373896  -5.19677966 1.139777e-06</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="prédiction" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Prédiction</h1>
+<p>Une fois le modèle validé, une application intéressante consiste à prévoir les valeurs de l’abondance du papillon Apollon pour de nouveaux sites d’observation du Parc National de la Vanoise en mesurant l’altitude, l’humidité et l’exposition de ces nouveaux sites.</p>
+<p>Nous avons une nouvelle donnée <span class="math inline">\(x_{n+1} = (x_{n+1,1},\, \dots,\, x_{n+1,p})\)</span> correspondant à un <span class="math inline">\((n+1)\)</span>-ème individu, et nous ne connaissons pas la valeur <span class="math inline">\(y_{n+1}\)</span> correspondante.</p>
+<p>Notons <span class="math inline">\(\hat{y}^p_{n+1}\)</span> la <strong>valeur prédite</strong> (<span class="math inline">\(y_{n+1}\)</span> étant la valeur réelle, inconnue, non mesurée). Nous n’observons que <span class="math inline">\(x_{n+1}\)</span>. Le modèle indique que : <span class="math display">\[ \mathbf{Y}_{n+1} \quad = \quad \beta^T \, x_{n+1} \: + \: {\boldsymbol\varepsilon}_{n+1} \, , \]</span> avec <span class="math inline">\({\boldsymbol\varepsilon}_{n+1}\sim\mathcal{N}(0, \,\sigma^2)\)</span> et <span class="math inline">\({\boldsymbol\varepsilon}_{n+1}\)</span> indépendant des <span class="math inline">\(({\boldsymbol\varepsilon}_{i})_{1\le i\le n}\)</span>.</p>
+<p>La prédiction s’effectue alors grâce au modèle et à l’estimation <span class="math inline">\(\hat{\beta}\)</span> obtenue précédemment : <span class="math display">\[ \hat{y}_{n+1}^p \quad = \quad \hat{\beta}^T \, x_{n+1} \, . \]</span></p>
+<p>Attention toutefois ! L’estimation utilisée <span class="math inline">\(\hat{\beta}\)</span> est calculée avec les données initiales <span class="math inline">\((x_1,y_1), \dots, (x_{n},y_n)\)</span> et pas avec <span class="math inline">\((x_{n+1},y_{n+1})\)</span>.</p>
+<p>Par exemple, si nous voulons connaitre la valeur prédite par le modèle d’un nouveau site d’observation ayant un indice d’humidité de 13.2, à une altitude de 2857 mètres et un indice d’orientation de 1.17.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>xnew <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">13.2</span>, <span class="dv">2857</span>, <span class="fl">1.17</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>y_pred <span class="ot">&lt;-</span> <span class="fu">t</span>(hat_beta) <span class="sc">%*%</span> xnew</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>y_pred</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]
+[1,] 1.216418</code></pre>
+</div>
+</div>
+<p>Il est également possible de le faire à l’aide de la fonction <code>predict</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>xnew <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">13.2</span>, <span class="dv">2857</span>, <span class="fl">1.17</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>xnew <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">humidity_index =</span> xnew[<span class="dv">1</span>],</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">altitude_index =</span> xnew[<span class="dv">2</span>],</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">orientation_index =</span> xnew[<span class="dv">3</span>])</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(reg_apollo, </span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">new =</span> xnew)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       1 
+1.216418 </code></pre>
+</div>
+</div>
+</section>
+<section id="intervalles-de-confiance" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Intervalles de confiance</h1>
+<section id="intervalles-de-confiance-pour-les-paramètres" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="intervalles-de-confiance-pour-les-paramètres"><span class="header-section-number">6.1</span> Intervalles de confiance pour les paramètres</h2>
+<p>Une estimation est intéressante lorsqu’elle s’accompagne d’un intervalle de confiance. Grâce aux lois des estimateurs <span class="math inline">\(\hat{\boldsymbol\beta}_j\)</span> et <span class="math inline">\(\hat{\boldsymbol\sigma}^2\)</span>, il n’est pas difficile de construire des intervalles de confiance pour les coefficients correspondants.</p>
+<p>i- Un IC de niveau <span class="math inline">\(1-\alpha\)</span> pour le coefficient <span class="math inline">\(\beta_j\)</span> est donné par <span class="math display">\[ \mathrm{IC}_{1-\alpha}(\beta_j) \:\: = \:\: \Big[ \, \hat{\boldsymbol\beta}_j \: \pm \: q^{St(n-p)}_{1-\alpha/2} \, \hat{\boldsymbol\sigma} \, \sqrt{[(X^TX)^{-1}]_{jj}} \, \Big] \, . \]</span> i- Un IC de niveau <span class="math inline">\(1-\alpha\)</span> pour le coefficient <span class="math inline">\(\beta_j\)</span> est donné par <span class="math display">\[ \mathrm{IC}_{1-\alpha}(\sigma^2) \:\: = \:\: \Bigg[ \, \frac{(n-p)\, \hat{\boldsymbol\sigma}^2}{q^{\chi^2(n-p)}_{1-\alpha/2}} \: , \: \frac{(n-p)\, \hat{\boldsymbol\sigma}^2}{q^{\chi^2(n-p)}_{\alpha/2}} \, \Bigg] \, . \]</span></p>
+<p>La fonction <code>confint</code> permet d’obtenir les intervalles de confiance pour chacun des paramètres <span class="math inline">\(\beta_j\)</span>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  reg_apollo,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">level =</span> <span class="fl">0.95</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                         2.5 %       97.5 %
+(Intercept)       10.519937980 16.567977433
+humidity_index    -0.224112025  0.245377332
+altitude_index    -0.004690594 -0.003528144
+orientation_index -0.859207494 -0.384250811</code></pre>
+</div>
+</div>
+</section>
+<section id="intervalles-de-confiance-pour-les-prédictions" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="intervalles-de-confiance-pour-les-prédictions"><span class="header-section-number">6.2</span> Intervalles de confiance pour les prédictions</h2>
+<p>Comme précédemment, il existe des intervalles de confiance explicites pour les valeurs prédites : on les appelle <strong>intervalles de prédiction</strong>. Rappelons que <span class="math inline">\(x_{n+1} \in \mathbb{R}^p\)</span> est un nouvel individu, et la valeur réelle <span class="math inline">\(y_{n+1}\)</span> est inconnue.</p>
+<p>Un IC de niveau <span class="math inline">\(1-\alpha\)</span> pour une nouvelle valeur <span class="math inline">\(y_{n+1}\)</span> est donné par <span class="math display">\[ \mathrm{IC}_{1-\alpha}(y_{n+1}) \:\: = \:\: \Big[ \, x^T_{n+1} \, \hat{\boldsymbol\beta}_j \: \pm \: q^{St(n-p)}_{1-\alpha/2} \, \hat{\boldsymbol\sigma} \, \sqrt{x^T_{n+1} (X^TX)^{-1} x_{n+1} \, + \, 1} \, \Big] \, . \]</span></p>
+<p>Donnons les intervalles de confiance pour la prévision de l’abondance du papillon Apollon sur deux nouveaux sites d’observation du Parc National de la Vanoise :</p>
+<ul>
+<li>sur le premier site, les valeurs respectives de l’humidité, de l’altitude et de l’orientation sont 13.2, 2857, 1.17 ; et</li>
+<li>sur le second site, elles sont de 91, 2032, 0.89.</li>
+</ul>
+<p>Un intervalle de prédiction peut s’obtenir à partir de la fonction <code>predict()</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>humiditynew <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">13.2</span>, <span class="fl">9.1</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>altitudenew <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2857</span>, <span class="dv">2032</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>orientationnew <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.17</span>, <span class="fl">0.89</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>xnew <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">humidity_index =</span> humiditynew, </span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">altitude_index =</span> altitudenew,</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">orientation_index =</span> orientationnew</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  reg_apollo,</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">new =</span> xnew,</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval =</span> <span class="st">"pred"</span>,</span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">level =</span> <span class="fl">0.95</span></span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit       lwr      upr
+1 1.216418 -1.262932 3.695768
+2 4.737138  2.297181 7.177095</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="tests-statistiques" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Tests statistiques</h1>
+<section id="tests-sur-un-coefficient" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="tests-sur-un-coefficient"><span class="header-section-number">7.1</span> Tests sur un coefficient</h2>
+<p>Nous posons ici la question de l’utilité d’une variable explicative. Par exemple, l’altitude d’un site influence-t-elle l’abondance du papillon Apollon ?</p>
+<p>Nous souhaitons donc réaliser le test : <span class="math display">\[ (\mathcal{H}_0) : \text{"la variable explicative n'est pas pertinente"} \qquad \text{contre} \qquad (\mathcal{H}_1) : \text{"la variable explicative est pertinente"} \, . \]</span> Or dire que la variable est inutile revient à dire que son coefficient est nul. Nous sommes donc amener à réaliser le test suivant : <span class="math display">\[ (\mathcal{H}_0) : \beta_j = 0 \qquad \text{contre} \qquad (\mathcal{H}_1) : \beta_j \ne 0 \, . \]</span> Une variable explicative est considérée comme pertinente au seuil d’erreur de 1ère espèce <span class="math inline">\(\alpha\)</span>, si la <span class="math inline">\(p\)</span>-valeur du test est <span class="math inline">\(&lt;\alpha\)</span>.</p>
+<p>Puisque que nous connaissons les lois des estimateurs <span class="math inline">\(\hat{\boldsymbol\beta}_j\)</span> et <span class="math inline">\(\hat{\boldsymbol\sigma}^2\)</span>, il n’est pas difficile de construire (ou du moins se convaincre) le test suivant : nous rejetons l’hypothèse <span class="math inline">\((\mathcal{H}_0)\)</span> au seuil de 1ère espèce <span class="math inline">\(\alpha\)</span>, si <span class="math display">\[ \frac{|\hat{\boldsymbol\beta}_j|}{\displaystyle{\hat{\boldsymbol\sigma}\,\sqrt{\big[ (X^TX)^{-1}\big]_{jj}}}} \:\: &gt; \:\: q^{St(n-p)}_{1-\alpha/2} \, . \]</span></p>
+<p>Réalisons ce test pour le coefficient de l’humidité <span class="math inline">\(\beta_2\)</span> au seuil de 1ère espèce de 7%.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.07</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">abs</span>(<span class="fu">as.numeric</span>(hat_beta[<span class="dv">2</span>,<span class="dv">1</span>])) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">as.numeric</span>(<span class="fu">diag</span>(hat_sigma <span class="sc">*</span> <span class="fu">solve</span>(XT <span class="sc">%*%</span> X)))[<span class="dv">2</span>])</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="at">p =</span> <span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">df =</span> n<span class="sc">-</span>p)</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(S<span class="sc">&gt;</span>q, <span class="st">"Nous rejetons (H0)"</span>, <span class="st">"Nous ne rejetons pas (H0)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Nous ne rejetons pas (H0)"</code></pre>
+</div>
+</div>
+<p>Dans le tableau <code>Coefficients</code> de la sortie <code>summary</code> :</p>
+<ul>
+<li>la colonne <code>t.value</code>renvoie la valeur de la statistique de test ; et</li>
+<li>la dernière colonne, <code>Pr(|t|&gt;t)</code> renvoie la <span class="math inline">\(p\)</span>-valeur du test.</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_apollo)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                      Estimate   Std. Error      t value     Pr(&gt;|t|)
+(Intercept)       13.543957706 1.5234476709   8.89033340 3.595476e-14
+humidity_index     0.010632654 0.1182602186   0.08990897 9.285469e-01
+altitude_index    -0.004109369 0.0002928111 -14.03420063 5.445785e-25
+orientation_index -0.621729153 0.1196373896  -5.19677966 1.139777e-06</code></pre>
+</div>
+</div>
+<p>Au risque d’erreur de 1ère espèce de 5%, les tests sont significatifs pour les variables <code>altitude_index</code>et <code>orientation_index</code> : l’altitude et l’orientation du site influencent linéairement l’abondance du papillon Apollon.</p>
+</section>
+<section id="tests-sur-un-groupe-de-coefficients" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="tests-sur-un-groupe-de-coefficients"><span class="header-section-number">7.2</span> Tests sur un groupe de coefficients</h2>
+<p>Nous pouvons également tester la pertinence d’un groupe de variables explicatives, c’est-à-dire tester la nullité de plusieurs coefficients : <span class="math display">\[ (\mathcal{H}_0) : \forall j\in\{p-q+1, \dots, p\},\, \beta_j = 0 \qquad \text{contre} \qquad (\mathcal{H}_1):\exists j\in\{p-q+1,\dots,p\},\,\beta_j\ne0 \, . \]</span> Sous <span class="math inline">\((\mathcal{H}_0)\)</span>, le modèle est en réalité : <span class="math display">\[ \mathbf{Y}_i \:\: = \:\: \sum_{j=1}^{p-q} \beta_j \, x_{i,j} \: + \: {\boldsymbol\varepsilon}_i \, , \qquad i = 1,\dots,n \, . \]</span> Autrement écrit, avec <span class="math inline">\(\tilde{\beta} = (\beta_1,\dots,\beta_{p-q})^T\)</span>, on a <span class="math display">\[ \mathbf{Y} \:\: = \:\: X_0 \, \tilde{\beta} \: + \: {\boldsymbol\varepsilon} \]</span> avec <span class="math inline">\(X_0 \in \mathcal{M}_{n\times(p-q)}\)</span> = <span class="math inline">\(p-q\)</span> premières colonnes de <span class="math inline">\(X\)</span>.</p>
+<p>Notons :</p>
+<ul>
+<li><span class="math inline">\(\mathcal{M}_1\)</span> : modèle complet avec toutes les variables explicatives ; et</li>
+<li><span class="math inline">\(\mathcal{M}_0\)</span> : sous-modèle obtenu en enlevant les <span class="math inline">\(q\)</span> dernières variables.</li>
+</ul>
+<p>Le test écrit précédemment revient à comparer les deux modèles <span class="math inline">\(\mathcal{M}_0\)</span> et <span class="math inline">\(\mathcal{M}_1\)</span>. Nous soupçonnons que le vrai modèle est le modèle <span class="math inline">\(\mathcal{M}_0\)</span>. Si <span class="math inline">\(\mathcal{M}_0\)</span> est le bon modèle, alors nous collecterons moins de données en vue de la rpévision et nous estimerons mieux les paramètres. Remarquons néanmoins qu’un modèle plus riche s’ajustera mieux aux données. Mais ce gain d’ajustement “vaut-il le coup” ? Un modèle plus riche implique plus de paramètres à estimer, et donc plus d’incertitude.</p>
+<p>Nous allons donc construire un test permettant de comparer deux modèles. Notons :</p>
+<ul>
+<li><span class="math inline">\(\mathrm{SCR}\)</span> la variabilité expliquée par l’ensemble des variables explicatives (du modèle <span class="math inline">\(\mathcal{M}_1\)</span>) : <span class="math display">\[ \mathrm{SCR} \:\:= \:\: \sum_{i=1}^n \big( \mathbf{Y}_i \: - \: \hat{\mathbf{Y}}_i \big)^2 \:\: = \:\: \Vert \mathbf{Y} \: - \: P_{[X]}\mathbf{Y} \Vert^2 \, ; \]</span></li>
+<li><span class="math inline">\(\mathrm{SCR}_0\)</span> la variabilité expliquée par les variables explicatives contenues dans <span class="math inline">\(X_0\)</span> (du modèle <span class="math inline">\(\mathcal{M}_0\)</span>) : <span class="math display">\[ \mathrm{SCR}_0 \:\:= \:\: \sum_{i=1}^n \big( \mathbf{Y}_i \: - \: \hat{\mathbf{Y}}^0_i \big)^2 \:\: = \:\: \Vert \mathbf{Y} \: - \: P_{[X_0]}\mathbf{Y} \Vert^2 \, ; \]</span></li>
+</ul>
+<p>La matrice <span class="math inline">\(X_0\)</span> étant une sous-partie des colonnes de la matrice de design <span class="math inline">\(X\)</span>, nous avons <span class="math inline">\([X_0] \subset [X]\)</span>. Ainsi donc <span class="math inline">\(\mathrm{SCR} \le \mathrm{SCR}_0\)</span>. Ainsi pour comparer les deux modèles <span class="math inline">\(\mathcal{M}_0\)</span> et <span class="math inline">\(\mathcal{M}_1\)</span>, il nous suffit de construire un test sur la différence <span class="math inline">\(\mathrm{SCR} - \mathrm{SCR}_0\)</span>, et rejeter <span class="math inline">\((\mathcal{H}_0)\)</span> si cette différence est significativement plus grande que 0. La statistique du test de Fisher repose sur cette différence et prend de plus en compte la taille des modèles en compétition : <span class="math display">\[ F \:\: = \:\: \frac{\displaystyle{\frac{1}{q}} \, (\mathrm{SCR}_0-\mathrm{SCR})}{\displaystyle{\frac{1}{n-p}}\,\mathrm{SCR}} \, . \]</span> Sous <span class="math inline">\((\mathcal{H}_0)\)</span>, nous avons que <span class="math inline">\(F \sim \mathcal{F}(q,\, n-p)\)</span>. On rejette donc l’hypothèse <span class="math inline">\((\mathcal{H}_0)\)</span> au risque d’erreur de 1ère espèce <span class="math inline">\(\alpha\)</span>, si <span class="math inline">\(F &gt; q^{\mathcal{F}(q, \, n-p)}_{1-\alpha}\)</span>, où <span class="math inline">\(q^{\mathcal{F}(q, \, n-p)}_{1-\alpha}\)</span> est le quantile d’ordre <span class="math inline">\(1-\alpha\)</span> d’une loi de Fisher à <span class="math inline">\((q, \, n-p)\)</span> <em>d.d.l.</em></p>
+<p>Comparons les modèles complet (avec toutes les variables explicatives) et le modèle constitué seulement de la variable explicative <code>altitude_index</code>. Le test est le suivant : <span class="math display">\[ (\mathcal{H}_0) : \beta_1 = \beta_3 = 0 \qquad \text{contre} \qquad (\mathcal{H}_1): \beta_1 \neq0 \: \text{ou} \: \beta_3 = 0 \, . \]</span></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>reg1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(logabondance <span class="sc">~</span> altitude_index,</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> apollo)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(reg1, reg_apollo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: logabondance ~ altitude_index
+Model 2: logabondance ~ humidity_index + altitude_index + orientation_index
+  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+1     98 176.40                                  
+2     96 137.44  2     38.95 13.602 6.293e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>La <span class="math inline">\(p\)</span>-valeur du test de Fisher est 6.293e-06 &lt; 5% : au sueil d’erreur de 1ère espèce <span class="math inline">\(\alpha=5\%\)</span>, nous rejetons l’hypothèse <span class="math inline">\((\mathcal{H}_0)\)</span>, c’est-à-dire <span class="math inline">\(\beta_1\ne0\)</span> ou <span class="math inline">\(\beta_3\ne0\)</span>.</p>
+</section>
+<section id="test-du-modèle" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="test-du-modèle"><span class="header-section-number">7.3</span> Test du modèle</h2>
+<p>Un cas particulier du test précédent est de tester si l’ensemble des variables explicatives est pertinent ou autrement dit tester la pertinence du modèle complet. Il s’agit du <strong>test global de Fisher</strong>. En reprenant les notations précédentes, ici :</p>
+<ul>
+<li>le modèle <span class="math inline">\(\mathcal{M}_1\)</span> fait intervenir l’ensemble des vraiables ; et</li>
+<li>le modèle <span class="math inline">\(\mathcal{M}_0\)</span> ne fait intervenir que l’ordonnée à l’origine.</li>
+</ul>
+<p>Il correspond au test suivant : <span class="math display">\[ (\mathcal{H}_0):\beta_2 \: = \: \dots \: = \:\beta_p \: = 0 \qquad \text{contre} \qquad (\mathcal{H}_1) : \exists j\in \{2,\dots, p\}, \, \beta_j\ne0 \, . \]</span></p>
+<p>Puisqu’il s’agit d’un cas particulier du test précédent, la statistique de test et sa loi reste les mêmes : <span class="math display">\[ F \:\: = \:\: \frac{\displaystyle{\frac{1}{p-1}} \, (\mathrm{SCR}_0-\mathrm{SCR})}{\displaystyle{\frac{1}{n-p}}\,\mathrm{SCR}} \:\: \overset{(\mathcal{H}_0)}{\sim} \:\: \mathcal{F}(p-1, \, n-p) \, . \]</span> Nous rejetons l’hypothèse <span class="math inline">\((\mathcal{H}_0)\)</span> au risque d’erreur de 1ère espèce <span class="math inline">\(\alpha\)</span>, si <span class="math inline">\(F &gt; q^{\mathcal{F}(p-1,\,n-p)}_{1-\alpha}\)</span>.</p>
+<p>Ce test est systématiquement réalisé par la fonction <code>lm</code>, dont le résultat apparait à la dernière ligne de la sortie <code>summary</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_apollo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = logabondance ~ humidity_index + altitude_index + 
+    orientation_index, data = apollo)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.3368 -0.7446 -0.0876  0.7586  5.2587 
+
+Coefficients:
+                    Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       13.5439577  1.5234477   8.890 3.60e-14 ***
+humidity_index     0.0106327  0.1182602   0.090    0.929    
+altitude_index    -0.0041094  0.0002928 -14.034  &lt; 2e-16 ***
+orientation_index -0.6217292  0.1196374  -5.197 1.14e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.197 on 96 degrees of freedom
+Multiple R-squared:  0.6956,    Adjusted R-squared:  0.6861 
+F-statistic: 73.11 on 3 and 96 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>La <span class="math inline">\(p\)</span>-valeur est inférieure à 2.2e-16. Nous rejetons donc <span class="math inline">\((\mathcal{H}_0)\)</span> au seuil d’erreur de 1ère espèce de 5% : au moins l’une des variables explicatives est pertinente.</p>
+</section>
+</section>
+<section id="ajustement-de-modèle-aux-données" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Ajustement de modèle aux données</h1>
+<section id="coefficient-de-détermination" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="coefficient-de-détermination"><span class="header-section-number">8.1</span> Coefficient de détermination</h2>
+<p>Comme pour une ANOVA à un facteur, pour “mesurer le degré d’ajustement du modèle aux données”, nous allons comparer la variabilité totale des données avec la variabilité expliquée par le modèle.</p>
+<p>Notons <span class="math display">\[ \mathrm{SCT} \:\: = \:\: \sum_{i=1}^n (y_i \: - \: \overline{y})^2 \]</span> la variabilité totale des données.</p>
+<p>Remarquons que <span class="math inline">\(\mathrm{SCT}\)</span> est égal à <span class="math inline">\(\mathrm{SCR}_0\)</span> pour le modèle <span class="math inline">\(\mathcal{M}_0\)</span> ne faisant intervenir que l’ordonnée à l’origine. Ce dernier est défini sans covariable, c’est-à-dire par <span class="math inline">\(X^{(0)} = \mathbf{1}_n\)</span>, et pour celui-ci nous avons <span class="math inline">\(\hat{\beta_1} = \overline{y}\)</span> et donc <span class="math inline">\(\hat{y}_i = \overline{y}\)</span> pour tout <span class="math inline">\(i=1,\dots,n\)</span>.</p>
+<p>D’après le théorème de Pythagore, nous pouvons décomposer la variabilité totale comme la somme de deux sources de variabilités distinctes :</p>
+<ul>
+<li><span class="math inline">\(\mathrm{SCM}\)</span> : somme des carrés du modèle qui constitue un indicateur de variabilité expliquée par le modèle ; et</li>
+<li><span class="math inline">\(\mathrm{SCR}\)</span> : somme des carrés résiduels qui consitute un indicateur de variabilité non-expliquée par le modèle ;</li>
+</ul>
+<p><span class="math display">\[ \mathrm{SCT} \:\: = \:\: \underbrace{\sum_{i=1}^n (\hat{y}_i \:-\:\overline{y})^2}_{=\:\mathrm{SCM}} \: + \: \underbrace{\sum_{i=1}^n (y_i\:-\:\hat{y}_i)^2}_{=\:\mathrm{SCR}} \, . \]</span> Plus <span class="math inline">\(\mathrm{SCM}\)</span> est grande par rapport à <span class="math inline">\(\mathrm{SCT}\)</span>, plus le modèle explique la variabilité des observations.</p>
+<p>L’indicateur mesurant l’ajustement du modèle aux données est le <strong>coefficient de détermination</strong> défini par : <span class="math display">\[ R^2 \:\: = \frac{\mathrm{SCM}}{\mathrm{SCT}} \:\: = \:\: 1 \: - \: \frac{\mathrm{SCR}}{\mathrm{SCT}} \, . \]</span> Il peut également être utilisé (avec prudence) pour comparer les performances entre deux modèles.</p>
+<p>Remarquons que <span class="math inline">\(0 \le R^2 \le 1\)</span>. Si <span class="math inline">\(R^2\)</span> n’est pas assez proche de 1, alors cela signifie que le modèle n’approche pas bien la variable <span class="math inline">\(y\)</span> :</p>
+<ul>
+<li>il peut manquer une ou plusieurs variables explicatives qu’il faudrait introduire dans le modèle ; ou</li>
+<li>l’une ou plusieurs des variables explicatives n’interviennent pas de manière liénaire.</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_apollo)<span class="sc">$</span>r.squared</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6955704</code></pre>
+</div>
+</div>
+</section>
+<section id="coefficient-de-détermination-ajusté" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="coefficient-de-détermination-ajusté"><span class="header-section-number">8.2</span> Coefficient de détermination ajusté</h2>
+<p>Cependant, le coefficient de détermination possède des limites. Il ne peut pas être utilisé pour sélectionner les covariables pertinentes. En effet, si <span class="math inline">\(X_q\)</span> dénote la matrice composée des <span class="math inline">\(q\)</span> premières colonnes de <span class="math inline">\(X\)</span>, alors on a <span class="math display">\[ \mathrm{SCR}_{q+1} \:\: \leq \:\: \mathrm{SCR}_q \, . \]</span> Par conséquent, la fonction <span class="math inline">\(q\longmapsto R^2_q\)</span>, où <span class="math inline">\(R^2_q\)</span> est le coefficient de détermination du sous-modèle associé à <span class="math inline">\(X_q\)</span>, est croissante. Ainsi le <span class="math inline">\(R^2\)</span> augmente quelque soit la variable incluse. Par exemple, dans le jeu de données <code>apollo</code>, si nous ajoutons la variable “nombre de panneaux de randonnées”, nous ajusterons mieux les observations alors que la covariable n’a aucun caractère explicatif du phénomène écologique étudié.</p>
+<p>De plus, le <span class="math inline">\(R^2\)</span> ne peut pas être utilisé tel quel pour la comparaison de modèles de tailles différentes ou pour la sélection de variables pertinentes. Cependant, il peut être intéressant pour comparer des modèles de même dimension.</p>
+<p>Pour ces raisons, nous définissons le <strong>coefficient de détermination ajusté</strong> comme une modification du <span class="math inline">\(R^2\)</span> qui tient compte du nombre de variables : <span class="math display">\[ R^2_a \:\: = \:\: 1 \: - \: \frac{n-1}{n-p} \, \frac{\mathrm{SCR}}{\mathrm{SCT}} \, . \]</span> Le <span class="math inline">\(R^2_a\)</span> est donc une valeur amoindrie du <span class="math inline">\(R^2\)</span> : la valeur du <span class="math inline">\(R^2\)</span> est d’autant abaissée que le nombre <span class="math inline">\(p\)</span> de variables explicatives du modèle est grand.</p>
+<p>Ce nouveau coefficient est également donné par la sortie <code>summary</code> à la ligne <code>Adjusted R-squared</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_apollo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = logabondance ~ humidity_index + altitude_index + 
+    orientation_index, data = apollo)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.3368 -0.7446 -0.0876  0.7586  5.2587 
+
+Coefficients:
+                    Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       13.5439577  1.5234477   8.890 3.60e-14 ***
+humidity_index     0.0106327  0.1182602   0.090    0.929    
+altitude_index    -0.0041094  0.0002928 -14.034  &lt; 2e-16 ***
+orientation_index -0.6217292  0.1196374  -5.197 1.14e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.197 on 96 degrees of freedom
+Multiple R-squared:  0.6956,    Adjusted R-squared:  0.6861 
+F-statistic: 73.11 on 3 and 96 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="annexe-a.-en-pratique-les-grandes-étapes" class="level1 unnumbered">
+<h1 class="unnumbered">Annexe A. En pratique : les grandes étapes</h1>
+<ol type="1">
+<li>Exploration des données et calcul de statistiques descriptives.</li>
+<li>Représenter les variables.</li>
+<li>Ajuster le modèle <code>lm</code>.</li>
+<li>Estimer les paramètres.</li>
+<li>Choix des variables.</li>
+<li>Étude des résidus et vérificaton du modèle. Possiblement modifier le modèle pour obtenir des résidus satisfaisants.</li>
+<li>Prédiction.</li>
+</ol>
+</section>
+<section id="annexe-b.-tests-problème-de-colinéarité-des-variables-explicatives" class="level1 unnumbered">
+<h1 class="unnumbered">Annexe B. Tests &amp; Problème de colinéarité des variables explicatives</h1>
+<p>Explorons à présent le problème de colinéarité des variables explicatives lors des tests de nullité d’un coefficient. Pour ce faire, simulons le modèle linéaire suivant : <span class="math display">\[ \mathbf{Y} \:\: = \:\: x_2 \: + \: x_3 \: + \: x_4 \: + \: {\boldsymbol\varepsilon} \, . \]</span> Supposons que :</p>
+<ul>
+<li>nous ne connaissons pas le vrai modèle ; et</li>
+<li>nous n’ayons à notre disposition les variables explicatives <span class="math inline">\(x_2\)</span>, <span class="math inline">\(x_3\)</span>, <span class="math inline">\(x_4\)</span>, <span class="math inline">\(x_5\)</span> et l’ordonnée à l’origine.</li>
+</ul>
+<p>Nous ne savons donc pas réellement que la variable <span class="math inline">\(x_5\)</span> n’influence pas réellement la variable <span class="math inline">\(y\)</span>. Supposons que <span class="math inline">\(x_5\)</span> est très corrélée aux autres variables : <span class="math display">\[ x_5 \:\: \approx \:\: 2x_2 \: + \: x_3 \, . \]</span></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>x3 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>x4 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">98</span>))</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>x5 <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> x2 <span class="sc">+</span> x3 <span class="sc">+</span> c</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>eps <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> x2 <span class="sc">+</span> x3 <span class="sc">+</span> x4 <span class="sc">+</span> eps</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(y <span class="sc">~</span> x2 <span class="sc">+</span> x3 <span class="sc">+</span> x4 <span class="sc">+</span> x5))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y ~ x2 + x3 + x4 + x5)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.3153 -0.6298 -0.0165  0.5615  3.7927 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   0.1666     0.1127   1.478   0.1427    
+x2            2.3908     1.5950   1.499   0.1372    
+x3            1.7205     0.7912   2.175   0.0321 *  
+x4            0.8889     0.1128   7.877 5.46e-12 ***
+x5           -0.7747     0.7990  -0.970   0.3347    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.106 on 95 degrees of freedom
+Multiple R-squared:  0.6196,    Adjusted R-squared:  0.6035 
+F-statistic: 38.68 on 4 and 95 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Seule la variable <span class="math inline">\(x_4\)</span> est déclarée pertinente. Les <span class="math inline">\(p\)</span>-valeurs des tests concernant les variables <span class="math inline">\(x_2\)</span> et <span class="math inline">\(x_3\)</span> sont élevées : nous les éliminerions donc à tord. Elles sont “cachées” par <span class="math inline">\(x_4\)</span>.</p>
+<p>Regardons maintenant ce qu’il se passe quand nous réalisons la régression de <span class="math inline">\(y\)</span> sur les trois premières variables <span class="math inline">\(x_2\)</span>, <span class="math inline">\(x_3\)</span> et <span class="math inline">\(x_4\)</span>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Afficher le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(y <span class="sc">~</span> x2 <span class="sc">+</span> x3 <span class="sc">+</span> x4))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y ~ x2 + x3 + x4)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.2974 -0.6326 -0.0400  0.5579  3.7956 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   0.1512     0.1116   1.355    0.179    
+x2            0.8483     0.1167   7.267 9.77e-11 ***
+x3            0.9623     0.1205   7.988 3.01e-12 ***
+x4            0.8899     0.1128   7.889 4.88e-12 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.106 on 96 degrees of freedom
+Multiple R-squared:  0.6158,    Adjusted R-squared:  0.6038 
+F-statistic: 51.29 on 3 and 96 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Sans la présence de la variable <span class="math inline">\(x_5\)</span>, les trois variables <span class="math inline">\(x_2\)</span>, <span class="math inline">\(x_3\)</span> et <span class="math inline">\(x_4\)</span> “deviennent” pertinentes.</p>
+<p>En résumé.</p>
+<ul>
+<li>Si nous utilisons les tests de Student pour éliminer toutes les variables déclarées non pertinentes en même temps, nous prenons le risque d’en éliminer certaines qui sont pourtant pertinentes.</li>
+<li>Si au contraire, nous éliminons une à une les variables, <strong>en refaisant la régression à chaque fois</strong>, nous prenons moins de risque
+: nous commençons par enlever la variable <span class="math inline">\(x_5\)</span>, dont la <span class="math inline">\(p\)</span>-valeur du test de Student est la plus grande (à l’exception de l’<code>intercept</code>) ; alors en réalisant à nouveau une régression sans cette variable, <span class="math inline">\(x_2\)</span> et <span class="math inline">\(x_3\)</span> “redeviennent” pertinentes.</li>
+<li>Si nous souhaitons plusieurs variables en même temps, mieux vaut réaliser un test de Fisher, comme vu dans une section précédente.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Website built with <a href="https://quarto.org">Quarto</a></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
