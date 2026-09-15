@@ -1,0 +1,8 @@
+---
+title: "Modèles linéaires mixtes"
+---
+
+
+::: {.callout-note collapse="true" appearance="simple"}
+Bientôt disponible.
+:::

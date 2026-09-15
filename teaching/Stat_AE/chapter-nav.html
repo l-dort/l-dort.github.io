@@ -1,0 +1,67 @@
+<div class="chapter-nav">
+  <div class="chapter-links" id="chapterLinks">
+    <a href="index.html">Présentation</a>
+    <a href="Lecture2_RegLogi.html">Régression logistique</a>
+    <a href="Lecture3_RegPoisson.html">Régression de Poisson</a>
+    <a href="Lecture4_ModLinMixte.html">Modèles linéaires mixtes</a>
+  </div>
+
+<button class="chapters-toggle" id="chaptersToggle" style="display:none;">☰ Chapitres</button>
+
+  <div class="chapter-dropdown" id="chapterDropdown"></div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const header = document.querySelector("#quarto-header");
+  const nav = document.querySelector(".chapter-nav");
+  const linksContainer = document.getElementById("chapterLinks");
+  const toggleBtn = document.getElementById("chaptersToggle");
+  const dropdown = document.getElementById("chapterDropdown");
+
+  if (!nav || !linksContainer || !toggleBtn || !dropdown) return;
+
+  dropdown.innerHTML = linksContainer.innerHTML;
+
+  function syncPosition() {
+    if (!header) return;
+    nav.style.top = header.classList.contains("headroom--unpinned") ? "0px" : "80px";
+  }
+  if (header) {
+    new MutationObserver(syncPosition).observe(header, { attributes: true, attributeFilter: ["class"] });
+    syncPosition();
+  }
+
+  function setTotalOffset() {
+    const h = (header ? header.offsetHeight : 0) + nav.offsetHeight;
+    document.documentElement.style.setProperty('--total-header-height', h + 'px');
+  }
+
+  function checkOverflow() {
+    linksContainer.style.display = "flex";
+    toggleBtn.style.display = "none";
+
+    const overflowing = linksContainer.scrollWidth > linksContainer.clientWidth + 1;
+
+    if (overflowing) {
+      linksContainer.style.display = "none";
+      toggleBtn.style.display = "flex";
+    }
+    setTotalOffset();
+  }
+
+  checkOverflow();
+  window.addEventListener("resize", checkOverflow);
+
+  toggleBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    dropdown.classList.toggle("open");
+  });
+  document.addEventListener("click", function (e) {
+    if (!toggleBtn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.remove("open");
+    }
+  });
+});
+</script>

@@ -49,6 +49,41 @@
     "text": "Données\nLes jeux de données sont à télécharger ici.\n\n\n\n\n\n\nDernières mises à jour\n11 septembre 2026 – TD 1 : précision exercice 1. ; Chapitre 3 : ajout du diaporama et de la page de cours.\n10 septembre 2026 – Structure de la page internet.\n8 septembre 2026 – Chapitre 2 : corrections mineures.\n7 septembre 2026 – Mise en ligne initiale du cours (Chapitres 1 et 2)."
   },
   {
+    "objectID": "teaching/Stat_AE/Lecture3_RegPoisson.html",
+    "href": "teaching/Stat_AE/Lecture3_RegPoisson.html",
+    "title": "Régression de Poisson : Modéliser des données de comptage",
+    "section": "",
+    "text": "Présentation\n    Régression logistique\n    Régression de Poisson\n    Modèles linéaires mixtes\n  \n\n☰ Chapitres\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBientôt disponible."
+  },
+  {
+    "objectID": "teaching/Stat_AE/index.html",
+    "href": "teaching/Stat_AE/index.html",
+    "title": "Statistique avancée appliquée à l’Agroécologie",
+    "section": "",
+    "text": "Présentation\n    Régression logistique\n    Régression de Poisson\n    Modèles linéaires mixtes\n  \n\n☰ Chapitres"
+  },
+  {
+    "objectID": "teaching/Stat_AE/index.html#présentation",
+    "href": "teaching/Stat_AE/index.html#présentation",
+    "title": "Statistique avancée appliquée à l’Agroécologie",
+    "section": "Présentation",
+    "text": "Présentation\nCe cours est à destination des étudiant.e.s en 3ème année de la dominante Ingénierie de l’Élevage de la spécialité Agronomie à l’Institut Agro Dijon, ainsi qu’aux étudiant.e.s en Master 2 Agroécologie. L’objectif de ce cours est d’introduire des méthodes avancées d’analyses statistiques rencontrés en agroécologie telles que les modèles linéaires généralisés, les modèles linéaires mixtes et des méthodes avancées de réduction de dimension. Ce cours est un prolongement naturel du cours de 2e année et de M1 introduisant les analyses statistiques linéaires multiples telles que la régression linéaire et l’analyse en composante principale.\nToutes les analyses statistiques seront effectuées avec le logiciel R et son interface Rstudio."
+  },
+  {
+    "objectID": "teaching/Stat_AE/index.html#programme",
+    "href": "teaching/Stat_AE/index.html#programme",
+    "title": "Statistique avancée appliquée à l’Agroécologie",
+    "section": "Programme",
+    "text": "Programme\nVous pouvez retrouver ci-dessous les supports de cours, ainsi que les fichiers .Rmd utilisés pour le cours et les TDs. Ils sont susceptibles d’être modifiés (à la marge). Assurez-vous d’avoir des versions suffisament récentes.\n\nChapitre 1 : Rappel de régression linéaire multiple\nChapitre 2 : Régression logistique : Modéliser des données de proportion\nChapitre 3 : Régression de Poisson : Modéliser des données de comptage\nChapitre 4 : Modèles linéaires mixtes\nChapitre 5 : Méthodes avancées de réduction de dimension"
+  },
+  {
+    "objectID": "teaching/Stat_AE/index.html#données",
+    "href": "teaching/Stat_AE/index.html#données",
+    "title": "Statistique avancée appliquée à l’Agroécologie",
+    "section": "Données",
+    "text": "Données\nLes jeux de données seront bientôt disponibles \n\n\n\n\n\n\nDernières mises à jour\n14 septembre 2026 - Création de la page du cours."
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
@@ -67,7 +102,7 @@
     "href": "teaching.html",
     "title": "Teaching",
     "section": "",
-    "text": "Most of the lectures given are in french.\n\n\n\n\n  Introduction (compréhensive) à l'analyse statistique (linéaire) multivariée\n  Régression linéaire & Réduction de dimension\n\n\n\n\n\n\n  Arbres de décision & Forêts aléatoires\n  Introduction et application à l'ingénierie de l'élevage"
+    "text": "Most of the lectures given are in french.\n\n\n\n\n  Introduction (compréhensive) à l'analyse statistique (linéaire) multivariée\n  Régression linéaire & Réduction de dimension\n\n\n\n\n\n\n  Arbres de décision & Forêts aléatoires\n  Introduction et application à l'ingénierie de l'élevage\n\n\n\n\n\n\n  Statistique avancée appliquée à l'agroécologie\n  Modèle linéaire généralisée, Modèle linéaire mixte & Réduction de dimension"
   },
   {
     "objectID": "research.html",
@@ -82,6 +117,20 @@
     "title": "Léo Dort",
     "section": "",
     "text": "I am Associate Professor (Maître de Conférences) at Institut Agro Dijon and INRAE in the lab UMR Agroécologie.\n\nI did my phD at ÉNS de Lyon under the supervision of Grégory Miermont and Emmanuel Jacob.\n\n\nVice head of IREM de Dijon\nMember of the project CONDORCET, financed by PEPR Maths-VivES\nMember of PEPR SolsVivants\n\n\n\nResearch interests\n\nI am interested in :\n\nthe study of random graphs with different aspects: the development of models and their application in ecology, the study of local limit in a dynamical setting, and the study of precesses evolving on these dynamical graphs (such as contact process) ;\nthe study of statistical depth functions and their application in voting procedures.\n\n\nInstitut Agro Dijon\nSite Déméter, Bâtiment Longelles\n26, bd Docteur Petitjean\n21079 Dijon Cedex\nBureau 20\nINRAE Dijon\nUMR Agroécologie\n17 rue Sully\n21000 Dijon"
+  },
+  {
+    "objectID": "teaching/Stat_AE/Lecture2_RegLogi.html",
+    "href": "teaching/Stat_AE/Lecture2_RegLogi.html",
+    "title": "Régression logistique : Modéliser des données de proportion",
+    "section": "",
+    "text": "Présentation\n    Régression logistique\n    Régression de Poisson\n    Modèles linéaires mixtes\n  \n\n☰ Chapitres\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBientôt disponible."
+  },
+  {
+    "objectID": "teaching/Stat_AE/Lecture4_ModLinMixte.html",
+    "href": "teaching/Stat_AE/Lecture4_ModLinMixte.html",
+    "title": "Modèles linéaires mixtes",
+    "section": "",
+    "text": "Présentation\n    Régression logistique\n    Régression de Poisson\n    Modèles linéaires mixtes\n  \n\n☰ Chapitres\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBientôt disponible."
   },
   {
     "objectID": "teaching/intro-analyse-multivariee/Lecture4_ClassifNonSupervisee.html",
@@ -389,13 +438,6 @@
     "href": "teaching/arbreForet/index.html#programme",
     "title": "Introduction aux arbres de décision et aux forêts aléatoires",
     "section": "Programme",
-    "text": "Programme\nVous pouvez retrouver ci-dessous les supports de cours, ainsi que les fichiers .Rmd utilisés pour le cours et les TDs. Ils sont susceptibles d’être modifiés (à la marge). Assurez-vous d’avoir des versions suffisament récentes.\n\nChapitre 1 : Arbres de décisions\nChapitre 2 : Forêts aléatoires"
-  },
-  {
-    "objectID": "teaching/arbreForet/index.html#données",
-    "href": "teaching/arbreForet/index.html#données",
-    "title": "Introduction aux arbres de décision et aux forêts aléatoires",
-    "section": "Données",
-    "text": "Données\nLes jeux de données seront bientôt disponibles \n\n\n\n\n\n\nDernières mises à jour\n11 septembre 2026 - Création de la page du cours."
+    "text": "Programme\nVous pouvez retrouver ici les supports de cours, ainsi que les fichiers .Rmd utilisés pour le cours et les TDs. Ils sont susceptibles d’être modifiés (à la marge). Assurez-vous d’avoir des versions suffisament récentes.\n\nChapitre 1 : Arbres de décisions\nChapitre 2 : Forêts aléatoires\n\n\n\n\n\n\n\n\n\nDernières mises à jour 15 septembre 2026 - Mise-à-jour documents de cours.\n11 septembre 2026 - Création de la page du cours."
   }
 ]

@@ -40,3 +40,15 @@ Pour insérer un nouveau cours
 
 </div>
 ```
+
+
+```{=html}
+<div class="course-grid">
+
+<a class="course-card" href="teaching/Stat_AE/index.qmd">
+  <h3>Statistique avancée appliquée à l'agroécologie</h3>
+  <p>Modèle linéaire généralisée, Modèle linéaire mixte &amp Réduction de dimension</p>
+</a>
+
+</div>
+```

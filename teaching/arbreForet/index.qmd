@@ -19,7 +19,7 @@ interface Rstudio.
 
 ## Programme {.unnumbered}
 
-Vous pouvez retrouver ci-dessous les supports de cours, ainsi que les fichiers
+Vous pouvez retrouver [ici](../../downloads/arbreForet/ArbreForet.zip) les supports de cours, ainsi que les fichiers
 `.Rmd` utilisés pour le cours et les TDs. 
 Ils sont susceptibles d'être modifiés (à la marge). Assurez-vous d'avoir des
 versions suffisament récentes.
@@ -29,14 +29,15 @@ versions suffisament récentes.
 - Chapitre 2 : Forêts aléatoires
 
 
-## Données {.unnumbered}
+<!-- ## Données {.unnumbered} -->
 
-Les jeux de données seront bientôt disponibles <!--sont à télécharger [ici](../downloads/intro-analyse-multivariee/Data.zip).-->
+<!-- Les jeux de données seront bientôt disponibles <!--sont à télécharger [ici](../downloads/intro-analyse-multivariee/Data.zip).-->
 
 
 
 ::: {.callout-note collapse="true" appearance="simple"}
 *Dernières mises à jour*
+**15 septembre 2026** - Mise-à-jour documents de cours.
 
 **11 septembre 2026** - Création de la page du cours.
 :::

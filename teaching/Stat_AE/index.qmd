@@ -1,0 +1,51 @@
+---
+title: "Statistique avancée appliquée à l'Agroécologie"
+---
+
+
+## Présentation {.unnumbered}
+
+Ce cours est à destination des étudiant.e.s en 3ème année de la dominante 
+*Ingénierie de l'Élevage* de la spécialité Agronomie à l'Institut Agro Dijon, 
+ainsi qu'aux étudiant.e.s en Master 2 Agroécologie.
+L'objectif de ce cours est d'introduire des méthodes avancées d'analyses 
+statistiques rencontrés en agroécologie telles que les modèles linéaires 
+généralisés, les modèles linéaires mixtes et des méthodes avancées de 
+réduction de dimension.
+Ce cours est un prolongement naturel du cours de 2e année et de M1
+introduisant les analyses statistiques linéaires multiples telles que la
+régression linéaire et l'analyse en composante principale.
+
+Toutes les analyses statistiques seront effectuées avec le logiciel `R` et son
+interface Rstudio.
+
+
+## Programme {.unnumbered}
+
+Vous pouvez retrouver ci-dessous les supports de cours, ainsi que les fichiers
+`.Rmd` utilisés pour le cours et les TDs. 
+Ils sont susceptibles d'être modifiés (à la marge). Assurez-vous d'avoir des
+versions suffisament récentes.
+
+- Chapitre 1 : Rappel de régression linéaire multiple
+
+- Chapitre 2 : Régression logistique : Modéliser des données de proportion
+
+- Chapitre 3 : Régression de Poisson : Modéliser des données de comptage
+
+- Chapitre 4 : Modèles linéaires mixtes
+
+- Chapitre 5 : Méthodes avancées de réduction de dimension
+
+
+## Données {.unnumbered}
+
+Les jeux de données seront bientôt disponibles <!--sont à télécharger [ici](../downloads/intro-analyse-multivariee/Data.zip).-->
+
+
+
+::: {.callout-note collapse="true" appearance="simple"}
+*Dernières mises à jour*
+
+**14 septembre 2026** - Création de la page du cours.
+:::
