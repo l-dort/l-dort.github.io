@@ -29,7 +29,7 @@ versions suffisament récentes.
 
 - Chapitre 1 : Rappel de régression linéaire multiple
 
-- Chapitre 2 : Régression logistique : Modéliser des données de proportion
+- Chapitre 2 : Régression logistique : Modéliser des données de proportion [Documents de cours](../downloads/stat_AE/RegressionLogistique.zip)
 
 - Chapitre 3 : Régression de Poisson : Modéliser des données de comptage
 
@@ -38,9 +38,9 @@ versions suffisament récentes.
 - Chapitre 5 : Méthodes avancées de réduction de dimension
 
 
-## Données {.unnumbered}
+<!-- ## Données {.unnumbered} -->
 
-Les jeux de données seront bientôt disponibles <!--sont à télécharger [ici](../downloads/intro-analyse-multivariee/Data.zip).-->
+<!-- Les jeux de données seront bientôt disponibles <!--sont à télécharger [ici](../downloads/intro-analyse-multivariee/Data.zip).--> 
 
 
 
