@@ -29,6 +29,10 @@ versions suffisament récentes.
 - Chapitre 2 : Forêts aléatoires
 
 
+## Bonus {.unnumbered}
+
+Une feuille pratique supplémentaire afin de s'essayer à la reconnaisance automatique de caractères manuscrits. Le fichier `.Rmd` et les donénes sont téléchargeables [ici](../../arbreForet/Bonus.zip).
+
 <!-- ## Données {.unnumbered} -->
 
 <!-- Les jeux de données seront bientôt disponibles <!--sont à télécharger [ici](../downloads/intro-analyse-multivariee/Data.zip).-->
@@ -37,6 +41,9 @@ versions suffisament récentes.
 
 ::: {.callout-note collapse="true" appearance="simple"}
 *Dernières mises à jour*
+
+**17 septembre 2026** - Ajout de la feuille bonus.
+
 **15 septembre 2026** - Mise-à-jour documents de cours.
 
 **11 septembre 2026** - Création de la page du cours.
