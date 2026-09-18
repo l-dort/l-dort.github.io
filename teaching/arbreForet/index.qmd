@@ -31,7 +31,7 @@ versions suffisament récentes.
 
 ## Bonus {.unnumbered}
 
-Une feuille pratique supplémentaire afin de s'essayer à la reconnaisance automatique de caractères manuscrits. Le fichier `.Rmd` et les donénes sont téléchargeables [ici](../../arbreForet/Bonus.zip).
+Une feuille pratique supplémentaire afin de s'essayer à la reconnaisance automatique de caractères manuscrits. Le fichier `.Rmd` et les données sont téléchargeables [ici](../../downloads/arbreForet/Bonus.zip).
 
 <!-- ## Données {.unnumbered} -->
 
