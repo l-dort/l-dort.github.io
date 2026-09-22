@@ -29,7 +29,7 @@ versions suffisament récentes.
 
 - Chapitre 1 : Rappel de régression linéaire multiple
 
-- Chapitre 2 : Régression logistique : Modéliser des données de proportion [Documents de cours](../downloads/stat_AE/RegressionLogistique.zip)
+- Chapitre 2 : Régression logistique : Modéliser des données de proportion [Documents de cours](../../downloads/stat_AE/RegressionLogistique.zip)
 
 - Chapitre 3 : Régression de Poisson : Modéliser des données de comptage
 
