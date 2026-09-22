@@ -47,5 +47,7 @@ versions suffisament récentes.
 ::: {.callout-note collapse="true" appearance="simple"}
 *Dernières mises à jour*
 
+**22 septembre 2026** - Mise à jour des documents de cours de régression logistique.
+
 **14 septembre 2026** - Création de la page du cours.
 :::
