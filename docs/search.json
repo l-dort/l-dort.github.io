@@ -431,13 +431,13 @@
     "href": "teaching/arbreForet/index.html#programme",
     "title": "Introduction aux arbres de décision et aux forêts aléatoires",
     "section": "Programme",
-    "text": "Programme\nVous pouvez retrouver ici les supports de cours, ainsi que les fichiers .Rmd utilisés pour le cours et les TDs. Ils sont susceptibles d’être modifiés (à la marge). Assurez-vous d’avoir des versions suffisament récentes.\n\nChapitre 1 : Arbres de décisions\nChapitre 2 : Forêts aléatoires"
+    "text": "Programme\nVous pouvez retrouver ici les supports de cours, ainsi que les fichiers .Rmd utilisés pour le cours et les TDs. Ils sont susceptibles d’être modifiés (à la marge). Assurez-vous d’avoir des versions suffisament récentes.\n\nChapitre 1 : Arbres de décisions\nChapitre 2 : Forêts aléatoires\n\n/!\\ Des éléments de corrections des exercices du TD peuvent être trouvés ici. /!\\"
   },
   {
     "objectID": "teaching/arbreForet/index.html#bonus",
     "href": "teaching/arbreForet/index.html#bonus",
     "title": "Introduction aux arbres de décision et aux forêts aléatoires",
     "section": "Bonus",
-    "text": "Bonus\nUne feuille pratique supplémentaire afin de s’essayer à la reconnaisance automatique de caractères manuscrits. Le fichier .Rmd et les données sont téléchargeables ici.\n\n\n\n\n\n\n\n\nDernières mises à jour\n17 septembre 2026 - Ajout de la feuille bonus.\n15 septembre 2026 - Mise-à-jour documents de cours.\n11 septembre 2026 - Création de la page du cours."
+    "text": "Bonus\nUne feuille pratique supplémentaire afin de s’essayer à la reconnaisance automatique de caractères manuscrits. Le fichier .Rmd et les données sont téléchargeables ici.\n/!\\ Des éléments de corrections de cette feuille bonus sont ici. /!\\\n\n\n\n\n\n\n\n\nDernières mises à jour\n25 septembre 2026 - Ajout des éléments de correction des TDs.\n17 septembre 2026 - Ajout de la feuille bonus.\n15 septembre 2026 - Mise-à-jour documents de cours.\n11 septembre 2026 - Création de la page du cours."
   }
 ]

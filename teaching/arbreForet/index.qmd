@@ -29,9 +29,14 @@ versions suffisament récentes.
 - Chapitre 2 : Forêts aléatoires
 
 
+`/!\` Des éléments de corrections des exercices du TD peuvent être trouvés [ici](../../downloads/arbreForet/Tutorials_correction.zip). `/!\`
+
+
 ## Bonus {.unnumbered}
 
 Une feuille pratique supplémentaire afin de s'essayer à la reconnaisance automatique de caractères manuscrits. Le fichier `.Rmd` et les données sont téléchargeables [ici](../../downloads/arbreForet/Bonus.zip).
+
+`/!\` Des éléments de corrections de cette feuille bonus sont [ici](../../downloads/arbreForet/Bonus_correction.zip). `/!\`
 
 <!-- ## Données {.unnumbered} -->
 
@@ -41,6 +46,8 @@ Une feuille pratique supplémentaire afin de s'essayer à la reconnaisance autom
 
 ::: {.callout-note collapse="true" appearance="simple"}
 *Dernières mises à jour*
+
+**25 septembre 2026** - Ajout des éléments de correction des TDs.
 
 **17 septembre 2026** - Ajout de la feuille bonus.
 
