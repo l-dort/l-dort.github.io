@@ -33,7 +33,7 @@ versions suffisament récentes.
 
 - Chapitre 2 - [Régression linéaire factorielle](../../downloads/intro-analyse-multivariee/chap3_RegFacto.pdf)
   - TD 4 : [Analyse de variance à 2 facteurs](../../downloads/intro-analyse-multivariee/TD4.zip)
-  - TD 5 : Analyse de la covariance
+  - TD 5 : [Analyse de la covariance](../../downloads/intro-analyse-multivariee/TD5.zip)
 
 - Chapitre 3 - Réduction (linéaire) de dimension
   - TD 6 : Analyse en composantes principales
