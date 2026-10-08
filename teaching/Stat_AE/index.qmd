@@ -45,6 +45,8 @@ versions suffisament récentes.
 ::: {.callout-note collapse="true" appearance="simple"}
 *Dernières mises à jour*
 
+**8 octobre 2026** - Régression de Poisson : Ajout d'un exercice de TD, ajout du jeu de données lomolino.
+
 **8 octobre 2026** - Mise à jour des documents de cours de régression de Poisson.
 
 **22 septembre 2026** - Mise à jour des documents de cours de régression logistique.

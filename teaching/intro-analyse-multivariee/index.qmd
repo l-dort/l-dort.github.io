@@ -31,7 +31,7 @@ versions suffisament récentes.
   - TD 2 : Régression linéaire multiple (Modèle)
   - TD 3 : Régression linéaire multiple (Inférence & Prédiction)
 
-- Chapitre 2 - [Régression linéaire factorielle](../../downloads/intro-analyse-multivariee/chap3_RegFacto.pdf)
+- Chapitre 2 - [Régression linéaire factorielle](../../downloads/intro-analyse-multivariee/chap3_RegFacto.pdf) (<a href="../../downloads/intro-analyse-multivariee/Chapitre3_cours.zip" download>.Rmd</a> du chapitre)
   - TD 4 : [Analyse de variance à 2 facteurs](../../downloads/intro-analyse-multivariee/TD4.zip)
   - TD 5 : [Analyse de la covariance](../../downloads/intro-analyse-multivariee/TD5.zip)
 
@@ -52,6 +52,8 @@ Les jeux de données sont à télécharger [ici](../../downloads/intro-analyse-m
 
 ::: {.callout-note collapse="true" appearance="simple"}
 *Dernières mises à jour*
+
+**8 octobre 2026** -- Mises-à-jour du diaporama et de la page de cours du Chapitre 2.
 
 **30 septembre 2026** -- Ajout TD 4.
 

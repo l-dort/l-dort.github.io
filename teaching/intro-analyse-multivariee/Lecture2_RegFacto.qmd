@@ -7,7 +7,8 @@ editor: visual
 
 Ce chapitre est très largement inspiré, et pour tout une partie reprise
 du cours *Modèle linéaire gaussien* de Sophie Donnet. Il peut être
-retrouvé sur son [site internet](https://sophiedonnet.github.io/linearmodel.html).
+retrouvé sur son site internet :
+<https://sophiedonnet.github.io/linearmodel.html>.
 
 
 # Préliminaires {.unnumbered}
@@ -80,7 +81,7 @@ perspective de conservation d'une espèce menacée.
 
 ```{r loading_data}
 # a modifier selon l'emplacement du repertoire de travail
-load('Data/apollo.Rdata')
+load('../Data/apollo.Rdata')
 
 summary(apollo)
 ```
@@ -97,7 +98,6 @@ Nous verrons ensuite le cas de **deux facteurs**. Enfin, nous
 terminerons par le cas d'un facteur associé à une variable quantitative.
 Dans ce dernier cas "mixte", on parle d'**analyse de la covariance** ou
 ANCOVA (*ANalysis of COVAriance*).
-
 
 # Analyse de variance à un facteur
 
@@ -192,10 +192,10 @@ On suppose que les $y_{i,j}$ sont la réalisation de variables aléatoires
 *i.i.d.* $\mathbf{Y}_{i,j}$. Nous cherchons à savoir si le facteur $X$
 fait varier la variable $\mathbf{Y}$. Le modèle considéré ici est le
 suivant :
-$$ \mathbf{Y}_{i,j} \:\: = \:\: \mu_i \: + \: \varepsilon_{i} \, , \qquad \forall i\in\{1,\dots,I\} \, , \: \forall j\in\{1,\dots, n_i\} \, , $$
+$$ \mathbf{Y}_{i,j} \:\: = \:\: \mu_i \: + \: {\boldsymbol\varepsilon}_{i} \, , \qquad \forall i\in\{1,\dots,I\} \, , \: \forall j\in\{1,\dots, n_i\} \, , $$
 où
 
-- les variables aléatoires $\varepsilon_i$, appelées *erreurs*, sont des
+- les variables aléatoires ${\boldsymbol\varepsilon}_i$, appelées *erreurs*, sont des
   variables aléatoires *i.i.d.* de loi $\mathcal{N}(0, \, \sigma^2)$ de
   variance $\sigma^2$ inconnue ; et
 - les paramètres $\mu_i$ sont inconnues et fixes (déterministes).
@@ -203,9 +203,9 @@ où
 Comme au chapitre précédent, il existe une écriture matricielle de ce
 modèle. Posons
 $$ X^r \:\: = \:\: \begin{pmatrix} 1 & & & & \\ \vdots & & & & \\ 1 & & & & \\& 1 & & & \\ & \vdots & & & \\ & 1 & & & \\ & & \ddots & & \\ & & & \ddots & \\ & & & & 1 \\ & & & & \vdots \\ & & & & 1 \end{pmatrix} \, , \qquad \mu \:\: = \:\: \begin{pmatrix}\mu_1 \\ \mu_2 \\ \vdots \\ 
-\mu_{I} \end{pmatrix} \qquad \text{et} \qquad \varepsilon \:\: = \:\: \begin{pmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \vdots \\ \varepsilon_n \end{pmatrix} \, . $$
+\mu_{I} \end{pmatrix} \qquad \text{et} \qquad {\boldsymbol\varepsilon} \:\: = \:\: \begin{pmatrix} {\boldsymbol\varepsilon}_1 \\ {\boldsymbol\varepsilon}_2 \\ \vdots \\ {\boldsymbol\varepsilon}_n \end{pmatrix} \, . $$
 Alors, le modèle se réécrit matriciellement sous la forme :
-$$ \mathbf{Y} \:\: = \:\: X^r \, \mu \: + \: \varepsilon \, , \quad \text{où } \varepsilon\sim\mathcal{N}(0, \, \sigma^2 I_n) \, . $$
+$$ \mathbf{Y} \:\: = \:\: X^r \, \mu \: + \: {\boldsymbol\varepsilon} \, , \quad \text{où } {\boldsymbol\varepsilon}\sim\mathcal{N}(0, \, \sigma^2 I_n) \, . $$
 
 Le modèle est dit **régulier** car la matrice de *design* $X^r$ est de
 rang plein !
@@ -262,7 +262,7 @@ c'est-à-dire dans notre contexte, une ordonnée à l'origine.
 Introduisons un effet moyen $\mu$ dans le modèle précédent. Supposons
 que les variables $y_{i,j}$ sont la réalisation de variables aléatoires
 $\mathbf{Y}_{i,j}$, avec :
-$$ \mathbf{Y}_{i,j} \:\: = \:\: \mu \: + \: \alpha_i \: + \: \varepsilon_{i,j} \, , \qquad \forall i\in\{1,\dots, I\} \, , \, \forall j\in\{1,\dots,n_i\} \, . $$
+$$ \mathbf{Y}_{i,j} \:\: = \:\: \mu \: + \: \alpha_i \: + \: {\boldsymbol\varepsilon}_{i,j} \, , \qquad \forall i\in\{1,\dots, I\} \, , \, \forall j\in\{1,\dots,n_i\} \, . $$
 Pour chaque modalité $i$, $\alpha_i$ est l'effet de la $i$-ème modalité
 sur la variable à expliquer $y$ par rapport à l'effet moyen, ou
 autrement écrit :
@@ -493,6 +493,48 @@ de facteurs. Afin de privillégier la clareté et d'alléger les notations, nous
 nous restreignons au cas de deux facteurs.
 
 
+Nous pouvons commencer par une représentation graphique.
+
+```{r}
+ggplot(apollo) +
+  aes(
+    x = sector,
+    y = logabondance,
+    fill = sector
+  ) +
+  geom_jitter(
+    aes(color = sector),
+    alpha = 0.9
+  ) +
+  geom_boxplot(
+    alpha = 0.5
+  ) + 
+  facet_wrap(
+    ~ grazing
+  ) +
+  labs(
+    title = "Log-abondance du papillon Apollon en fonction du secteur et du mode de gestion",
+    subtitle = "Boîtes à moustache",
+    x = "Secteur",
+    y = "Log(abondance)"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 12,
+                              colour = "#3a8",
+                              face = "bold"),
+    plot.subtitle = element_text(size = 10,
+                              colour = "#3a4",
+                              face = "bold"),
+    axis.title = element_text(size = 10,
+                              color = "grey40"),
+    axis.text.x = element_text(angle = 45,
+                               hjust = 1),
+    legend.position = "none"
+  )
+```
+
+
 ## Modèle régulier & Modèle singulier
 
 Supposons que le premier facteur ait $I$ modalités et le second $J$ modalités.
@@ -509,10 +551,10 @@ premier (resp. second) facteur.
 Commençons par introduire le modèle régulier.
 Nous supposons que les valeurs $y_{i,j,k}$ sont la réalisation de variables
 aléatoires $\mathbf{Y}_{i,j,k}$ suivant le modèle :
-$$ \mathbf{Y}_{i,j,k} \:\: = \:\: \mu_{i,j} \: + \: \varepsilon_{i,j,k} \, , \qquad \forall i \in\{1,\dots, I\} , \, \forall j \in\{1,\dots,J\} \, , \forall k\in\{1,\dots,n_{i,j}\} \, , $$
+$$ \mathbf{Y}_{i,j,k} \:\: = \:\: \mu_{i,j} \: + \: {\boldsymbol\varepsilon}_{i,j,k} \, , \qquad \forall i \in\{1,\dots, I\} , \, \forall j \in\{1,\dots,J\} \, , \forall k\in\{1,\dots,n_{i,j}\} \, , $$
 où 
 
-- les erreurs $\varepsilon_{i,j,k} \: \overset{\text{i.i.d.}}{\sim} \: \mathcal{N}(0, \, \sigma^2)$ ; et
+- les erreurs ${\boldsymbol\varepsilon}_{i,j,k} \: \overset{\text{i.i.d.}}{\sim} \: \mathcal{N}(0, \, \sigma^2)$ ; et
 - les paramètres $\mu_{i,j}$ sont inconnus et fixes (déterministes).
 
 Posons
@@ -528,7 +570,7 @@ $$ \hat{\sigma}^2 \:\: = \:\: \frac{1}{n-IJ} \sum_{i,j,k} \big( y_{i,j,k} \: - \
 
 ### Modèle singulier
 
-Comme dans le cas de l'analyse de variance à un facteur, afin de mieux analyser
+Comme dans le cas de l'analyse de var iance à un facteur, afin de mieux analyser
 l'influence des facteurs, nous introduisons de nouveaux termes. Considérons
 donc la décomposition suivante de la moyenne $\mu_{i,j}$ inconnue :
 $$ \mu_{i,j} \:\: = \:\: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \gamma_{i,j} \, . $$
@@ -599,7 +641,7 @@ l'autre ou les deux) secteur et mode de gestion influencent l'abondance du
 papillon.
 
 Le test global de Fisher teste les hypothèses suivantes :
-$$ (\mathcal{H}_0): \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \varepsilon_{i,j,k} \quad \text{contre} \quad (\mathcal{H}_1):\mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \gamma_{i,j} \: + \: \varepsilon_{i,j,k} \, . $$
+$$ (\mathcal{H}_0): \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: {\boldsymbol\varepsilon}_{i,j,k} \quad \text{contre} \quad (\mathcal{H}_1):\mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \gamma_{i,j} \: + \: {\boldsymbol\varepsilon}_{i,j,k} \, . $$
 Le résultat de ce test est donné à la dernière ligne de la sortie de la fonction
 `summary`.
 
@@ -624,11 +666,11 @@ facteurs ou influencent-ils la variable de manière indépendante ?
 Pour répondre à ces questions nous pouvons réaliser des tests de comparaison
 de modèles. Ces derniers sont :
 $$ \begin{eqnarray}
-\mathcal{M}_\mu & : & \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: \varepsilon_{i,j,k} \\
-\mathcal{M}_{\mu,\alpha} & : & \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: \alpha_i \: + \: \varepsilon_{i,j,k} \\
-\mathcal{M}_{\mu,\beta} & : & \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: \beta_j \: + \: \varepsilon_{i,j,k} \\
-\mathcal{M}_{\mu,\alpha,\beta} & : & \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \varepsilon_{i,j,k} \\
-\mathcal{M}_{\mu,\alpha,\beta,\gamma} & : & \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \gamma_{i,j} \: + \: \varepsilon_{i,j,k}
+\mathcal{M}_\mu & : & \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: {\boldsymbol\varepsilon}_{i,j,k} \\
+\mathcal{M}_{\mu,\alpha} & : & \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: \alpha_i \: + \: {\boldsymbol\varepsilon}_{i,j,k} \\
+\mathcal{M}_{\mu,\beta} & : & \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: \beta_j \: + \: {\boldsymbol\varepsilon}_{i,j,k} \\
+\mathcal{M}_{\mu,\alpha,\beta} & : & \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: {\boldsymbol\varepsilon}_{i,j,k} \\
+\mathcal{M}_{\mu,\alpha,\beta,\gamma} & : & \mathbf{Y}_{i,j,k} \:\:\: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \gamma_{i,j} \: + \: {\boldsymbol\varepsilon}_{i,j,k}
 \end{eqnarray} $$
 
 Le modèle :
@@ -640,7 +682,7 @@ en compte tous les phénomènes, mais comporte beaucoup de paramètres ;
 Avant de réaliser des tests sur l'influence des facteurs pris indépendamment,
 il est important de tester l'interaction de ces derniers. Le test est le
 suivant :
-$$ (\mathcal{H}_0):\mathbf{Y}_{i,j,k}\:=\:\mu\:+\:\alpha_i\:+\:\beta_j\:+\:\varepsilon_{i,j,k} \quad \text{contre} \quad (\mathcal{H}_1):\mathbf{Y}_{i,j,k}\:=\:\mu\:+\:\alpha_i\:+\:\beta_j\:+\:\gamma_{i,j}\:+\:\varepsilon_{i,j,k} \, . $$
+$$ (\mathcal{H}_0):\mathbf{Y}_{i,j,k}\:=\:\mu\:+\:\alpha_i\:+\:\beta_j\:+\:{\boldsymbol\varepsilon}_{i,j,k} \quad \text{contre} \quad (\mathcal{H}_1):\mathbf{Y}_{i,j,k}\:=\:\mu\:+\:\alpha_i\:+\:\beta_j\:+\:\gamma_{i,j}\:+\:{\boldsymbol\varepsilon}_{i,j,k} \, . $$
 Il s'agit d'un test de modèles emboités (ou de sous-modèles) : nous réalisons
 donc un test global de Fisher (de comparaison de modèles). Dans ce cadre, la
 statistique de test est :
@@ -662,10 +704,10 @@ La $p$-valeur du test de Fisher est élevée : au risque d’erreur de 1ère esp
 de 5%, on ne peut pas conclure qu’il y a une interaction.
 Nous considérons donc dans la suite qu’il n’y a pas d’interaction, et nous
 sommes ramenés au modèle :
-$$ \mathbf{Y}_{i,j,k} \:\: = \:\: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \varepsilon_{i,j,k} \, . $$
+$$ \mathbf{Y}_{i,j,k} \:\: = \:\: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: {\boldsymbol\varepsilon}_{i,j,k} \, . $$
 
 
-## Test des facteurs
+## Test d'effet des facteurs
 
 Commençons par deux remarques méthodologiques.
 
@@ -683,7 +725,7 @@ Nous souhaitons maintenant savoir si la variable `grazing` est pertinent dans
 le model `model2`.
 
 Nous souhaitons donc comparer les deux modèles :
-$$ \mathcal{M}_{\mu,\alpha,\beta}: \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \varepsilon_{i,j,k} \quad \text{et} \quad \mathcal{M}_{\mu,\alpha}: \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \alpha_i \: + \: \varepsilon_{i,j,k} \, . $$
+$$ \mathcal{M}_{\mu,\alpha,\beta}: \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: {\boldsymbol\varepsilon}_{i,j,k} \quad \text{et} \quad \mathcal{M}_{\mu,\alpha}: \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \alpha_i \: + \: {\boldsymbol\varepsilon}_{i,j,k} \, . $$
 Il s'agit une nouvelle fois d'un test de modèles emboités. Nous réalisons donc
 un test de Fisher de comparaison de modèles.
 
@@ -698,7 +740,7 @@ de 5%, on ne peut pas conclure que la variable `grazing` a une influence sur
 l'abondance du papillon Apollo.
 Nous considérons donc dans la suite le modèle `model3` sans le facteur 
 `grazing`, et nous sommes ramenés au modèle :
-$$ \mathcal{M}_{\mu,\alpha}:\:\mathbf{Y}_{i,j,k} \:\: = \:\: \mu \: + \: \alpha_i \: + \: \varepsilon_{i,j,k} \, . $$
+$$ \mathcal{M}_{\mu,\alpha}:\:\mathbf{Y}_{i,j,k} \:\: = \:\: \mu \: + \: \alpha_i \: + \: {\boldsymbol\varepsilon}_{i,j,k} \, . $$
 
 Nous pouvons à présent tester l'influence de la variable `sector` sur
 l'abondance du papillon Apollon dans le modèle `model3`, ce qui correspond ici
@@ -707,7 +749,7 @@ section précédente.
 
 Si nous avions précédemment conclut que le facteur `grazing` influençait la
 variable d'intérêt, nous aurions comparé les modèles :
-$$ \mathcal{M}_{\mu,\alpha,\beta}: \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: \varepsilon_{i,j,k} \quad \text{et} \quad \mathcal{M}_{\mu,\beta}: \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \beta_j \: + \: \varepsilon_{i,j,k} \, . $$
+$$ \mathcal{M}_{\mu,\alpha,\beta}: \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \alpha_i \: + \: \beta_j \: + \: {\boldsymbol\varepsilon}_{i,j,k} \quad \text{et} \quad \mathcal{M}_{\mu,\beta}: \mathbf{Y}_{i,j,k} \: = \: \mu \: + \: \beta_j \: + \: {\boldsymbol\varepsilon}_{i,j,k} \, . $$
 
 ```{r }
 model4 <- lm(formula = logabondance ~ grazing,
@@ -727,14 +769,14 @@ Pour réaliser une analyse de variance à trois facteurs (ou plus), nous
 procéderons de la même façon. La tâche s'avère plus fastidieuse.
 
 Le modèle ANOVA à trois facteurs s'écrit de la manière suivante :
-$$ \mathbf{Y}_{i,j,k,l} \:\: = \:\: \mu \: + \: \underbrace{\alpha_i \: + \: \beta_j \: + \: \gamma_k}_{\text{Effets des facteurs}} \: + \: \underbrace{\delta_{i,j} \: + \: \zeta_{i,k} \: + \: \eta_{j,k}}_{\text{Effets des interactions 2 à 2}} \: + \: \underbrace{\theta_{i,j,k}}_{\text{Effet de l'interaction des 3 facteurs}} \: + \: \varepsilon_{i,j,k,l} \, . $$
+$$ \mathbf{Y}_{i,j,k,l} \:\: = \:\: \mu \: + \: \underbrace{\alpha_i \: + \: \beta_j \: + \: \gamma_k}_{\text{Effets des facteurs}} \: + \: \underbrace{\delta_{i,j} \: + \: \zeta_{i,k} \: + \: \eta_{j,k}}_{\text{Effets des interactions 2 à 2}} \: + \: \underbrace{\theta_{i,j,k}}_{\text{Effet de l'interaction des 3 facteurs}} \: + \: {\boldsymbol\varepsilon}_{i,j,k,l} \, . $$
 Il y a donc beaucoup plus de paramètres à estimer. L'étude des interactions 
 s'avère également plus complexe. Dans un soucis de simplification, parfois
 justifiée par l'expérience, il est possible de supposer l'absence d'interaction.
 
 
 
-# Analyse de la covariance
+# 3. Analyse de la covariance
 
 Les deux parties précédentes étudiaient l'étude de l'influence de variables
 explicatives toutes exclusivement quantitatives (continues) ou toutes eexclusivement
@@ -995,7 +1037,7 @@ F. Modèle nul, c'est-à-dire lorsque $\alpha=\beta_i=\gamma_i =0$ pour tout $i$
 $$ \mathbf{Y}_{i,j} \: = \: \mu \: + \: {\boldsymbol\varepsilon}_{i,j} \, . $$
 
 
-## Inférence
+## 3.3. Inférence
 
 Toute l'inférence statistique se passe de la même manière que précédemment.
 
