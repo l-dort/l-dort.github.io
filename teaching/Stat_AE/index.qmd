@@ -29,13 +29,11 @@ versions suffisament récentes.
 
 - Chapitre 1 : Rappel de régression linéaire multiple
 
-- Chapitre 2 : Régression logistique : Modéliser des données de proportion [Documents de cours](../../downloads/stat_AE/RegressionLogistique.zip)
+- Chapitre 2 : Régression logistique : Modéliser des données de proportion - [Documents de cours](../../downloads/stat_AE/RegressionLogistique.zip)
 
-- Chapitre 3 : Régression de Poisson : Modéliser des données de comptage
+- Chapitre 3 : Régression de Poisson : Modéliser des données de comptage - [Documents de cours](../../downloads/stat_AE/RegressionPoisson.zip)
 
-- Chapitre 4 : Modèles linéaires mixtes
-
-- Chapitre 5 : Méthodes avancées de réduction de dimension
+- Chapitre 4 : Régression non-linéaire ou Modèles linéaires mixtes ou Méthodes avancées de réduction de dimension
 
 
 <!-- ## Données {.unnumbered} -->
@@ -46,6 +44,8 @@ versions suffisament récentes.
 
 ::: {.callout-note collapse="true" appearance="simple"}
 *Dernières mises à jour*
+
+**8 octobre 2026** - Mise à jour des documents de cours de régression de Poisson.
 
 **22 septembre 2026** - Mise à jour des documents de cours de régression logistique.
 
