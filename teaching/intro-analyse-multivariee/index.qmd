@@ -35,7 +35,7 @@ versions suffisament récentes.
   - TD 4 : [Analyse de variance à 2 facteurs](../../downloads/intro-analyse-multivariee/TD4.zip)
   - TD 5 : [Analyse de la covariance](../../downloads/intro-analyse-multivariee/TD5.zip)
 
-- Chapitre 3 - Réduction (linéaire) de dimension
+- Chapitre 3 - [Réduction (linéaire) de dimension](../../downloads/intro-analyse-multivariee/chap4_ReducDim.pdf) (<a href="../../downloads/intro-analyse-multivariee/Chapitre4_cours.zip" download>.Rmd</a> du chapitre)
   - TD 6 : Analyse en composantes principales
   - TDs 7-8 : Analyse des correspondances, Analyse des correspondances multiples & Analyse factorielle des correspondances
   
@@ -52,6 +52,8 @@ Les jeux de données sont à télécharger [ici](../../downloads/intro-analyse-m
 
 ::: {.callout-note collapse="true" appearance="simple"}
 *Dernières mises à jour*
+
+**11 octobre 2026** -- Ajout du diaporama et du .Rmd de cours du Chapitre 3.
 
 **8 octobre 2026** -- Mises-à-jour du diaporama et de la page de cours du Chapitre 2.
 

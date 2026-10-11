@@ -1189,21 +1189,21 @@ lm(formula = y ~ x2 + x3 + x4 + x5)
 
 Residuals:
      Min       1Q   Median       3Q      Max 
--2.80655 -0.57974 -0.05283  0.69902  2.49557 
+-2.56866 -0.68020 -0.05366  0.66996  2.84535 
 
 Coefficients:
             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  -0.1367     0.1072  -1.275  0.20543    
-x2            3.5601     1.5658   2.274  0.02524 *  
-x3            2.4888     0.8187   3.040  0.00306 ** 
-x4            1.1319     0.1059  10.688  &lt; 2e-16 ***
-x5           -1.3355     0.7982  -1.673  0.09759 .  
+(Intercept) -0.08041    0.11222  -0.717    0.475    
+x2          -0.73253    1.55850  -0.470    0.639    
+x3           0.24408    0.76348   0.320    0.750    
+x4           1.06007    0.10983   9.652 9.17e-16 ***
+x5           0.77740    0.77631   1.001    0.319    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 1.058 on 95 degrees of freedom
-Multiple R-squared:  0.7498,    Adjusted R-squared:  0.7393 
-F-statistic: 71.19 on 4 and 95 DF,  p-value: &lt; 2.2e-16</code></pre>
+Residual standard error: 1.066 on 95 degrees of freedom
+Multiple R-squared:  0.7291,    Adjusted R-squared:  0.7177 
+F-statistic: 63.91 on 4 and 95 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 <p>Seule la variable <span class="math inline">\(x_4\)</span> est déclarée pertinente. Les <span class="math inline">\(p\)</span>-valeurs des tests concernant les variables <span class="math inline">\(x_2\)</span> et <span class="math inline">\(x_3\)</span> sont élevées : nous les éliminerions donc à tord. Elles sont “cachées” par <span class="math inline">\(x_4\)</span>.</p>
@@ -1220,20 +1220,20 @@ lm(formula = y ~ x2 + x3 + x4)
 
 Residuals:
      Min       1Q   Median       3Q      Max 
--2.73231 -0.59283 -0.02285  0.67713  2.47617 
+-2.59933 -0.70277 -0.04902  0.68158  2.85445 
 
 Coefficients:
             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  -0.1576     0.1074  -1.467    0.146    
-x2            0.9474     0.1164   8.142 1.42e-12 ***
-x3            1.1310     0.1094  10.336  &lt; 2e-16 ***
-x4            1.1269     0.1069  10.547  &lt; 2e-16 ***
+(Intercept) -0.06231    0.11076  -0.563    0.575    
+x2           0.82451    0.10649   7.743 9.92e-12 ***
+x3           0.99979    0.11582   8.632 1.28e-13 ***
+x4           1.05187    0.10953   9.604 1.06e-15 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 1.068 on 96 degrees of freedom
-Multiple R-squared:  0.7425,    Adjusted R-squared:  0.7344 
-F-statistic: 92.26 on 3 and 96 DF,  p-value: &lt; 2.2e-16</code></pre>
+Residual standard error: 1.066 on 96 degrees of freedom
+Multiple R-squared:  0.7262,    Adjusted R-squared:  0.7177 
+F-statistic: 84.88 on 3 and 96 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 <p>Sans la présence de la variable <span class="math inline">\(x_5\)</span>, les trois variables <span class="math inline">\(x_2\)</span>, <span class="math inline">\(x_3\)</span> et <span class="math inline">\(x_4\)</span> “deviennent” pertinentes.</p>
