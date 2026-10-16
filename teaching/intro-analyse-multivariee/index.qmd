@@ -36,8 +36,8 @@ versions suffisament récentes.
   - TD 5 : [Analyse de la covariance](../../downloads/intro-analyse-multivariee/TD5.zip)
 
 - Chapitre 3 - [Réduction (linéaire) de dimension](../../downloads/intro-analyse-multivariee/chap4_ReducDimACP.pdf) (<a href="../../downloads/intro-analyse-multivariee/Chapitre4_cours.zip" download>.Rmd</a> du chapitre)
-  - TD 6 : [Analyse en composantes principales](../../downloads/intro-analyse-multivariee/TD6.zip)
-  - TDs 7-8 : Analyse des correspondances, Analyse des correspondances multiples & Analyse factorielle des correspondances
+  - TD 6-7 : [Analyse en composantes principales](../../downloads/intro-analyse-multivariee/TD6.zip)
+  - TDs 8 : Analyse des correspondances, Analyse des correspondances multiples & Analyse factorielle des correspondances
   
 - Chapitre 4 - Introduction à la classification automatique non-supervisée
   - TD 9 : Classification ascendante hiérarchique
@@ -52,6 +52,10 @@ Les jeux de données sont à télécharger [ici](../../downloads/intro-analyse-m
 
 ::: {.callout-note collapse="true" appearance="simple"}
 *Dernières mises à jour*
+
+**16 octobre 2026** -- TD 6 - Mise-à-jour.
+
+**14 octobre 2026** -- Ajout du TD 6. ; Chapitre 3 : correction de typos.
 
 **11 octobre 2026** -- Ajout du diaporama et du .Rmd de cours du Chapitre 3.
 
