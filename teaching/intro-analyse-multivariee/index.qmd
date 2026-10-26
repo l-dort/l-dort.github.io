@@ -53,11 +53,13 @@ Les jeux de données sont à télécharger [ici](../../downloads/intro-analyse-m
 ::: {.callout-note collapse="true" appearance="simple"}
 *Dernières mises à jour*
 
+**26 octobre 2026** -- Mise-à-jour massive : Chapitre 1 (`.Rmd`) ; Chapitre 2 (`.Rmd`, diaporama ; TD 4 : corrections typographiques du sujet `.Rmd`, modification du sujet du 1er exercice et ajout d'une correction ; TD 5 : corrections typographiques du sujet `.Rmd` et ajout d'une correction).
+
 **16 octobre 2026** -- TD 6 - Mise-à-jour.
 
 **14 octobre 2026** -- Ajout du TD 6. ; Chapitre 3 : correction de typos.
 
-**11 octobre 2026** -- Ajout du diaporama et du .Rmd de cours du Chapitre 3.
+**11 octobre 2026** -- Ajout du diaporama et du `.Rmd` de cours du Chapitre 3.
 
 **8 octobre 2026** -- Mises-à-jour du diaporama et de la page de cours du Chapitre 2.
 
