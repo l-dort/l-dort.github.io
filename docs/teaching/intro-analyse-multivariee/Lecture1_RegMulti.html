@@ -821,14 +821,16 @@ orientation_index -0.621729153</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>hat_sigma <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>(n<span class="sc">-</span>p) <span class="sc">*</span> <span class="fu">sum</span>(<span class="fu">resid</span>(reg_apollo)<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
-<pre><code>Error: objet 'reg_apollo' introuvable</code></pre>
+<pre><code>Error:
+! objet 'reg_apollo' introuvable</code></pre>
 </div>
 <details class="code-fold">
 <summary>Afficher le code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>hat_sigma</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
-<pre><code>Error: objet 'hat_sigma' introuvable</code></pre>
+<pre><code>Error:
+! objet 'hat_sigma' introuvable</code></pre>
 </div>
 </div>
 <p>En particulier, il est maintenant possible d’obtenir un estimateur de la variance des coefficients. Rappelons que <span class="math inline">\(\hat{\boldsymbol\beta}_j\)</span> est de loi <span class="math inline">\(\mathcal{N}(\beta,\,\sigma^2(X^TX)^{-1}))\)</span>. En particulier, <span class="math display">\[ \sigma^2_{\hat{\beta}_j} \:\: = \:\: \sigma^2 \: \big[(X^TX)^{-1}\big]_{jj} \qquad \textrm{et} \qquad \sigma_{\hat{\beta}_j ,\: \hat{\beta}_k} \:\: = \:\: \sigma^2 \: \big[(X^TX)^{-1}\big]_{jk} \, . \]</span> Pour calculer ces quantités, il nous faut connaître la variance inconnue <span class="math inline">\(\sigma^2\)</span>, dont nous connaissons un estimateur sans biais. Alors un estimateur (naturel) de la variance du coefficient <span class="math inline">\(\beta_j\)</span> est donné par : <span class="math display">\[ \hat{\boldsymbol\sigma}_{\hat{\beta}_j} \:\: = \:\: \hat{\boldsymbol\sigma}\, \big[(X^TX)^{-1}]_{jj} \, . \]</span></p>
@@ -838,7 +840,8 @@ orientation_index -0.621729153</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">diag</span>(hat_sigma <span class="sc">*</span> <span class="fu">solve</span>(XT <span class="sc">%*%</span> X)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
-<pre><code>Error: objet 'hat_sigma' introuvable</code></pre>
+<pre><code>Error:
+! objet 'hat_sigma' introuvable</code></pre>
 </div>
 </div>
 <p>Une estimation de la variance <span class="math inline">\(\sigma^2\)</span> est directement accessible depuis la sortie <code>summary()</code>.</p>
@@ -984,7 +987,8 @@ orientation_index -0.859207494 -0.384250811</code></pre>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">abs</span>(<span class="fu">as.numeric</span>(hat_beta[<span class="dv">2</span>,<span class="dv">1</span>])) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">as.numeric</span>(<span class="fu">diag</span>(hat_sigma <span class="sc">*</span> <span class="fu">solve</span>(XT <span class="sc">%*%</span> X)))[<span class="dv">2</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
-<pre><code>Error: objet 'hat_sigma' introuvable</code></pre>
+<pre><code>Error:
+! objet 'hat_sigma' introuvable</code></pre>
 </div>
 <details class="code-fold">
 <summary>Afficher le code</summary>
@@ -993,7 +997,8 @@ orientation_index -0.859207494 -0.384250811</code></pre>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(S<span class="sc">&gt;</span>q, <span class="st">"Nous rejetons (H0)"</span>, <span class="st">"Nous ne rejetons pas (H0)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
-<pre><code>Error: objet 'S' introuvable</code></pre>
+<pre><code>Error:
+! objet 'S' introuvable</code></pre>
 </div>
 </div>
 <p>Dans le tableau <code>Coefficients:</code> de la sortie <code>summary()</code> :</p>
@@ -1137,7 +1142,8 @@ F-statistic: 73.11 on 3 and 96 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_apollo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
-<pre><code>Error: objet 'reg_apollo' introuvable</code></pre>
+<pre><code>Error:
+! objet 'reg_apollo' introuvable</code></pre>
 </div>
 </div>
 </section>

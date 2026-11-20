@@ -4,5 +4,5 @@ title: "Classification automatique non-supervisée"
 
 
 ::: {.callout-note collapse="true" appearance="simple"}
-Bientôt disponible.
+En construction.
 :::
