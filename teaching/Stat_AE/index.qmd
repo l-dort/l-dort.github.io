@@ -1,12 +1,15 @@
 ---
 title: "Statistique avancée appliquée à l'Agroécologie"
 ---
+::: {.callout-note collapse="true" appearance="simple"}
+*Page de cours en construction.*
+:::
 
 
 ## Présentation {.unnumbered}
 
 Ce cours est à destination des étudiant.e.s en 3ème année de la dominante 
-*Ingénierie de l'Élevage* de la spécialité Agronomie à l'Institut Agro Dijon, 
+*Agroécologie pour des productions végétales durables* de la spécialité Agronomie à l'Institut Agro Dijon, 
 ainsi qu'aux étudiant.e.s en Master 2 Agroécologie.
 L'objectif de ce cours est d'introduire des méthodes avancées d'analyses 
 statistiques rencontrés en agroécologie telles que les modèles linéaires 
@@ -14,7 +17,7 @@ généralisés, les modèles linéaires mixtes et des méthodes avancées de
 réduction de dimension.
 Ce cours est un prolongement naturel du cours de 2e année et de M1
 introduisant les analyses statistiques linéaires multiples telles que la
-régression linéaire et l'analyse en composante principale.
+régression linéaire et l'analyse en composantes principales.
 
 Toutes les analyses statistiques seront effectuées avec le logiciel `R` et son
 interface Rstudio.
@@ -27,7 +30,7 @@ Vous pouvez retrouver ci-dessous les supports de cours, ainsi que les fichiers
 Ils sont susceptibles d'être modifiés (à la marge). Assurez-vous d'avoir des
 versions suffisament récentes.
 
-- Chapitre 1 : Rappel de régression linéaire multiple
+- Chapitre 1 : Rappel de régression linéaire multiple - [Documents de cours](../../downloads/stat_AE/Lecture1_RegMulti_Recap.zip)
 
 - Chapitre 2 : Régression logistique : Modéliser des données de proportion - [Documents de cours](../../downloads/stat_AE/RegressionLogistique.zip)
 
@@ -38,12 +41,14 @@ versions suffisament récentes.
 
 <!-- ## Données {.unnumbered} -->
 
-<!-- Les jeux de données seront bientôt disponibles <!--sont à télécharger [ici](../downloads/intro-analyse-multivariee/Data.zip).--> 
+<!-- Les jeux de données seront bientôt disponibles <!--sont à télécharger [ici](../downloads/stat_AE/Data.zip).--> 
 
 
 
 ::: {.callout-note collapse="true" appearance="simple"}
 *Dernières mises à jour*
+
+**22 novembre 2026** - Régression linéaire multiple : Page de cours de rappels construite ; Régression logistique : Page de cours construite, mise-à-jour du fichier Rmarkdown, mise-à-jour des exercices (corrections typographiques) et ajout d'éléments de codes de corrections des exercices.
 
 **8 octobre 2026** - Régression de Poisson : Ajout d'un exercice de TD, ajout du jeu de données lomolino.
 

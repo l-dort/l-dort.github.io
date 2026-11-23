@@ -4,49 +4,920 @@ title: "Régression logistique : Modéliser des données de proportion"
 
 
 ::: {.callout-note collapse="true" appearance="simple"}
-Bientôt disponible.
+*Page de cours en construction.*
 :::
 
 
-
-<!-- ```{r setup, include=FALSE} -->
-<!-- knitr::opts_chunk$set( -->
-<!--   echo = TRUE,  -->
-<!--   warning = FALSE,  -->
-<!--   message = FALSE, -->
-<!--   rows.print = 5) -->
-<!-- ``` -->
-
-<!-- Nous débutons par l'installation (si nécessaire) et le chargement de différentes -->
-<!-- librairies pour la manipulation, la représentation, l'analyse statistique par  -->
-<!-- arbres binaires et forêts aléatoires. -->
-
-<!-- ```{r packages} -->
-<!-- if(!require(dplyr)) install.packages("dyplr") -->
-<!-- if(!require(ggplot2)) install.packages("ggplot2") -->
-<!-- if(!require(rpart)) install.packages("rpart") -->
-<!-- if(!require(rpart.plot)) install.packages("rpart.plot") -->
-<!-- if(!require(randomForest)) install.packages("randomForest") -->
-
-<!-- library(dplyr)        # pour la manipulation de données -->
-<!-- library(ggplot2)      # pour les figures -->
-<!-- library(rpart)        # pour les partitions par arbre binaire -->
-<!-- library(rpart.plot)   # pour les figures de partition par arbre binaire -->
-<!-- library(randomForest) # pour les Forets aleatoires -->
-<!-- ``` -->
+Ce chapitre résumé est très largement inspiré du livre *Régression avec R* de Pierre-André Cornillon, Nicolas Hengartner, Eric Matzner-Lober et Laurent Rouvière.
 
 
 
-<!-- # Introduction -->
+# Préliminaires {.unnumbered}
+
+```{r setup, include=FALSE}
+if (!require(knitr)) install.packages("knitr")
+library(knitr)       # export and format for R notebook
+
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  rows.print = 5)
+```
+
+
+## Chargement des pacquets {.unnumbered}
+
+Nous débutons en chargeant un ensemble de paquets pour la manipulation de données, des représentations graphiques et l'utilisation du modèle linéaire généralisé.
+
+```{r packages, message=FALSE, warning=FALSE}
+if (!require(tidyverse)) install.packages("tidyverse")
+if (!require(knitr)) install.packages("knitr")
+if (!require(GGally)) install.packages("GGally")
+if (!require(MASS)) install.packages("MASS")
+if (!require(arm)) install.packages("arm")
+
+library(tidyverse)   # manipulation and advanced data visualisation
+library(knitr)       # export and format for R notebook
+library(GGally)      # extension of ggplot2
+library(MASS)        # modern applied statistics with S
+library(arm)         # generalised linear model
+```
+
+
+Le bloc de codes suivant permet de fixer certains paramètres de représentation graphique `ggplot` que nous réutiliserons tout au long de ce chapitre.
+
+```{r ggplot_theme}
+# default ggplot theme
+set_theme(
+  # black and white theme: defaut theme of ggplot2
+  theme_minimal() + 
+  # specify my parameters
+  theme(
+    # title style
+    plot.title = element_text(size = 12,          # size of title
+                              colour = "#3a8",    # color of title
+                              face = "bold"),     # face of title
+    # subtitle style
+    plot.subtitle = element_text(size = 10,       # size of subtitle
+                                 colour = "#3a4", # colour of subtitle
+                                 face = "bold"),  # face of subtitle
+    # axis title style
+    axis.title = element_text(size = 10,          # size of title of axis
+                              family = "sans",    # family of title of axis
+                              face = "bold",      # face of title of axis
+                              colour = "grey40"), # colour of title of axis
+    # axis x title style
+    axis.title.x = element_text(hjust = 1,        # horizontal adjustment of labels
+                                vjust = -0.5),    # vertical adjustment of labels
+    # axis y title style
+    axis.title.y = element_text(hjust = 1,        # horizontal adjustment of labels
+                                vjust = 2,        # vertical adjustment of labels
+                                angle = 90),      # angle adjustment of labels
+    # legend position
+    legend.position = "none"
+  )
+)
+```
+
+
+## Contexte & Chargement des données {.unnumbered}
+
+Étudions la germination d'une graine en fonction de la température du sol. Le jeu de données `germination.csv` contient pour chaque échantillon :
+- la température du sol en degré ; et
+- si la graine a germé (1), ou si elle n'a pas germé (0).
+
+```{r data_loading}
+graine <- read.csv2("Data/germination.csv",
+                    header = TRUE,
+                    sep = ",",
+                    dec = ".")
+```
+
+Commençons par explorer le jeu de données enregistré dans `graine`.
+
+```{r data_exploration}
+head(graine)
+str(graine)
+summary(graine)
+```
+
+
+# Limite du modèle linéaire
+
+Commençons par essayer d'ajuster un modèle statistique simple, celui d'une régression linéaire.
+
+## Premières visualisations
+
+```{r plot}
+plot.graine <- ggplot(
+  graine, 
+  aes(x = temperature, 
+      y = germination,
+      color = factor(germination))
+  ) +
+  geom_jitter(
+    height = 0.05, 
+    alpha = 0.5
+    ) +
+  scale_color_manual(
+    values = c("#F97", "#38F")
+  ) +
+  labs(
+    title = "Scatter plot of germination in function of temperature",
+    subtitle = "Germination data",
+    x = "Temperature (°C)", 
+    y = "Germination (0/1)"
+  )
+
+plot.graine
+```
+
+
+## Ajustement d'un modèle de régression linéaire
+
+Bien que le graphe précédent ne soit pas convaincant quant à une relation linéaire entre la germination et la température du sol, nous pourrions être tentés d'ajuster un modèle linéaire.
+
+```{r lm}
+lm.graine <- lm(germination ~ temperature,
+                data = graine)
+```
+
+```{r lm-fit}
+ggplot(
+  graine, 
+  aes(x = temperature, 
+      y = germination,
+      color = factor(germination))
+  ) +
+  geom_jitter(
+    height = 0.05, 
+    alpha = 0.5
+    ) +
+  scale_color_manual(
+    values = c("#F97", "#38F")
+  ) +
+  geom_smooth(
+    method = lm, 
+    formula = y ~ x,
+    se = TRUE, 
+    color = 'turquoise4'
+  ) +
+  labs(
+    title = "Fitted simple linear regression",
+    subtitle = "Germination data",
+    x = "Temperature (°C)", 
+    y = "Germination (0/1)"
+  )
+```
+
+```{r summary-lm}
+summary(lm.graine)
+```
+
+Étudions les résidus.
+
+```{r lm-residuals}
+par(mfrow = c(2,2))
+plot(lm.graine)
+```
+
+Les résidus ne semblent pas validés le modèle linéaire. Même si ces derniers ne le remettait pas en cause, nous aurions quelques difficultés en termes de prévision.
+
+```{r lm-predict1}
+predict(lm.graine, 
+        newdata = list(temperature = 23.4))
+```
+
+Pour une température de 23.4 °C, le modèle de régression linéaire simple prévoit une germination avec une probabilité de 0.81.
+
+```{r lm-predict2}
+predict(lm.graine,
+        newdata = list(temperature = c(0, 35)))
+```
+
+Cependant le modèle prévoit des probabilités de germination inférieure à 0 pour 0°C, et supérieure à 1 pour 35°C. Ce qui n'est pas réaliste.
+
+
+*Le princiapl problème est que la variable réponse, la germination n'est pas quantitative continue ce que requiert le modèle de régression linéaire simple (ou multiple). Un autre modèle est donc nécessaire pour ce type de données (dont la réponse est binaire).*
+
+
+# Régression logistique
+
+Repartons du graphique suivant.
+
+```{r plot-2}
+plot.graine
+```
+
+Nous voyons sur le graphique que la germination a tendance a être plus présente pour des températures élevées. Afin de mieux quantifier ce lien, nous allons étudier $p(x)$ la **probabilité de germination à température** $x$. Pour se donner une idée plus précise de l'allure de la fonction $p(x)$, nous pouvons représenter l'évolution de la proportion de graines germées sur différentes classes de températures.
+
+```{r classes}
+n_classes <- 12
+
+donnees.proportions <- graine %>%
+  mutate(
+    classe_temp = cut(
+      temperature,
+      breaks = n_classes
+    )
+  ) %>%
+  group_by(classe_temp) %>%
+  summarise(
+    n = n(),
+    n_germe = sum(as.numeric(as.character(germination)), 
+                  na.rm = TRUE),
+    proportion = n_germe / n,
+    .groups = "drop"
+  ) %>%
+  mutate(
+    bornes = stringr::str_remove_all(classe_temp, "\\(|\\]"),
+    xmin = as.numeric(stringr::str_split_i(bornes, ",", 1)),
+    xmax = as.numeric(stringr::str_split_i(bornes, ",", 2)),
+    temp_moy = (xmin + xmax) / 2
+  ) %>%
+  dplyr::select(-bornes)
+
+donnees.proportions
+```
+
+
+```{r plot-freq}
+plot.proportion <- ggplot() +
+  geom_jitter(
+    data = graine,
+    aes(x = temperature, 
+        y = germination,
+        color = factor(germination)),
+    height = 0.0, 
+    alpha = 0.25
+  ) +
+  scale_color_manual(
+    values = c("#F97", "#38F")
+  ) +
+  # add segments of proportion of germination on the classes of temperatures
+  geom_segment(
+    data = donnees.proportions,
+    aes(x = xmin, 
+        xend = xmax, 
+        y = proportion, 
+        yend = proportion),
+    color = "black", 
+    linewidth = 1,
+  ) +
+  labs(
+    title = "Step function",
+    subtitle = "Germination data",
+    x = "Temperature (°C)",
+    y = "Proportion of germinated seed"
+  ) +
+  ylim(0, 1)
+
+plot.proportion
+```
+
+La liaison entre la germination et la température devient beaucoup plus lisible.
+
+
+## Modélisation
+
+Nous cherchons à modéliser une variable binaire $Y$ (`germination`) en fonction des valeurs prises par une variable quantitative $X$ (`temperature`). Nous allons nous intéresser à la loi de $Y$ pour chaque valeur que $X$ peut prendre.
+
+Une approche naturelle consiste à modéliser cette loi par une loi de Bernoulli de paramètre $p\in[0,1]$ inconnue. (Nous pouvons supposer sans perte de généralités que $Y$ prend ses valeurs dans $\{0,1\}$.) Afin de prendre en compte la température pour expliquer la variable $Y$, nous allons faire varier le paramètre de la loi de Bernoulli avec la température : pour une graine à température de sol fixée $x$, $Y$ va suivre une loi de Bernoulli de paramètre $p(x)$, où $p(x)$ désigne la probabilité de l'événement $\{Y=1\}$ (la graine a germé) pour un sol de température $x$.
+
+
+Nous faisons ici l'hypothèse qu'il existe une transformation $g$ telle que :
+$$ g\big( p(x_i) \big) \:\: = \:\: \beta_0 \: + \: \beta_1 \, x_i \, . $$
+
+Nous ne savons pas si une telle fonction $g$ existe, et il reste donc à la spécifier en fonction du contexte.
+
+
+## Transformation `logit`
+
+Pour ajuster un modèle à ces données, nous allons nous ramener à un modèle linéaire par une *transformation logistique*.
+
+Reprenons le graphe suivant :
+
+```{r plot-freq2}
+plot.proportion
+```
+
+La fonction en escalier représentée dépend du regroupement effectué et peut donc changer en fonction des classes choisies. Par construction, il y a des sauts à chaque regroupement alors que nous pouvons imaginer sans mal que la proportion évolue de façon continue avec la température. Afin de lisser la fonction en escaliers, il est d'usage d'utiliser une fonction de type *sigmoïde*, par exemple
+$$ \frac{e^{\beta_1 + \beta_2x}}{1+e^{\beta_1+\beta_2x}} \, , $$
+où les paramètres $\beta_1,\beta_2\in\mathbb{R}$ devront être choisis de manière à ajuster au mieux la fonction en escaliers.
+
+Cette représentation suggère de modéliser la probabilité $p(x)$ de germination pour un sol à température $x$ par la fonction :
+$$ p_\beta(x) \:\: = \:\: \frac{e^{\beta_1 + \beta_2x}}{1+e^{\beta_1+\beta_2x}} \, . $$
+La fonction $u \mapsto \frac{e^u}{1+e^u}$ étant bijective, le modèle précédent se réécrit comme :
+$$ \mathrm{logit}\big( p_\beta(x) \big) \:\: = \:\: \log\Big( \frac{p_\beta(x)}{1-p_\beta(x)} \Big) \:\: = \:\: \beta_1 \: + \: \beta_2 x \, . $$
+
+```{r logit-function}
+fonction_logistique <- function(x, b0, b1) {
+  1 / (1 + exp(-(b0 + b1 * x)))
+}
+```
+
+```{r logit-plot}
+b0_essai <- -8
+b1_essai <- 0.5
+
+grille_x <- tibble(temperature = seq(0, 40, length.out = 300)) %>%
+  mutate(p_essai = fonction_logistique(temperature, b0_essai, b1_essai))
+
+ggplot() +
+  geom_jitter(
+    data = donnees.proportions,
+    aes(x = temp_moy, 
+        y = proportion),
+    color = "black",
+    height = 0.0, 
+    alpha = 0.75
+  ) +
+  # add logit curve
+  geom_line(data = grille_x,
+            aes(x = temperature, 
+                y = p_essai),
+            color = "red1", 
+            linewidth = 0.75
+  ) +
+  labs(
+    title = "Fitted logit function",
+    subtitle = "Germination data",
+    x = "Temperature (°C)", 
+    y = "Probability to germinate",
+  )
+```
+
+Il semble donc qu'une telle transformation logistique puisse décrire le lien entre la probabilité de germination et la température du sol.
+
+
+## Analyse sur `R`
+
+### Ajustement du modèle 
+
+Le **modèle de régression logistique** peut être ajusté par la fonction `glm()` (pour *generalized linear model*).
+
+```{r glm-bernoulli}
+glm.graine <- glm(
+  formula = germination ~ temperature,  # symbolic description of the model to be fitted
+  data = graine,                        # data frame
+  family = binomial                     # description of the error distribution and link function to be used in the model
+)
+```
+
+### Estimation des coefficients
+
+Comme pour la fonction `lm()`, la fonction `summary()` permet d'obtenir l'estimation des paramètres de la fonction logistique.
+
+```{r glm_summary}
+summary(glm.graine)
+```
+
+Comme pour une régression linéaire, nous obtenons un tableau `Coefficients` comportant les différentes informations sur les coefficients $\beta_j$.
+
+```{r glm-coef}
+summary(glm.graine)$coefficients
+```
+
+Ce tableau comporte pour chaque variable (ligne) :
+
+- son estimation $\hat{\beta}_j$ (colonne `Estimate`) ;
+- son écart-type estimé $\hat{\sigma}_j$ (colonne `Std. Error`) ;
+- la valeur observée de la statistique du test d'hypothèses $(\mathcal{H}_0):\beta_j = 0$ contre $(\mathcal{H}_1):\beta_j\ne0$ (colonne `z value`) ; et
+- la $p$-valeur du test précédent (colonne `Pr(>|z|)`).
+
+
+```{r plot-reg-logistic}
+b0_essai <- glm.graine$coefficients[1]
+b1_essai <- glm.graine$coefficients[2]
+
+grille_x <- tibble(temperature = seq(5, 35, length.out = 300)) %>%
+  mutate(p_essai = fonction_logistique(temperature, b0_essai, b1_essai))
+
+ggplot() +
+  geom_jitter(
+    data = graine,
+    aes(x = temperature, 
+        y = germination,
+        color = factor(germination)),
+    height = 0.0, 
+    alpha = 0.3
+  ) +
+  scale_color_manual(
+    values = c("#F97", "#38F")
+  ) +
+  geom_segment(
+    data = donnees.proportions,
+    aes(x = xmin, 
+        xend = xmax, 
+        y = proportion, 
+        yend = proportion),
+    color = "black", 
+    linewidth = 0.5,
+  ) +
+  geom_line(data = grille_x,
+            aes(x = temperature, 
+                y = p_essai),
+            color = "red1", 
+            linewidth = 0.75
+  ) +
+  labs(
+    title = "Estimated logistic regression curve",
+    subtitle = "Germination data",
+    x = "Temperature (°C)", 
+    y = "Probability to germinate",
+  ) +
+  ylim(0, 1)
+```
+
+```{r plot-reg-logistic-confidence}
+grille_temp <- tibble(temperature = seq(5, 35, length.out = 200))
+
+predictions <- predict(glm.graine, 
+                       newdata = grille_temp,
+                        type = "link", 
+                       se.fit = TRUE)
+
+grille_temp <- grille_temp %>%
+  mutate(
+    logit_fit = predictions$fit,
+    se = predictions$se.fit,
+    p_fit = plogis(logit_fit),
+    borne_inf = plogis(logit_fit - 1.96 * se),
+    borne_sup = plogis(logit_fit + 1.96 * se)
+  )
+
+ggplot() +
+  geom_jitter(
+    data = graine,
+    aes(x = temperature, 
+        y = germination,
+        color = factor(germination)),
+    height = 0.0, 
+    alpha = 0.3
+  ) +
+  scale_color_manual(
+    values = c("#D8F", "#38F")
+  ) +
+  geom_ribbon(
+    data = grille_temp,
+    aes(x = temperature, 
+        ymin = borne_inf, 
+        ymax = borne_sup),
+    alpha = 0.2
+  ) +
+  geom_segment(
+    data = donnees.proportions,
+    aes(x = xmin, 
+        xend = xmax, 
+        y = proportion, 
+        yend = proportion),
+    color = "black", 
+    linewidth = 0.5,
+  ) +
+  geom_line(
+    data = grille_temp,
+    aes(x = temperature, 
+        y = p_fit), 
+    linewidth = 0.75,
+    color = "red1"
+  ) +
+  labs(
+    title = "Estimated logistic regression curve (with standard error)",
+    subtitle = "Germination data",
+    x = "Temperature (°C)", 
+    y = "Probability to germinate",
+  ) +
+  ylim(0, 1)
+```
+
+### Interprétation : Odds ratio &amp Intervalles de confiance
+
+Les coefficients peuvent être difficiles à interpréter dans le cadre d'une régression logistique, car ils sont exprimés sur l'échelle du `logit`. C'est pourquoi nous introduisons les **cotes** ou *odds*, et le **rapport de cotes** ou *odds ratio*. 
+
+#### L'odds
+
+Nous définissons l'**odds** de germination à la température $x$ est
+$$ \mathrm{odds}(x) \: = \: \frac{p(x)}{1-p(x)} \, . $$
+C'est le rapport entre la probabilité de succès et celle d'échec (on peut l'interpréter comme un "rapport de chances") : si $p(x) = 0.75$, alors $\mathrm{odds}(x) = 3$, nous dirons ainsi que les chances de succès de germination sont de 3 contre 1.
+
+Attention toutefois à ne pas confondre un odds avec une probabilité (il prend ces valeurs dans $[0,+\infty[$).
+
+#### Le modèle sur l'échelle des log-odds
+
+Rappelons que le modèle de régression logistique peut s'écrire :
+$$ \mathrm{logit}\big( p(x) \big) \: = \: \log\big(\mathrm{odds}(x)\big) \: = \: \beta_0 \: + \: \beta_1 \, x \, \, , $$
+ou, de façon équivalente, 
+$$ \mathrm{odds}(x) \: = \: e^{\beta_0} \: e^{\beta_1 \, x} \, . $$
+
+- $\beta_0$ est le log-odds en $x=0$ : $e^{\beta_0}$ est l'odds de germination à 0°C. Ce n'est interprétable que si $x=0$ a un sens. Sinon il est possible de centrer la covariable.
+- Si nous augmentons $x$ d'une unité, alors nous obtenons :
+$$ \log\big( \mathrm{odds}(x+1) \big) \: - \: \log\big( \mathrm{odds}(x) \big) \: = \: \beta_1 \, , $$
+ou, autrement écrit,
+$$ \frac{\mathrm{odds}(x+1)}{\mathrm{odds}(x)} \: = \: e^{\beta_1} \, . $$
+Le nombre $e^{\beta_1}$ est l'odds ratio associé à une augmentation d'une unité de $x$. Il ne dépend pas de $x$. Pour une augmentation de $\Delta$ unités, l'odds ratio vaut $e^{\Delta \, \beta_1}$.
+
+La lecture peut s'effectuer comme suit :
+- $\beta_1 >0$ si, et seulement si, $e^{\beta_1}>1$ si, et seulement si, $p(x)$ croît avec $x$ ; 
+- $\beta_1 = 0$ si, et seulement si, $e^{\beta_1}=1$ si, et seulement si, la variable explicative n'a pas d'effet ;
+- $\beta_1 <0$ si, et seulement si, $e^{\beta_1}<1$ si, et seulement si, $p(x)$ décroît avec $x$.
+
+```{r odds-ratio, message=FALSE, warning=FALSE}
+if(!require(questionr)) install.packages("questionr")
+
+questionr::odds.ratio(glm.graine)
+```
+
+```{r coefficient}
+coef(glm.graine)
+```
+
+Ici, $\hat\beta_1 = 0.467$ et odds ratio du coefficient $\beta_1$ est $e^{0.467} \simeq 1.60$. Chaque degré supplémentaire **multiplie l'odds** de germination de 1.60 (soit une augmentation d'environ 60% de l'odds).
+
+Terminons par une remarque importante. Multiplier l'odds par 1.60 ne multiplie pas la probabilité de germination par 1.60. L'effet sur la probabilité $p(x)$ dépend du niveau de départ.
+
+#### Intervalle de confiance
+
+Il est possible de construire des intervalles de confiance pour le coefficient $\beta_1$ et, *a fortiori* pour l'odds ratio en prenant l'exponentielle.
+
+```{r CI}
+confint(glm.graine, level = 0.95)      # IC for beta (vraisemblance)
+exp(confint(glm.graine, level = 0.95)) # IC for odds-ratio
+```
+
+### Test du rapport de vraisemblance 
+
+Le test du rapport de vraisemblance ou LRT (pour *Likelihood Ratio Test*) permet de comparer deux modèles **emboîtés**, ajustés sur les mêmes données. Nous présentons ici le test de **validité globale** : nous testons si le coefficient $\beta_1$ (ou au moins l'un des coefficients dans un cadre multivarié, à l'exception de la constante), est non nul. C'est l'analogue, pour la régression, du test global de Fisher de la régression linéaire.
+
+Dans notre contexte simple (à une variable explciative), il s'agit de tester :
+$$ (\mathcal{H}_0):\beta_1 = 0 \quad \mathrm{contre} \quad (\mathcal{H}_1):\beta_1\ne0 \, . $$
+Notons $D_{\text{nul}}$ la déviance du modèle réduit (constante seule) et $D_{\text{mod}}$ celle du modèle complet. La statistique de test est 
+$$ \Lambda \: = \: D_{\text{nul}} \, - \, D_{\text{mod}} \: = \: 2 \big(\ell(\hat\beta_1)) - \ell(\hat\beta_{1}^{(0)}) \big) \, , $$
+où $\ell$ désigne la log-vraisemblance maximisée. 
+
+Sous $(\mathcal{H}_0)$, l'estimateur $\Lambda$ suit **asymptotiquement** une loi du $\chi^2(k)$, où $k$ est le nombre de coefficients testés (ici $k = 1$). Nous rejetons l'hypothèse $(\mathcal{H}_0)$ au risque d'erreur de 1ère espèce $\alpha$, si la $p$-valeur du test est $< \alpha$, ou, de façon équivalente, si l'estimation du rapport de vraisemblance $\Lambda_{\text{obs}}$ est $> q^{\chi^2}_{1-\alpha}$.
+
+```{r likelyhood-ratio-test}
+glm.nul <- glm(
+  formula = germination ~ 1, # model without variable
+  data = graine,
+  family = binomial)
+
+anova(
+  glm.nul,     # object containing the results returned by a model fitting function
+  glm.graine,  # additional object of the same type
+  test = "LRT" # test to be realised
+  )
+```
+Le tableau d'analyse de variance renvoie :
+- `Df` : nombre de degrés de liberté ;
+- `Deviance` : estimation de l'estimateur $\Lambda$, $\Lambda_{\text{obs}} = 163.51$ ;
+- `Pr(>Chi)` : $p$-valeur du test du rapport de vraisemblance.
+
+Ici la $p$-valeur est très basse (`< 2.2e-16`), nous rejetons donc l'hyptohèse $(\mathcal{H}_0)$ : au risque d'erreur de 1ère espèce de 5%, le modèle complet semble mieux s'adapter aux données que le modèle nul.
+
+
+### Test de Hosmer et Lemeshow
+
+Pour de données individuelles (ou lorsque nous avons peu de répétition sur les points du *design*), la déviance résiduelle ne suit pas, même approximativement, une loi du $\chi^2$ : elle ne peut donc pas servir de test d'adéquation. Le test de Hosmer et Lemeshow contourne ce problème en regroupant les observations.
+
+L'hypothèse $(\mathcal{H_0})$ stipule que le modèle logistique considéré est correctement spécifié, c'est-à-dire que les observations $y_i$ sont des réalisations indépendantes de lois de Bernoulli de paramètre $p_\beta(x_i)$ avec
+$$ \mathrm{logit}\big( p_\beta(x_i) \big) \: = \: \beta_0 \: + \: \beta_1 x_i \, . $$
+L'hypothèse alternative $(\mathcal{H}_1)$ est la négation de $(\mathcal{H}_0)$.
+
+Le principe de ce test est le suivant :
+a. on calcule des probabilités ajustées $\hat p_i$ ;
+b. on trie des probabilités ajustées afin de former $G$ groupes (par défaut, $G = 10$, correspondant aux déciles) ; et
+c. dans chaque groupe $g$ de taille $n_g$, on compare le nombre observé de succès $O_g = \sum_{i\in g} y_i$ au nombre attendu $E_g = \sum_{i\in g} \hat{p}_i$.
+
+La statistique de test est :
+$$ \hat{C} \: = \: \sum_{g=1}^G \frac{\big(O_g \, - \, E_g\big)^2}{E_g \, \big(1 \, - \, \frac{E_g}{n_g}\big)} \, , $$
+et suit approximativement, sous $(\mathcal{H}_0)$, une loi du $\chi^2(G-2)$.
+
+```{r test-Hosmer-Lemeshow, message=FALSE}
+if(!require(generalhoslem)) install.packages("generalhoslem")
+library(generalhoslem) # realiser Hosmer's test
+
+hosmer <- logitgof(
+  obs = graine$germination,
+  exp = fitted(glm.graine)
+)
+
+hosmer          # statistic, Df, p-value
+hosmer$observed # observed number by group
+hosmer$expected # expected number by group
+```
+
+La statistique de test suit une loi du $\chi^2$ à 8 degrés de liberté, et au risque d'erreur de 1ère espèce de 5%, nous ne rejetons pas $(\mathcal{H}_0)$ : le modèle logistique avec toutes ses variables est satisfaisant.
+
+Pour terminer cette partie, rappelons que ne pas rejeter $(\mathcal{H}_0)$ ne prouve pas que le modèle est "vrai". Pour aller en ce sens, il est nécessaire de calculer la puissance de ce test. Or ce test possède une puissance limitée, et son résultat dépend du choix de $G$. 
+
+
+## Prédiction
+
+Par défaut, la fonction `predict()` renvoie la valeur sur l'échenlle de la fonction de lien, c'est-à-dire le log-odds estimé $\hat{\beta}_0 + \hat{\beta}_1 \, x_0$. 
+L'option `type = response` permet d'obtenir la **probabilité** estimée
+$$ \hat{p}(x_0) \: = \: \frac{1}{1 + e^{-(\hat{\beta}_0 \, + \, \hat{\beta_1} \, x_0)}} \, . $$
+
+```{r predict}
+# for log-odds
+predict(
+  glm.graine, 
+  newdata = list(temperature = 19.4)
+)
+
+# for probability
+predict(
+  glm.graine, 
+  newdata = list(temperature = 19.4),
+  type = "response"
+)
+```
+
+Pour un intervalle de confiance sur $p(x_0)$, nous commençons par construire sur l'échelle de la fonction lien, puis nous appliquons la fonction logistique réciproque `plogis()`. L'intervalle obtenu reste ainsi dans $[0,1]$.
+
+```{r predict-ic}
+pred <- predict(
+  glm.graine, 
+  newdata = list(temperature = 19.4),
+  type = "response",
+  se.fit = TRUE
+)
+
+ic.lien <- pred$fit + c(-1, 1) * qnorm(0.975) * pred$se.fit
+
+plogis(pred$fit) # estimation of p(19.4)
+plogis(ic.lien)  # IC at level 0.95 for p(19.4)
+```
+
+Il s'agit d'un intervalle de confiance sur la **probabilité** de germination à 19.4°C, et non d'un intervalle de prédiction pour une graine donnée, dont l'issue vaut 0 ou 1. Comme en régression linéaire, nous éviterons d'extrapoler hors du domaine des températures observées.
+
+
+## Analyse des résidus &amp Validation du modèle
+
+Comme pour le modèle linéaire, les résidus mesurent l'écart entre chaque observation et sa valeur ajustée par le modèle. Les objectifs sont identiques : identifier des valeurs aberrantes, des points influents, un défaut de spécification, *etc*.
+
+Les résidus bruts $y_i - \hat{p}_i$ ne sont pas homoscédastiques car $\mathrm{Var}(\mathbf{Y}_i) = p_i(1-p_i)$. Nous leur préférons donc :
+
+- les **résidus de Pearson** 
+$$ r_i^P \: = \: \frac{y_i - \hat{p}_i}{\sqrt{\hat{p}_i (1-\hat{p}_i)}} \, , $$
+- les **résidus de déviance**
+$$ r_i^D \: = \: \mathrm{sign}\big(y_i - \hat{p}_i\big) \, \sqrt{d_i} \, \qquad \text{où } d_i \: = \: -2 \, \big(y_i \log \hat{p}_i + (1-y_i) \log(1-\hat{p}_i) \big) \, , $$
+de sorte que $\sum_i (r_i^P)^2$ est la statistique de Pearson et $\sum_i (r_i^D)^2$ la déviance résiduelle.
+Les versions **standardisées** sont les résidus divisés par $\sqrt{1-h_{ii}}$, où $h_{ii}$ est le levier de l'observation $i$.
+
+L'analyse des résidus est essentiellement graphique.
+
+```{r glm-residuals}
+par(mfrow = c(2, 2))
+plot(glm.graine)
+```
+
+Les graphiques consistent à tracer des "index plot" avec en abscisse le numéro de l'observation et en ordonnée le résidu. En présence de données individuelles, on observera fréquemment une structure sur ce type de représentation. Le graphique `Q-Q Residuals` n'est **pas pertinent** ici : la régression logistique ne suppose aucune normalité des résidus. Le graphique `Residuals vs Leverage` reste utile pour repérer des points influents.
+
+```{r standardised-residuals}
+prev.lin <- predict(glm.graine)
+
+res_P <- residuals(glm.graine, type = "pearson")   # pearson
+res_PS <- rstandard(glm.graine, type = "pearson")  # pearson standardise
+res_D <- residuals(glm.graine, type = "deviance")  # deviance 
+res_DS <- rstandard(glm.graine, type = "deviance") # deviance standardise
+```
+
+```{r plot-standardised-residuals}
+par(mfrow = c(2, 2), pch = 20)
+
+plot(
+  res_PS, 
+  xlab = "index",
+  ylab = "Person Standard"
+)
+plot(
+  prev.lin, 
+  res_PS,
+  xlab = "Prevision lineaire",
+  ylab = "Person Standard"
+)
+plot(
+  res_DS, 
+  xlab = "index",
+  ylab = "Deviance Standard"
+)
+plot(
+  prev.lin,
+  res_DS, 
+  xlab = "Prevision lineaire",
+  ylab = "Deviance Standard"
+)
+```
+
+Sur les graphiques de droite, nous observons **deux branches**. Pour des données binaires, le résidu est une fonction déterministe de $\hat{p}_i$ et de $y_i$. Par exemple, pour les résidus de Pearson, $r_i^P = \sqrt{\frac{(1-\hat{p}_i)}{\hat{p}_i}} si $y_i = 1$ et $r_i^P = \sqrt{\frac{\hat{p}_i}{(1-\hat{p}_i)}} si $y_i = 0$. Ce type de graphique est donc peu lisible en données individuelles.
+
+Les graphiques de gauche (*index plot*) permettent de repérer les observations aberrantes, ainsi qu'une éventuelle structure liée à l'ordre des observations, signe possible d'une dépendance non modélisée. 
+En revanche, ils ne renseignent pas sur la forme du modèle (linéarité du `logit` en $x$). Pour cela, nous utilisons les **résidus groupés** : les résidus sont moyennés par classes de valeurs ajustées ; si le modèle est bien spécifié, ces moyennes fluctuent autour de 0 (dans une bande d'environ $\pm$ 2 écarts-types).
+
+```{r binned-residuals}
+binnedplot(
+  x = fitted(glm.graine),                       # expected values from the logistic regression
+  y = residuals(glm.graine, type = "response"), # residual values from logistic regression
+)
+```
 
 
 
-<!-- # Limites du modèle linéaire classique -->
 
-<!-- # Indice de Gini &amp Entropie -->
+# Régression logistique pour des variables qualitatives
 
-<!-- # Deux types d'arbres -->
+Lorsque la variable explicative $X$ est qualitative, l'écriture $\beta_0 + \beta_1 \, x$ n'a plus de sens. Considérons le cas où $X$ prend ses valeurs dans $\{A,B,C\}$. L'écriture du modèle reprend alors les mêmes idées d'écriture que dans le cas d'une régression linéaire factorielle :
+$$ \mathrm{logit}\big(p_\beta(x)\big) \: = \: \beta_0 \: + \: \beta_1 \mathbf{1}_{A}(x) \: + \beta_2 \mathbf{1}_{B}(x) \: + \beta_3 \mathbf{1}_{C}(x) \: , $$ 
+où $\mathbf{1}_A(x) = 1$ si $x$ possède la modalité $A$ et $0$ sinon ; de même pour $\mathbf{1}_B$ et $\mathbf{1}_C$.
 
-<!-- ## Arbres de classification -->
+Ce modèle est sur-paramétré : il comporte quatre paramètres pour seulement trois modalités ($\mathbf{1}_A(x) + \mathbf{1}_B(x) + \mathbf{1}_C(x) = 1$ est colinéaire à la constante). Il faut donc imposer une contrainte. 
+Par défaut, `R` utilise une *modalité de référence* (contraste "traitement") : le coefficiement de la première modalité (prise par ordre alphabétique) est fixé à 0. Avec $A$ comme référence, $\beta_1$ est fixé à 0 et :
+$$ \mathrm{logit}\big(p_\beta(x)\big) \: = \: \beta_0 \: + \beta_2 \mathbf{1}_{B}(x) \: + \beta_3 \mathbf{1}_{C}(x) \: . $$ 
 
-<!-- ## Arbres de régression -->
+Ainsi $\mathrm{logit}(p(A)) = \beta_0$, $\mathrm{logit}(p(B)) = \beta_0 + \beta_2$ et $\mathrm{logit}(p(C)) = \beta_0 + \beta_3$. En termes d'odds ratios :
+
+- $e^{\beta_0}$ est l'odds de la modalité de référence $A$ ;
+- $e^{\beta_2}$ est l'odds ratio de $B$ par rapport à $A$ ;
+- $e^{\beta_3}$ est l'odds ratio de $C$ par rapport à $A$ ; et
+- $e^{\beta_3 - \beta_2}$ est l'odds ratio de $C$ par rapport à $B$.
+
+Comme exemple, imaginons que nous cherchions à expliquer une variable binaire $Y$ par une varible explicative $X$ à valeurs dans $\{A,B,C\}$. Nous simulons un échantillon de taille 100 tel que la loi de $X$ est uniforme sur $\{A,B,C\}$ et la loi conditionnelle de $Y$ sachant $X$ est définie par :
+$$ \mathcal{L}\mathrm{oi}\big(Y\mid X=A\big) \: = \: \mathcal{L}\mathrm{oi}\big(Y\mid X=C\big) \: = \: \mathcal{B}\mathrm{er}(0.8) \quad \text{et} \quad \mathcal{L}\mathrm{oi}\big(Y\mid X=B\big) \: = \: \mathcal{B}\mathrm{er}(0.2) . $$
+
+Les "vrais" coefficients (référence $A$) sont donc $\beta_0 = \log 4 \sime 1.39$, $\beta_2 = -2\log 4 \simeq -2.77$ et $\beta_3 = 0$.
+
+```{r data-generating}
+set.seed(37)
+
+X <- factor(
+  sample(x = c("A", "B", "C"),
+         size = 100,
+         replace = TRUE)
+)
+Y <- rep(0, 100)
+
+Y[X == "A"] <- rbinom(
+  n = sum(X == "A"),
+  size = 1,
+  prob = 0.8
+)
+Y[X == "B"] <- rbinom(
+  n = sum(X == "B"),
+  size = 1,
+  prob = 0.2
+)
+Y[X == "C"] <- rbinom(
+  n = sum(X == "C"),
+  size = 1,
+  prob = 0.8
+)
+
+donnees <- data.frame(X, Y)
+```
+
+Le moèle logistique s'ajuste alors de la manière suivante :
+
+```{r glm-quali}
+glm.quali <- glm(
+  formula = Y ~ X, 
+  data = donnees,
+  family = binomial
+)
+
+coef(glm.quali)
+```
+
+Aucun coefficient ne semble être renvoyé pour la modalité $A$ : c'est la modalité de référence, le premier niveau de `levels(X)`. On lit alors les estimations : $\hat{\beta}_0 = 1.8562980$, $\hat{\beta}_2 = -3.2913825$ et $\hat{\beta}_3 = -0.4010108$. 
+
+```{r or-quali}
+exp(coef(glm.quali))    # odds (A) and odds ratio (B/A, C/A)
+exp(confint(glm.quali)) # confidence interval
+```
+
+Ces coefficients sont à interpréter en fonction de la contrainte. Ici, sous la contrainte $\beta_1=0$ : 
+
+- $\hat{\beta}_2$ étant négatif, nous pouvons dire que la probabilité que $Y=1$ est plus faible lorsque $X$ vaut $B$ plutôt que lorsque $X$ vaut $A$ ; 
+- $\hat{\beta}_3$ étant proche de $0$, nous en déduisons que lorsque $X$ est égal à $C$ la probabilité de l'événement $Y=1$ est proche de la probabilité de ce même événement lorsque $X$ vaut $A$.
+
+(Ces interprétations sont cohérentes avec le procédé de simulation.)
+
+Les interactions se traitent de la même façon que pour les modèles de régression linéaire factorielle (ANOVA et ANCOVA), et leur traitement ne sera donc pas traité ici.
+
+
+
+# Régression logistique multiple
+
+Il est naturel de penser que la germination dépend de plusieurs variables environnementales, et pas seulement de la température du sol.
+Le fichier `germinationMulti.csv` contient, en plus de la température, des mesures d'humidité, de pH, d'azote du sol, et de profondeur de semis.
+
+```{r data-loading-multi}
+graineMulti <- read.csv2("Data/germinationMulti.csv",
+                         header = TRUE,
+                         sep = ",",
+                         dec = ".")
+```
+
+
+## Le modèle
+
+Avec $p$ variables explicatives $x=(x_1,\dots,x_p)$, le modèle s'écrit 
+$$ \mathrm{logit}\big(p(x)) \: = \: \beta_0 \: + \: \beta_1 \, x_1 \: + \: \dots \: + \: \beta_p \, x_p \, . $$
+Pour $j\ge1$, $e^{\beta_j}$ est l'odds ratio associé à l'augmentation d'une unité de $x_j$, **toutes choses égales par ailleurs** (les autres variables étant fixées). Cette interprétation dépend de l'unité de $x_j$, et le coefficient de $x_j$ peut différer de celui du modèle simple si les covariables sont corrélées.
+
+
+## Analyse sur `R`
+
+Sur le même principe que précédemment, la fonction `glm()` permet d'ajuster un modèle de régression logistique multiple.
+
+```{r glm-multi}
+glm.graineMulti <- glm(
+  formula = germination ~ temperature + humidite + azote + ph + profondeur_semis,
+  data = graineMulti,
+  family = binomial
+)
+
+summary(glm.graineMulti)
+```
+
+```{r or-multi}
+exp(coef(glm.graineMulti))
+exp(confint(glm.graineMulti))
+```
+
+## Tests
+
+Il est possible de réalisé un test de pertinence global ($\beta_1=\dots=\beta_p=0$), qui n'est autre que le test de rapport de vraisemblance présenté ci-dessus à $p$ degrés de liberté.
+
+Il est également possible de réalisé un test de pertinence de chacune des variables correspondant à un test de rapport de vraisemblance à uin degré de liberté, pour chaque varibale retirée.
+
+```{r tests-multi}
+glm.nul.multi <- glm(
+  germination ~ 1,
+  data = graineMulti,
+  family = binomial
+)
+
+anova(glm.nul.multi, glm.graineMulti, test = "LRT") # global test
+drop1(glm.graineMulti, test = "LRT")                # test for each variable
+```
+
+
+
+## Sélection de modèles
+
+Parmi toutes les variables explicatives envisagées, certaines peuvent ne pas être pertinentes. Nous pouvons envisager d'effectuer une sélection de modèles. En  présence de $p$ variables explicatives $X_1,\dots,X_p$, $2^p$ modèles peuvent être envisagés (sans prendre en compte les interactions). 
+Une approche naturelle pour sélectionner un modèle parmi ces $2^p$ possibilités revient à construire tous ces modèles et à choisir celui qui optimise un critère de choix de modèle donné.
+
+Parmi les critères les plus utilisés, on retrouve, comme pour le modèle linéaire l'AIC (*Akaike Information Criterion*) et le BIC (*Bayesian Information Criterion*). Ces critères sont tous deux basés sur deux parties :
+
+- une **composante de vraisemblance** ($-2\mathcal{L}_\mathcal{M}(Y, \hat{\beta})$) mesurant l'ajustement du modèle aux données (valeurs faibles pour de bons ajustements) ; et
+- une **composante mesurant la complexité** du modèle ($2|\mathcal{M}|$ pour AIC et $|\mathcal{M}|\log(n)$ pour BIC).
+
+Ces critères, à minimiser, sélectionneront donc des modèles qui réalisent un bon compromis entre qualité d'ajustement et complexité.
+
+
+Il n'y a pas un critère meilleur que l'autre. Notons seulement que la pénailité BIC est plus grande que la pénalité AIC (dès que $n\ge8$). Par conséquent, le critère BIC aura tendance à choisir des modèles plus parcimonieux que le critère AIC.
+
+
+```{r bestglm-package, message=FALSE}
+if(!require(bestglm)) install.packages("bestglm")
+
+library(bestglm) # select best glm model
+```
+
+La fonction `bestglm()` permet de réaliser une sélection de modèles. Elle requiert cependant une transformation du jeu de données.
+
+```{r design-matrix}
+graineXy <- data.frame(
+ temperature = graineMulti$temperature,
+ humidite = graineMulti$humidite,
+ azote = graineMulti$azote,
+ ph = graineMulti$ph,
+ profondeur_semis = graineMulti$profondeur_semis,
+ germination = graineMulti$germination
+)
+```
+
+Une fois la matrice de *design* créée, nous pouvons appliquer la fonction `bestglm()`.
+
+```{r bestglm-AIC}
+glm.AIC <- bestglm(
+  Xy = graineXy,     # data frame containing the design matrix X and the output variable y
+  family = binomial, # one of the glm distribution functions
+  IC = "AIC"         # information criteria to use
+)
+
+glm.AIC$BestModels
+```
+
+```{r bestglm-BIC}
+glm.BIC <- bestglm(
+  Xy = graineXy,
+  family = binomial,
+  IC = "BIC"
+)
+
+glm.BIC$BestModels
+```
+
+Pour les deux critères AIC et BIC, le modèle sélectionné est le même (ce n'est pas toujours le cas). Il s'agit du modèle prenant en compte l'humudité et la température uniquement. Inclure une ou plusieurs des autres variables n'apportent pas d'explicativité supplémentaire sur la germination.

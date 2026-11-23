@@ -1,7 +1,9 @@
 ---
 title: "Introduction compréhensive à l'analyse statistique (linéaire) multivariée"
 ---
-
+::: {.callout-note collapse="true" appearance="simple"}
+*Page de cours en construction*
+:::
 
 ## Présentation {.unnumbered}
 
@@ -39,7 +41,7 @@ versions suffisament récentes.
   - TD 6-7 : [Analyse en composantes principales](../../downloads/intro-analyse-multivariee/TD6.zip)
   - TDs 8 : Analyse des correspondances, Analyse des correspondances multiples
   
-- Chapitre 4 - [Introduction à la classification automatique non-supervisée](../../downloads/intro-analyse-multivariee/chap5_ClassifNonSupervisee.pdf)
+- Chapitre 4 - [Introduction à la classification automatique non-supervisée](../../downloads/intro-analyse-multivariee/chap5_ClassifNonSupervise.pdf)
   - TD 9 : Classification ascendante hiérarchique
 
 

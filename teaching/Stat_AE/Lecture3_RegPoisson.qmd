@@ -4,5 +4,7 @@ title: "Régression de Poisson : Modéliser des données de comptage"
 
 
 ::: {.callout-note collapse="true" appearance="simple"}
-Bientôt disponible.
+*Page de cours en construction.*
 :::
+
+

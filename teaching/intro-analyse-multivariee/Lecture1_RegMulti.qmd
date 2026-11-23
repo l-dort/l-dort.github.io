@@ -70,7 +70,7 @@ Le jeu de données `apollo` (au format `.Rdata`) possède 100 lignes et 6 colonn
 
 - *humidity_index* : indice d'humidité du sol local du site. Des valeurs faibles correspondent à des milieux secs, favorables à l'espèce ; des valeurs élevées à des milieux humides, généralement moins favorables ;
 - *altitude_index* : indice d'altitude du site d'observation ;
-- *orientation_index* : indice d'expositation du site. Les valeurs élevées correspondent à des versants bien exposés et ensolleilés ;
+- *orientation_index* : indice d'exposition du site. Les valeurs élevées correspondent à des versants bien exposés et ensolleilés ;
 - *logabundance* : logarithme de l'abondance du papillon Apollon dénombrée par transect sur chaque type ;
 - *sector* : secteur géographique du site d'observation au sein du Parc National de la Vanoise ;
 - *grazing* : mode de gestion du site : *grazed* pour un site pâturé, alpage exploité ; ou *ungrazed* pour un site non-paturé, en évolution naturelle.
