@@ -52,3 +52,30 @@ Pour insérer un nouveau cours
 
 </div>
 ```
+
+<!--
+```{=html}
+<div class="course-grid">
+
+<a class="course-card" href="teaching/Plan_exp/index.qmd">
+  <h3>Introduction aux plans d'expériences</h3>
+  <p>???</p>
+</a>
+
+</div>
+```
+-->
+
+
+<!--
+```{=html}
+<div class="course-grid">
+
+<a class="course-card" href="teaching/Echantillonnage/index.qmd">
+  <h3>Quelques méthodes d'échantillonnage</h3>
+  <p>Méthodes de Monte Carlo, Jackknife et Bootstrap</p>
+</a>
+
+</div>
+```
+-->

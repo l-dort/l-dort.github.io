@@ -4,6 +4,12 @@ title: "Régression linéaire multiple"
 
 
 
+::: {.callout-note collapse="true" appearance="simple"}
+*Page de cours en construction.*
+:::
+
+
+
 Ce chapitre est très largement inspiré, et pour tout une partie reprise du cours *Modèle linéaire gaussien* de Sophie Donnet. Il peut être retrouvé sur son site internet : <https://sophiedonnet.github.io/linearmodel.html>.
 
 
@@ -35,7 +41,7 @@ library(GGally)      # Extension of ggplot2
 
 Le bloc de codes suivant permet de fixer certains paramètres de représentation graphique `ggplot` que nous réutiliserons tout au long de ce chapitre.
 
-```{r ggplot_theme, echo=FALSE}
+```{r ggplot_theme}
 # default ggplot theme
 set_theme(
   # black and white theme: defaut theme of ggplot2

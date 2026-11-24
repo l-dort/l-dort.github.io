@@ -1,9 +1,14 @@
 ---
 title: "Introduction compréhensive à l'analyse statistique (linéaire) multivariée"
 ---
+
+
+
 ::: {.callout-note collapse="true" appearance="simple"}
-*Page de cours en construction*
+*Page de cours en construction.*
 :::
+
+
 
 ## Présentation {.unnumbered}
 
@@ -38,11 +43,15 @@ versions suffisament récentes.
   - TD 5 : [Analyse de la covariance](../../downloads/intro-analyse-multivariee/TD5.zip)
 
 - Chapitre 3 - [Réduction (linéaire) de dimension](../../downloads/intro-analyse-multivariee/chap4_ReducDimACP.pdf) (<a href="../../downloads/intro-analyse-multivariee/Chapitre4_cours.zip" download>.Rmd</a> du chapitre)
-  - TD 6-7 : [Analyse en composantes principales](../../downloads/intro-analyse-multivariee/TD6.zip)
-  - TDs 8 : Analyse des correspondances, Analyse des correspondances multiples
+  - TDs 6-7 : [Analyse en composantes principales](../../downloads/intro-analyse-multivariee/TD6_7.zip)
+  - TD 8 : [Analyse des correspondances, Analyse des correspondances multiples](../../downloads/intro-analyse-multivariee/TD8.zip)
   
 - Chapitre 4 - [Introduction à la classification automatique non-supervisée](../../downloads/intro-analyse-multivariee/chap5_ClassifNonSupervise.pdf)
-  - TD 9 : Classification ascendante hiérarchique
+  - TD 9 : [Classification ascendante hiérarchique](../../downloads/intro-analyse-multivariee/TD9.zip)
+  
+<!-- 
+[Éléments de correction](../../downloads/intro-analyse-multivariee/TDcode.zip) des TDs. *(Des blocs de codes sont données, les interprétations sont à effectuer.)*
+-->
 
 
 ## Données {.unnumbered}
@@ -54,6 +63,10 @@ Les jeux de données sont à télécharger [ici](../../downloads/intro-analyse-m
 
 ::: {.callout-note collapse="true" appearance="simple"}
 *Dernières mises à jour*
+
+**24 novembre 2026** -- Ajout TD 9.
+
+**23 novembre 2026** -- Ajout TD 8.
 
 **20 novembre 2026** -- Chapitre 3 : Ajout d'une courte annexe décrivant l'ACM au diaporama de cours et mise-à-jour du fichier `.Rmd` ; Chapitre 4 : Ajout du diaporama de cours.
 

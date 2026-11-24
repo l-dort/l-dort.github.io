@@ -4,5 +4,8 @@ title: "Réduction de dimension"
 
 
 ::: {.callout-note collapse="true" appearance="simple"}
-En construction.
+*Page de cours en construction.*
 :::
+
+
+
